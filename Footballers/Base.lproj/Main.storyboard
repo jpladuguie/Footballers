@@ -1,25 +1,237 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="X5V-pe-msl">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Navigation Controller-->
+        <scene sceneID="Ski-wy-2jp">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController id="X5V-pe-msl" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="byV-Zi-9bX">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="uVB-Nv-X4V" kind="relationship" relationship="rootViewController" id="sxa-a8-YKk"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bvs-Ck-zy8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1" y="462"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="QcU-zX-uPu">
+            <objects>
+                <navigationController id="82z-yG-kcg" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="h7L-ut-2fr">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="JoL-Ye-QZk" kind="relationship" relationship="rootViewController" id="om8-JI-iPD"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dcG-Uz-Cyr" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1476" y="462"/>
+        </scene>
+        <!--Teams View-->
+        <scene sceneID="aCd-ff-aK8">
+            <objects>
+                <viewController id="BKb-9h-rFN" customClass="teamsView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                        <viewControllerLayoutGuide type="top" id="NJh-dD-VKf"/>
+                        <viewControllerLayoutGuide type="bottom" id="q2u-sy-gL4"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="xsH-Pk-CkF">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <segue destination="GTs-3N-ne6" kind="presentation" identifier="teamsMenuSegue" id="W9V-Vb-Hb0"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x41-DX-fHB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4381" y="-313"/>
+        </scene>
+        <!--Player View-->
+        <scene sceneID="Tom-wE-Ecs">
+            <objects>
+                <viewController id="1wd-lr-6Br" customClass="playerView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9Qx-NF-hpQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="0y5-kT-Hzw"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="juG-1Q-a3B">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7ie-Pf-OH3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="4381" y="462"/>
+        </scene>
+        <!--Rankings View-->
+        <scene sceneID="h9c-ie-aEi">
+            <objects>
+                <viewController id="1LQ-si-es3" customClass="rankingsView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="3f6-GD-ZYu"/>
+                        <viewControllerLayoutGuide type="bottom" id="QKa-th-nwf"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="uGM-FA-KuE">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <segue destination="GTs-3N-ne6" kind="presentation" identifier="rankingsMenuSegue" id="8nZ-Ql-avh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oju-eq-KGY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3647" y="1259"/>
+        </scene>
+        <!--Favourites View-->
+        <scene sceneID="rav-f2-GFD">
+            <objects>
+                <viewController id="dAh-cd-Voc" customClass="favouritesView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="KYB-oq-5iu"/>
+                        <viewControllerLayoutGuide type="bottom" id="e5Z-48-mst"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="MZ3-e2-ga9">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <segue destination="GTs-3N-ne6" kind="presentation" identifier="favouritesMenuSegue" id="1iO-ol-2i4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vc9-zE-iEx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4381" y="1259"/>
+        </scene>
+        <!--Compare View-->
+        <scene sceneID="Xr8-va-Mdh">
+            <objects>
+                <viewController id="wxw-SV-r2u" customClass="compareView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="qH2-ai-MV3"/>
+                        <viewControllerLayoutGuide type="bottom" id="NXA-94-BAt"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Jf3-CU-lch">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <segue destination="GTs-3N-ne6" kind="presentation" identifier="compareMenuSegue" id="arQ-ed-r8Q"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5g5-7S-cRc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3647" y="-313"/>
+        </scene>
+        <!--Side Menu View-->
+        <scene sceneID="A32-l8-Uam">
+            <objects>
+                <viewController id="4V4-TQ-2QO" customClass="sideMenuView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jQ5-Uu-pQu"/>
+                        <viewControllerLayoutGuide type="bottom" id="Dcu-VG-ACZ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="BZS-yR-BLZ">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="GC6-69-7ti"/>
+                    <connections>
+                        <segue destination="1wd-lr-6Br" kind="show" identifier="playerSegue" id="ZbC-vQ-kf7"/>
+                        <segue destination="BKb-9h-rFN" kind="show" identifier="teamsSegue" id="pSX-X3-tdj"/>
+                        <segue destination="1LQ-si-es3" kind="show" identifier="rankingsSegue" id="4nS-ee-EzC"/>
+                        <segue destination="JoL-Ye-QZk" kind="show" identifier="homeSegue" id="5jI-Xj-CU4"/>
+                        <segue destination="wxw-SV-r2u" kind="show" identifier="compareSegue" id="7AF-bx-4lO"/>
+                        <segue destination="dAh-cd-Voc" kind="show" identifier="favouritesSegue" id="8Ra-ie-nBV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dlp-Dd-kf6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3647" y="462"/>
+        </scene>
+        <!--Side Menu Navigation Controller-->
+        <scene sceneID="8ad-tV-6vN">
+            <objects>
+                <navigationController storyboardIdentifier="SideMenuNavigationController" navigationBarHidden="YES" id="GTs-3N-ne6" customClass="UISideMenuNavigationController" customModule="SideMenu" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="o92-eu-gqc">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="leftSide" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <segue destination="4V4-TQ-2QO" kind="relationship" relationship="rootViewController" id="HGL-Kx-3T2"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cxS-29-kpE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2925" y="462"/>
+        </scene>
+        <!--Home View-->
+        <scene sceneID="OK8-ol-6qL">
+            <objects>
+                <viewController id="JoL-Ye-QZk" customClass="homeView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ifb-Yk-Rwl"/>
+                        <viewControllerLayoutGuide type="bottom" id="VA3-ze-vft"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Gqh-Sc-Vac">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="A0d-Ue-odP"/>
+                    <connections>
+                        <segue destination="GTs-3N-ne6" kind="presentation" identifier="homeMenuSegue" id="m5p-Kd-Af4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="X5M-72-cOA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2203" y="462"/>
+        </scene>
+        <!--Loading View-->
+        <scene sceneID="f8l-FM-FGC">
+            <objects>
+                <viewController storyboardIdentifier="loadingViewId" id="uVB-Nv-X4V" customClass="loadingView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="lny-Cb-pQc"/>
+                        <viewControllerLayoutGuide type="bottom" id="J7H-MR-M6e"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="7zN-tm-eQN">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="ylQ-1w-9Tf"/>
+                    <connections>
+                        <segue destination="82z-yG-kcg" kind="presentation" identifier="loadingSegue" modalTransitionStyle="crossDissolve" id="3jE-rk-OPy"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SkZ-iX-Xpp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="740" y="462"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="om8-JI-iPD"/>
+        <segue reference="m5p-Kd-Af4"/>
+    </inferredMetricsTieBreakers>
 </document>

@@ -182,7 +182,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     
     // Number of rows in tableview.
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ((self.player?.getSummaryStats().count)! + 1)
+        return ((self.player?.getSummaryStats().count)! + 2)
     }
     
     
@@ -240,8 +240,8 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
             // Create cell.
             let statCell: playerStatCell = tableView.dequeueReusableCellWithIdentifier( NSStringFromClass(playerStatCell), forIndexPath: indexPath) as! playerStatCell
             
-            statCell.statNameLabel.text = self.player?.getSummaryStats()[indexPath.row - 1][0]
-            statCell.statValueLabel.text = self.player?.getSummaryStats()[indexPath.row - 1][1]
+            statCell.statNameLabel.text = self.player?.getSummaryStats()[indexPath.row - 2][0]
+            statCell.statValueLabel.text = self.player?.getSummaryStats()[indexPath.row - 2][1]
             
             // Set cell.
             cell = statCell

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2ED7D601B4BFB9F4677F1386 /* Pods_Footballers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ADF919B346CB0628D173243 /* Pods_Footballers.framework */; };
+		3F154F891D8ABA3100EF70E2 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F154F881D8ABA3100EF70E2 /* CoreData.framework */; };
+		3F154F8C1D8ABA5400EF70E2 /* players.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3F154F8A1D8ABA5400EF70E2 /* players.xcdatamodeld */; };
 		E81059C41D807A6800EE205E /* playerStatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81059C31D807A6800EE205E /* playerStatCell.swift */; };
 		E81059D01D80B19800EE205E /* playerSecondCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81059CF1D80B19800EE205E /* playerSecondCell.swift */; };
 		E8180C431D7CBB2400043884 /* defaultPlayerImage.png in Resources */ = {isa = PBXBuildFile; fileRef = E8180C421D7CBB2400043884 /* defaultPlayerImage.png */; };
@@ -44,6 +46,8 @@
 
 /* Begin PBXFileReference section */
 		2ADF919B346CB0628D173243 /* Pods_Footballers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Footballers.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F154F881D8ABA3100EF70E2 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		3F154F8B1D8ABA5400EF70E2 /* players.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = players.xcdatamodel; sourceTree = "<group>"; };
 		44D20C8AB5A64F8CED142D4B /* Pods-Footballers.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Footballers.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Footballers/Pods-Footballers.debug.xcconfig"; sourceTree = "<group>"; };
 		459A20C510435B97C61922BD /* Pods-Footballers.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Footballers.release.xcconfig"; path = "Pods/Target Support Files/Pods-Footballers/Pods-Footballers.release.xcconfig"; sourceTree = "<group>"; };
 		E81059C31D807A6800EE205E /* playerStatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerStatCell.swift; sourceTree = "<group>"; };
@@ -87,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F154F891D8ABA3100EF70E2 /* CoreData.framework in Frameworks */,
 				2ED7D601B4BFB9F4677F1386 /* Pods_Footballers.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -106,6 +111,7 @@
 		E87F5AE41D78B82500C10A38 = {
 			isa = PBXGroup;
 			children = (
+				3F154F8A1D8ABA5400EF70E2 /* players.xcdatamodeld */,
 				E87F5B021D78B86400C10A38 /* Player.swift */,
 				E87F5B031D78B86400C10A38 /* Data.swift */,
 				E82125921D78B9B80024D016 /* playerData.txt */,
@@ -164,6 +170,7 @@
 		F9DD665714D31AB559346A0F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3F154F881D8ABA3100EF70E2 /* CoreData.framework */,
 				2ADF919B346CB0628D173243 /* Pods_Footballers.framework */,
 			);
 			name = Frameworks;
@@ -312,6 +319,7 @@
 				E8C713E81D7DF3BF00B717F2 /* playerTopCell.swift in Sources */,
 				E82125901D78B99E0024D016 /* homeView.swift in Sources */,
 				E81059C41D807A6800EE205E /* playerStatCell.swift in Sources */,
+				3F154F8C1D8ABA5400EF70E2 /* players.xcdatamodeld in Sources */,
 				E821258E1D78B99E0024D016 /* playerView.swift in Sources */,
 				E821258F1D78B99E0024D016 /* teamsView.swift in Sources */,
 				E87F5B041D78B86400C10A38 /* Player.swift in Sources */,
@@ -483,6 +491,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		3F154F8A1D8ABA5400EF70E2 /* players.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				3F154F8B1D8ABA5400EF70E2 /* players.xcdatamodel */,
+			);
+			currentVersion = 3F154F8B1D8ABA5400EF70E2 /* players.xcdatamodel */;
+			path = players.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = E87F5AE51D78B82500C10A38 /* Project object */;
 }

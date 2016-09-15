@@ -10,29 +10,29 @@ import SwiftyJSON
 func getDataFromUrl(Type: String, Parameters: [String: String], modelLastMode : String) -> NSString {
     
     // Initialise variables.
-    var key = ""
-    var htmlUrl = ""
-    var apiUrl = ""
-    var htmlData: NSString = ""
+    var key: String = ""
+    var htmlUrl: String = ""
+    var apiUrl: String = ""
+    var htmlData: String = ""
     var data: String = ""
     
-    // Create the url which will be used depending on the data type.
-    if Type == "Player" {
+    switch Type {
+    case "Player":
         htmlUrl = "https://www.whoscored.com/Players/" + Parameters["playerId"]!
         apiUrl = "https://www.whoscored.com/StatisticsFeed/1/GetPlayerStatistics?"
-    }
-    else if Type == "Team" {
+    case "Team":
         htmlUrl = "https://www.whoscored.com/Teams/" + Parameters["teamIds"]!
         apiUrl = "https://www.whoscored.com/StatisticsFeed/1/GetTeamStatistics?"
-    }
-    else if Type == "Player Ranking" {
+    case "Player Ranking":
         htmlUrl = "https://www.whoscored.com/Statistics"
         apiUrl = "https://www.whoscored.com/StatisticsFeed/1/GetPlayerStatistics?"
-    }
-    else if Type == "Team Ranking" {
+    case "Team Ranking":
         htmlUrl = "https://www.whoscored.com/Statistics"
         apiUrl = "https://www.whoscored.com/StatisticsFeed/1/GetTeamStatistics?"
+    default:
+        print("Error in data type.")
     }
+    
     
     // If the Model-Last-Mode key is empty, get it by loading the page.
     if modelLastMode == "" {
@@ -158,7 +158,7 @@ func getDataFromUrl(Type: String, Parameters: [String: String], modelLastMode : 
     catch let error as NSError {
         print(error)
     }
-
+        
     // Add the Model-Last-Mode key to the data.
     data = data.substringToIndex(data.endIndex.predecessor())
     data = data.substringToIndex(data.endIndex.predecessor())

@@ -19,8 +19,8 @@ class playerTopCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = UIColor.clearColor()
-        selectionStyle = .None
+        backgroundColor = UIColor.clear
+        selectionStyle = .none
         
         // Flag image.
         self.flagImage = UIImageView()
@@ -29,36 +29,36 @@ class playerTopCell: UITableViewCell {
         
         // Country label.
         self.countryLabel = UITextView()
-        self.countryLabel.frame = CGRectMake(0, 45, self.contentView.frame.width / 3, 45)
-        self.countryLabel.textAlignment = .Center
-        self.countryLabel.font = UIFont.systemFontOfSize(13.0)
-        self.countryLabel.textColor = UIColor.whiteColor()
-        self.countryLabel.backgroundColor = UIColor.clearColor()
-        self.countryLabel.scrollEnabled = false
-        self.countryLabel.selectable = false
+        self.countryLabel.frame = CGRect(x: 0, y: 45, width: self.contentView.frame.width / 3, height: 45)
+        self.countryLabel.textAlignment = .center
+        self.countryLabel.font = UIFont.systemFont(ofSize: 13.0)
+        self.countryLabel.textColor = UIColor.white
+        self.countryLabel.backgroundColor = UIColor.clear
+        self.countryLabel.isScrollEnabled = false
+        self.countryLabel.isSelectable = false
         self.addSubview(self.countryLabel)
         
         // Age label.
         self.ageLabel = UITextView()
-        self.ageLabel.frame = CGRectMake(self.contentView.frame.width / 3, 0, self.contentView.frame.width / 3, 45)
-        self.ageLabel.textAlignment = .Center
-        self.ageLabel.font = UIFont.systemFontOfSize(35.0)
-        self.ageLabel.textColor = UIColor.whiteColor()
-        self.ageLabel.backgroundColor = UIColor.clearColor()
-        self.ageLabel.scrollEnabled = false
-        self.ageLabel.selectable = false
+        self.ageLabel.frame = CGRect(x: self.contentView.frame.width / 3, y: 0, width: self.contentView.frame.width / 3, height: 45)
+        self.ageLabel.textAlignment = .center
+        self.ageLabel.font = UIFont.systemFont(ofSize: 35.0)
+        self.ageLabel.textColor = UIColor.white
+        self.ageLabel.backgroundColor = UIColor.clear
+        self.ageLabel.isScrollEnabled = false
+        self.ageLabel.isSelectable = false
         self.contentView.addSubview(self.ageLabel)
      
         // Age description label.
         self.ageDescLabel = UITextView()
-        self.ageDescLabel.frame = CGRectMake(self.contentView.frame.width / 3, 45, self.contentView.frame.width / 3, 30)
+        self.ageDescLabel.frame = CGRect(x: self.contentView.frame.width / 3, y: 45, width: self.contentView.frame.width / 3, height: 30)
         self.ageDescLabel.text = "Age"
-        self.ageDescLabel.textAlignment = .Center
-        self.ageDescLabel.font = UIFont.systemFontOfSize(13.0)
-        self.ageDescLabel.textColor = UIColor.whiteColor()
-        self.ageDescLabel.backgroundColor = UIColor.clearColor()
-        self.ageDescLabel.scrollEnabled = false
-        self.ageDescLabel.selectable = false
+        self.ageDescLabel.textAlignment = .center
+        self.ageDescLabel.font = UIFont.systemFont(ofSize: 13.0)
+        self.ageDescLabel.textColor = UIColor.white
+        self.ageDescLabel.backgroundColor = UIColor.clear
+        self.ageDescLabel.isScrollEnabled = false
+        self.ageDescLabel.isSelectable = false
         self.contentView.addSubview(self.ageDescLabel)
         
         // Team image.
@@ -68,13 +68,13 @@ class playerTopCell: UITableViewCell {
         
         // Team label.
         self.teamLabel = UITextView()
-        self.teamLabel.frame = CGRectMake(((self.contentView.frame.width / 3) * 2), 45, self.contentView.frame.width / 3, 50)
-        self.teamLabel.textAlignment = .Center
-        self.teamLabel.font = UIFont.systemFontOfSize(13.0)
-        self.teamLabel.textColor = UIColor.whiteColor()
-        self.teamLabel.backgroundColor = UIColor.clearColor()
-        self.teamLabel.scrollEnabled = false
-        self.teamLabel.selectable = false
+        self.teamLabel.frame = CGRect(x: ((self.contentView.frame.width / 3) * 2), y: 45, width: self.contentView.frame.width / 3, height: 50)
+        self.teamLabel.textAlignment = .center
+        self.teamLabel.font = UIFont.systemFont(ofSize: 13.0)
+        self.teamLabel.textColor = UIColor.white
+        self.teamLabel.backgroundColor = UIColor.clear
+        self.teamLabel.isScrollEnabled = false
+        self.teamLabel.isSelectable = false
         self.contentView.addSubview(self.teamLabel)
     }
     
@@ -86,7 +86,7 @@ class playerTopCell: UITableViewCell {
         super.prepareForReuse()
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

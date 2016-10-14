@@ -10,8 +10,8 @@ import UIKit
 
 class favouritesView: UIViewController {
 
-    @IBAction func menuOpened(sender: AnyObject) {
-        performSegueWithIdentifier("favouritesMenuSegue", sender: nil)
+    @IBAction func menuOpened(_ sender: AnyObject) {
+        performSegue(withIdentifier: "favouritesMenuSegue", sender: nil)
     }
     
     override func viewDidLoad() {
@@ -24,10 +24,10 @@ class favouritesView: UIViewController {
         self.view.backgroundColor = UIColor(red: 70.0/255.0, green: 70.0/255.0, blue: 70.0/255.0, alpha: 1.0)
         
         // Menu bar button
-        let menuButton = UIButton(type: UIButtonType.Custom) as UIButton
-        menuButton.frame = CGRectMake(0, 0, 25, 25)
-        menuButton.setImage(UIImage(named: "menuButton.png"), forState: .Normal)
-        menuButton.addTarget(self, action: #selector(favouritesView.menuOpened(_:)), forControlEvents:.TouchUpInside)
+        let menuButton = UIButton(type: UIButtonType.custom) as UIButton
+        menuButton.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
+        menuButton.setImage(UIImage(named: "menuButton.png"), for: UIControlState())
+        menuButton.addTarget(self, action: #selector(favouritesView.menuOpened(_:)), for:.touchUpInside)
         
         let leftBarButton = UIBarButtonItem()
         leftBarButton.customView = menuButton
@@ -35,17 +35,17 @@ class favouritesView: UIViewController {
         
         // Navigation bar.
         let navBar = UIView()
-        navBar.frame = CGRectMake(-1, 0, self.view.frame.width + 1, 64)
+        navBar.frame = CGRect(x: -1, y: 0, width: self.view.frame.width + 1, height: 64)
         navBar.backgroundColor = UIColor(red: 55.0/255.0, green: 55.0/255.0, blue: 55.0/255.0, alpha: 1.0)
         self.view.addSubview(navBar)
         
         // Shadow effect.
         navBar.layer.shadowRadius = 1
         navBar.layer.shadowOpacity = 1
-        navBar.layer.shadowColor = UIColor.blackColor().CGColor
-        navBar.layer.shadowOffset = CGSizeZero
+        navBar.layer.shadowColor = UIColor.black.cgColor
+        navBar.layer.shadowOffset = CGSize.zero
         navBar.layer.shouldRasterize = true
-        navBar.layer.shadowPath = UIBezierPath(rect: navBar.bounds).CGPath
+        navBar.layer.shadowPath = UIBezierPath(rect: navBar.bounds).cgPath
         
     }
 

@@ -7,7 +7,7 @@ import SwiftyJSON
 // Not needed unless it is the first time the data is being called for a player. It returns the data,
 // The Model-Last-Mode key, and some data which is taken from the HTML and not available from the API.
 
-func getDataFromUrl(Type: String, Parameters: [String: String], modelLastMode : String) -> NSString {
+func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode : String) -> NSString {
     
     // Initialise variables.
     var key: String = ""
@@ -38,32 +38,32 @@ func getDataFromUrl(Type: String, Parameters: [String: String], modelLastMode : 
     if modelLastMode == "" {
         
         // Get the cookies for the url, and create a HTTP request.
-        let url = NSURL(string: htmlUrl)
-        let jar = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-        jar.setCookies(cookies, forURL: url, mainDocumentURL: url)
-        let request = NSMutableURLRequest(URL: url!)
-        request.HTTPMethod = "GET"
+        let url = URL(string: htmlUrl)
+        let jar = HTTPCookieStorage.shared
+        jar.setCookies(cookies, for: url, mainDocumentURL: url)
+        let request = NSMutableURLRequest(url: url!)
+        request.httpMethod = "GET"
         
         // Add header values as if it was being accessed from the browser.
         request.addValue("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", forHTTPHeaderField: "Accept")
         request.addValue("Mozilla/5.0 (iPhone; CPU iPhone OS 9_3 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13E230", forHTTPHeaderField: "User-Agent")
         
-        let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?>=nil
+        let response: AutoreleasingUnsafeMutablePointer<URLResponse?>?=nil
         do {
-            let dataResponse = try NSURLConnection.sendSynchronousRequest(request, returningResponse: response)
+            let dataResponse = try NSURLConnection.sendSynchronousRequest(request as URLRequest, returning: response)
             // Save the data as an NSString object, which will be converted to JSON by the process
             // which is calling this function.
-            let html = NSString(data: dataResponse, encoding:NSUTF8StringEncoding)!
+            let html = NSString(data: dataResponse, encoding:String.Encoding.utf8.rawValue)!
             
             // Parses the Model-Last-Mode key from the original html source code.
-            var splitHtml = html.componentsSeparatedByString("Model-Last-Mode")
-            splitHtml[1] = splitHtml[1].stringByReplacingOccurrencesOfString("': '", withString: "", range: nil)
-            let list = splitHtml[1].componentsSeparatedByString("'")
+            var splitHtml = html.components(separatedBy: "Model-Last-Mode")
+            splitHtml[1] = splitHtml[1].replacingOccurrences(of: "': '", with: "", range: nil)
+            let list = splitHtml[1].components(separatedBy: "'")
             key = list[0]
             
             // Get the HTML data, which includes current team, shirt number, nationality and positions. This data isn't 
             // Available from the API so must be taken from the HTML.
-            if let doc = Kanna.HTML(html: html as String, encoding: NSUTF8StringEncoding) {
+            if let doc = Kanna.HTML(html: html as String, encoding: String.Encoding.utf8) {
                 
                 var imageUrl: String!
                 for img in doc.css("img") {
@@ -92,9 +92,9 @@ func getDataFromUrl(Type: String, Parameters: [String: String], modelLastMode : 
                             else if dt.text == "Nationality:" {
                                 for span in dl.css("span") {
                                     if span.text != "" {
-                                        let nationality = span.text!.stringByTrimmingCharactersInSet(
-                                            NSCharacterSet.whitespaceAndNewlineCharacterSet()
-                                        )
+                                        
+                                        let nationality = span.text!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                                        
                                         htmlData = (htmlData as String) + ", \"nationality\" : \"" + nationality + "\"}, "
                                     }
                                 }
@@ -104,8 +104,9 @@ func getDataFromUrl(Type: String, Parameters: [String: String], modelLastMode : 
                                 for li in dl.css("li") {
                                     positions = positions + "\"" + li.text! + "\", "
                                 }
-                                positions = positions.substringToIndex(positions.endIndex.predecessor())
-                                positions = positions.substringToIndex(positions.endIndex.predecessor())
+                                
+                                positions = positions.substring(to: positions.index(before: positions.endIndex))
+                                positions = positions.substring(to: positions.index(before: positions.endIndex))
                                 positions = positions + "]"
                             }
                         }
@@ -131,10 +132,10 @@ func getDataFromUrl(Type: String, Parameters: [String: String], modelLastMode : 
     apiUrl = String(apiUrl.characters.dropLast())
     
     // Get the cookies for the url, and create a HTTP request.
-    let url = NSURL(string: apiUrl)
-    let jar = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-    jar.setCookies(cookies, forURL: url, mainDocumentURL: url)
-    let request = NSMutableURLRequest(URL: url!)
+    let url = URL(string: apiUrl)
+    let jar = HTTPCookieStorage.shared
+    jar.setCookies(cookies, for: url, mainDocumentURL: url)
+    let request = NSMutableURLRequest(url: url!)
     
     // Add header values as if it was being accessed from the browser.
     request.addValue("application/json, text/javascript, */*; q=0.01", forHTTPHeaderField: "accept")
@@ -146,22 +147,22 @@ func getDataFromUrl(Type: String, Parameters: [String: String], modelLastMode : 
     request.addValue(htmlUrl, forHTTPHeaderField: "referer")
     request.addValue("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36", forHTTPHeaderField: "user-agent")
     request.addValue("XMLHttpRequest", forHTTPHeaderField: "x-requested-with")
-    request.HTTPMethod = "GET"
+    request.httpMethod = "GET"
     
-    let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?>=nil
+    let response: AutoreleasingUnsafeMutablePointer<URLResponse?>?=nil
     do {
-        let dataResponse = try NSURLConnection.sendSynchronousRequest(request, returningResponse: response)
+        let dataResponse = try NSURLConnection.sendSynchronousRequest(request as URLRequest, returning: response)
         // Save the data as an NSString object, which will be converted to JSON by the process
         // which is calling this function.
-        data = NSString(data: dataResponse, encoding:NSUTF8StringEncoding)! as String}
+        data = NSString(data: dataResponse, encoding:String.Encoding.utf8.rawValue)! as String}
         // Catch any errors in getting the data.
     catch let error as NSError {
         print(error)
     }
         
     // Add the Model-Last-Mode key to the data.
-    data = data.substringToIndex(data.endIndex.predecessor())
-    data = data.substringToIndex(data.endIndex.predecessor())
+    data = data.substring(to: data.characters.index(before: data.endIndex))
+    data = data.substring(to: data.characters.index(before: data.endIndex))
     data = data + ", \"Model-Last-Mode\": [\"" + key + "\"]"
     
     // Add htmlData to the data.
@@ -188,25 +189,25 @@ func getDataFromUrl(Type: String, Parameters: [String: String], modelLastMode : 
         rootViewController?.navigationController?.presentViewController(setViewController, animated: true, completion: nil)
     }*/
     
-    return data
+    return data as NSString
     
 }
 
 
 // Checks whether player with given id is saved in favourites.
-func isPlayerInFavourites(playerId: String) -> Bool {
+func isPlayerInFavourites(_ playerId: String) -> Bool {
     var json: JSON?
     
     // Get favourites data from file.
-    let path = NSBundle.mainBundle().pathForResource("favourites", ofType: "txt")
-    let text = try? NSString(contentsOfFile: path! as String, encoding: NSUTF8StringEncoding)
-    if let dataFromString = text!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
+    let path = Bundle.main.path(forResource: "favourites", ofType: "txt")
+    let text = try? NSString(contentsOfFile: path! as String, encoding: String.Encoding.utf8.rawValue)
+    if let dataFromString = text!.data(using: String.Encoding.utf8.rawValue, allowLossyConversion: false) {
         json = JSON(data: dataFromString)
     }
     
     
     for (_, player) in json!["players"] {
-        if String(player["playerId"]) == playerId {
+        if String(describing: player["playerId"]) == playerId {
             return true
         }
     }
@@ -215,12 +216,12 @@ func isPlayerInFavourites(playerId: String) -> Bool {
 }
 
 // Adds a player to favourites.
-func savePlayerToFavourites(playerData: [String: String]) {
+func savePlayerToFavourites(_ playerData: [String: String]) {
     
 }
 
 // Adds a player to favourites.
-func removePlayerFromFavourites(playerData: [String: String]) {
+func removePlayerFromFavourites(_ playerData: [String: String]) {
     
 }
 

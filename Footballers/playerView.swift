@@ -36,12 +36,12 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     var activityIndicator: NVActivityIndicatorView!
     
     // Back button pressed.
-    @IBAction func backButtonTouched(sender: UIButton) {
-        navigationController?.popViewControllerAnimated(true)
+    @IBAction func backButtonTouched(_ sender: UIButton) {
+        navigationController?.popViewController(animated: true)
     }
     
     // Favourites button pressed.
-    @IBAction func favouriteButtonTouched(sender: UIButton) {
+    @IBAction func favouriteButtonTouched(_ sender: UIButton) {
         // Negate isPlayerFavourite.
         isPlayerFavourite = !isPlayerFavourite!
         
@@ -49,13 +49,13 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         setFavouriteButton()
         self.navigationItem.rightBarButtonItem?.customView?.alpha = 0.0
         
-        UIView.animateWithDuration(0.25, animations: {
+        UIView.animate(withDuration: 0.25, animations: {
             self.navigationItem.rightBarButtonItem?.customView?.alpha = 1.0
         })
     }
     
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         // Declare player
@@ -64,16 +64,16 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         
         // Stats table view.
         self.statsTableView = UITableView(frame: CGRect(x: 0, y: 160, width: 320, height: self.view.frame.height - 160))
-        self.statsTableView.registerClass(playerTopCell.self, forCellReuseIdentifier: NSStringFromClass(playerTopCell))
-        self.statsTableView.registerClass(playerSecondCell.self, forCellReuseIdentifier: NSStringFromClass(playerSecondCell))
-        self.statsTableView.registerClass(playerStatCell.self, forCellReuseIdentifier: NSStringFromClass(playerStatCell))
+        self.statsTableView.register(playerTopCell.self, forCellReuseIdentifier: NSStringFromClass(playerTopCell.self))
+        self.statsTableView.register(playerSecondCell.self, forCellReuseIdentifier: NSStringFromClass(playerSecondCell.self))
+        self.statsTableView.register(playerStatCell.self, forCellReuseIdentifier: NSStringFromClass(playerStatCell.self))
         self.statsTableView.delegate = self
         self.statsTableView.dataSource = self
-        self.statsTableView.separatorStyle = UITableViewCellSeparatorStyle.None
-        self.statsTableView.backgroundColor = UIColor.clearColor()
+        self.statsTableView.separatorStyle = UITableViewCellSeparatorStyle.none
+        self.statsTableView.backgroundColor = UIColor.clear
         self.statsTableView.alpha = 0
         self.view.addSubview(self.statsTableView)
-        self.view.bringSubviewToFront(self.topBar)
+        self.view.bringSubview(toFront: self.topBar)
         
         // Player image
         // Get the image from the player's url, and create an imageView for it. Try except needed in case player has no image.
@@ -81,7 +81,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         
         // Check whether image is available.
         do {
-            let imageData = try NSData(contentsOfURL: NSURL(string: player!.imageUrl)!, options: NSDataReadingOptions())
+            let imageData = try Data(contentsOf: URL(string: player!.imageUrl)!, options: NSData.ReadingOptions())
             profileImage = UIImage(data: imageData)
         } catch {
             print("No player image found.")
@@ -89,17 +89,17 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         
         // Create circle shape from image.
         let profileImageView = UIImageView(image: profileImage)
-        profileImageView.frame = CGRectMake(self.view.frame.size.width/2 - 37.5, 15, 75, 112.5)
+        profileImageView.frame = CGRect(x: self.view.frame.size.width/2 - 37.5, y: 15, width: 75, height: 112.5)
         profileImageView.alpha = 0
         self.view.addSubview(profileImageView)
         
         // Create a view on top of the imageView and cut a circle out of it.
-        let topView = UIView(frame: CGRectMake(self.view.frame.size.width/2 - 37.5, 15, 75, 112.5))
+        let topView = UIView(frame: CGRect(x: self.view.frame.size.width/2 - 37.5, y: 15, width: 75, height: 112.5))
         let maskLayer = CAShapeLayer()
         let radius : CGFloat = profileImageView.bounds.width/2
         let path = UIBezierPath(rect: profileImageView.bounds)
-        path.addArcWithCenter(CGPoint(x: profileImageView.bounds.width/2, y: 50.0), radius: radius, startAngle: 0.0, endAngle: CGFloat(2*M_PI), clockwise: true)
-        maskLayer.path = path.CGPath
+        path.addArc(withCenter: CGPoint(x: profileImageView.bounds.width/2, y: 50.0), radius: radius, startAngle: 0.0, endAngle: CGFloat(2*M_PI), clockwise: true)
+        maskLayer.path = path.cgPath
         maskLayer.fillRule = kCAFillRuleEvenOdd
         topView.layer.mask = maskLayer
         topView.clipsToBounds = true
@@ -108,27 +108,27 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         
         // Name label.
         let nameLabel: UILabel = UILabel()
-        nameLabel.frame = CGRectMake(0, 100, self.view.frame.size.width, 40)
+        nameLabel.frame = CGRect(x: 0, y: 100, width: self.view.frame.size.width, height: 40)
         nameLabel.text = self.personalDetails[0][1]
-        nameLabel.textColor = UIColor.whiteColor()
-        nameLabel.textAlignment = NSTextAlignment.Center
-        nameLabel.backgroundColor = UIColor.clearColor()
-        nameLabel.font = UIFont.systemFontOfSize(18, weight: UIFontWeightMedium)
+        nameLabel.textColor = UIColor.white
+        nameLabel.textAlignment = NSTextAlignment.center
+        nameLabel.backgroundColor = UIColor.clear
+        nameLabel.font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
         nameLabel.alpha = 0
         self.view.addSubview(nameLabel)
         
         // Team label.
         let teamLabel: UILabel = UILabel()
-        teamLabel.frame = CGRectMake(0, 120, self.view.frame.size.width, 40)
+        teamLabel.frame = CGRect(x: 0, y: 120, width: self.view.frame.size.width, height: 40)
         teamLabel.text = self.personalDetails[1][1]
-        teamLabel.textColor = UIColor.whiteColor()
-        teamLabel.textAlignment = NSTextAlignment.Center
-        teamLabel.backgroundColor = UIColor.clearColor()
-        teamLabel.font = UIFont.systemFontOfSize(15, weight: UIFontWeightUltraLight)
+        teamLabel.textColor = UIColor.white
+        teamLabel.textAlignment = NSTextAlignment.center
+        teamLabel.backgroundColor = UIColor.clear
+        teamLabel.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightUltraLight)
         teamLabel.alpha = 0
         self.view.addSubview(teamLabel)
         
-        UIView.animateWithDuration(1.0, animations: {
+        UIView.animate(withDuration: 1.0, animations: {
             profileImageView.alpha = 1.0
             nameLabel.alpha = 1.0
             teamLabel.alpha = 1.0
@@ -148,28 +148,28 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         
         // Top bar.
         self.topBar = UIView()
-        self.topBar.frame = CGRectMake(0, 0, self.view.frame.width, 160)
+        self.topBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 160)
         self.topBar.backgroundColor = UIColor(red: 55.0/255.0, green: 55.0/255.0, blue: 55.0/255.0, alpha: 1.0)
         self.view.addSubview(self.topBar)
         
         // Shadow effect.
         self.topBar.layer.shadowRadius = 1
         self.topBar.layer.shadowOpacity = 1
-        self.topBar.layer.shadowColor = UIColor.blackColor().CGColor
-        self.topBar.layer.shadowOffset = CGSizeZero
+        self.topBar.layer.shadowColor = UIColor.black.cgColor
+        self.topBar.layer.shadowOffset = CGSize.zero
         self.topBar.layer.shouldRasterize = true
-        self.topBar.layer.shadowPath = UIBezierPath(rect: topBar.bounds).CGPath
+        self.topBar.layer.shadowPath = UIBezierPath(rect: topBar.bounds).cgPath
         
         // Loading activity indicator.
-        self.activityIndicator = NVActivityIndicatorView(frame: CGRect(x: (self.view.frame.size.width/2 - 25), y: (self.view.frame.size.height/2 - 25), width: 50, height: 50), type: NVActivityIndicatorType.BallClipRotatePulse, color: UIColor.whiteColor())
-        self.activityIndicator.startAnimation()
+        self.activityIndicator = NVActivityIndicatorView(frame: CGRect(x: (self.view.frame.size.width/2 - 25), y: (self.view.frame.size.height/2 - 25), width: 50, height: 50), type: NVActivityIndicatorType.ballClipRotatePulse, color: UIColor.white)
+        self.activityIndicator.startAnimating()
         self.view.addSubview(self.activityIndicator)
         
         // Back bar button.
-        let backButton = UIButton(type: UIButtonType.Custom) as UIButton
-        backButton.frame = CGRectMake(0, 0, 25, 25)
-        backButton.setImage(UIImage(named: "backButton.png"), forState: .Normal)
-        backButton.addTarget(self, action: #selector(playerView.backButtonTouched(_:)), forControlEvents:.TouchUpInside)
+        let backButton = UIButton(type: UIButtonType.custom) as UIButton
+        backButton.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
+        backButton.setImage(UIImage(named: "backButton.png"), for: UIControlState())
+        backButton.addTarget(self, action: #selector(playerView.backButtonTouched(_:)), for:.touchUpInside)
         
         let leftBarButton = UIBarButtonItem()
         leftBarButton.customView = backButton
@@ -181,26 +181,26 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     }
     
     // Number of rows in tableview.
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return ((self.player?.getSummaryStats().count)! + 2)
     }
     
     
     
     // Set up tableview cells.
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         // Create cell.
         var cell:UITableViewCell
         
         // If top cell.
-        if indexPath.row == 0 {
+        if (indexPath as NSIndexPath).row == 0 {
             
             // Create cell.
-            let topCell: playerTopCell = tableView.dequeueReusableCellWithIdentifier( NSStringFromClass(playerTopCell), forIndexPath: indexPath) as! playerTopCell
+            let topCell: playerTopCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerTopCell.self), for: indexPath) as! playerTopCell
             
             // Set values.
-            topCell.flagImage.image = UIImage(named: self.personalDetails[5][1].uppercaseString)!
+            topCell.flagImage.image = UIImage(named: self.personalDetails[5][1].uppercased())!
             topCell.countryLabel.text = self.personalDetails[6][1]
             topCell.ageLabel.text = self.personalDetails[2][1]
             
@@ -209,7 +209,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
             
             // Check whether image is available.
             do {
-                let imageData = try NSData(contentsOfURL: NSURL(string: self.player.teamImageUrl)!, options: NSDataReadingOptions())
+                let imageData = try Data(contentsOf: URL(string: self.player.teamImageUrl)!, options: NSData.ReadingOptions())
                 teamImage = UIImage(data: imageData)
             } catch {
                 print("No team image found.")
@@ -223,9 +223,9 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
             
         }
         // Second cell.
-        else if indexPath.row == 1 {
+        else if (indexPath as NSIndexPath).row == 1 {
             // Create cell.
-            let secondCell: playerSecondCell = tableView.dequeueReusableCellWithIdentifier( NSStringFromClass(playerSecondCell), forIndexPath: indexPath) as! playerSecondCell
+            let secondCell: playerSecondCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerSecondCell.self), for: indexPath) as! playerSecondCell
             
             // Set values.
             secondCell.heightValueLabel.text = self.personalDetails[3][1]
@@ -238,25 +238,25 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         else {
         
             // Create cell.
-            let statCell: playerStatCell = tableView.dequeueReusableCellWithIdentifier( NSStringFromClass(playerStatCell), forIndexPath: indexPath) as! playerStatCell
+            let statCell: playerStatCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerStatCell.self), for: indexPath) as! playerStatCell
             
-            statCell.statNameLabel.text = self.player?.getSummaryStats()[indexPath.row - 2][0]
-            statCell.statValueLabel.text = self.player?.getSummaryStats()[indexPath.row - 2][1]
+            statCell.statNameLabel.text = self.player?.getSummaryStats()[(indexPath as NSIndexPath).row - 2][0]
+            statCell.statValueLabel.text = self.player?.getSummaryStats()[(indexPath as NSIndexPath).row - 2][1]
             
             // Set cell.
             cell = statCell
             
         }
         
-        cell.layer.anchorPointZ = CGFloat(indexPath.row)
+        cell.layer.anchorPointZ = CGFloat((indexPath as NSIndexPath).row)
         return cell
 
     }
     
     // Change height for specific rows.
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        if indexPath.row == 0 || indexPath.row == 1 {
+        if (indexPath as NSIndexPath).row == 0 || (indexPath as NSIndexPath).row == 1 {
             return 90.0
         }
         return 40.0
@@ -265,15 +265,15 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     // Set favourite button.
     func setFavouriteButton() {
         
-        let favouriteButton = UIButton(type: UIButtonType.Custom) as UIButton
-        favouriteButton.frame = CGRectMake(0, 0, 25, 25)
+        let favouriteButton = UIButton(type: UIButtonType.custom) as UIButton
+        favouriteButton.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
         if isPlayerFavourite == true {
-            favouriteButton.setImage(UIImage(named: "favouriteButtonFull.png"), forState: .Normal)
+            favouriteButton.setImage(UIImage(named: "favouriteButtonFull.png"), for: UIControlState())
         }
         else {
-            favouriteButton.setImage(UIImage(named: "favouriteButtonEmpty.png"), forState: .Normal)
+            favouriteButton.setImage(UIImage(named: "favouriteButtonEmpty.png"), for: UIControlState())
         }
-        favouriteButton.addTarget(self, action: #selector(playerView.favouriteButtonTouched(_:)), forControlEvents:.TouchUpInside)
+        favouriteButton.addTarget(self, action: #selector(playerView.favouriteButtonTouched(_:)), for:.touchUpInside)
         
         let rightBarButton = UIBarButtonItem()
         rightBarButton.customView = favouriteButton

@@ -15,29 +15,29 @@ class playerStatCell: UITableViewCell {
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = UIColor.clearColor()
-        selectionStyle = .None
+        backgroundColor = UIColor.clear
+        selectionStyle = .none
         
         // Stat name label.
         self.statNameLabel = UITextView()
-        self.statNameLabel.frame = CGRectMake(10, 0, ((self.contentView.frame.width / 3) * 2) - 10, 40)
-        self.statNameLabel.textAlignment = .Left
-        self.statNameLabel.font = UIFont.systemFontOfSize(15.0)
-        self.statNameLabel.textColor = UIColor.whiteColor()
-        self.statNameLabel.backgroundColor = UIColor.clearColor()
-        self.statNameLabel.scrollEnabled = false
-        self.statNameLabel.selectable = false
+        self.statNameLabel.frame = CGRect(x: 10, y: 0, width: ((self.contentView.frame.width / 3) * 2) - 10, height: 40)
+        self.statNameLabel.textAlignment = .left
+        self.statNameLabel.font = UIFont.systemFont(ofSize: 15.0)
+        self.statNameLabel.textColor = UIColor.white
+        self.statNameLabel.backgroundColor = UIColor.clear
+        self.statNameLabel.isScrollEnabled = false
+        self.statNameLabel.isSelectable = false
         self.addSubview(self.statNameLabel)
         
         // Stat value label.
         self.statValueLabel = UITextView()
-        self.statValueLabel.frame = CGRectMake(((self.contentView.frame.width / 3) * 2), 0, (self.contentView.frame.width / 3) - 10, 40)
-        self.statValueLabel.textAlignment = .Right
-        self.statValueLabel.font = UIFont.boldSystemFontOfSize(15.0)
-        self.statValueLabel.textColor = UIColor.whiteColor()
-        self.statValueLabel.backgroundColor = UIColor.clearColor()
-        self.statValueLabel.scrollEnabled = false
-        self.statValueLabel.selectable = false
+        self.statValueLabel.frame = CGRect(x: ((self.contentView.frame.width / 3) * 2), y: 0, width: (self.contentView.frame.width / 3) - 10, height: 40)
+        self.statValueLabel.textAlignment = .right
+        self.statValueLabel.font = UIFont.boldSystemFont(ofSize: 15.0)
+        self.statValueLabel.textColor = UIColor.white
+        self.statValueLabel.backgroundColor = UIColor.clear
+        self.statValueLabel.isScrollEnabled = false
+        self.statValueLabel.isSelectable = false
         self.addSubview(self.statValueLabel)
         
     }
@@ -50,7 +50,7 @@ class playerStatCell: UITableViewCell {
         super.prepareForReuse()
     }
     
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

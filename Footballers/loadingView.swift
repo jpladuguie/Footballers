@@ -10,23 +10,23 @@ import UIKit
 import NVActivityIndicatorView
 import SideMenu
 
-var cookies: [NSHTTPCookie] = [NSHTTPCookie]()
+var cookies: [HTTPCookie] = [HTTPCookie]()
 var currentPage: String = String()
 
 class loadingView: UIViewController, UIWebViewDelegate {
     
     // Function is called once the webView finishes loading. It stores the cookies from the request, and calls the segue to the home screen.
-    func webViewDidFinishLoad(webView: UIWebView) {
-        if (webView.loading == false) {
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        if (webView.isLoading == false) {
             if let request = webView.request {
-                if let resp = NSURLCache.sharedURLCache().cachedResponseForRequest(request) {
-                    if let response = resp.response as? NSHTTPURLResponse {
-                        if let httpResponse = response as? NSHTTPURLResponse, let fields = httpResponse.allHeaderFields as? [String : String] {
+                if let resp = URLCache.shared.cachedResponse(for: request) {
+                    if let response = resp.response as? HTTPURLResponse {
+                        if let httpResponse = response as? HTTPURLResponse, let fields = httpResponse.allHeaderFields as? [String : String] {
                             
-                            cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(fields, forURL: response.URL!)
-                            NSHTTPCookieStorage.sharedHTTPCookieStorage().setCookies(cookies, forURL: response.URL!, mainDocumentURL: nil)
+                            cookies = HTTPCookie.cookies(withResponseHeaderFields: fields, for: response.url!)
+                            HTTPCookieStorage.shared.setCookies(cookies, for: response.url!, mainDocumentURL: nil)
                             
-                            performSegueWithIdentifier("loadingSegue", sender: nil)
+                            performSegue(withIdentifier: "loadingSegue", sender: nil)
                             
                         }
                     }
@@ -42,38 +42,38 @@ class loadingView: UIViewController, UIWebViewDelegate {
         self.view.backgroundColor = UIColor(red: 70.0/255.0, green: 70.0/255.0, blue: 70.0/255.0, alpha: 1.0)
         
         // Navigation bar.
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: UIBarMetrics.Default)
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         
         let navBar = UIView()
-        navBar.frame = CGRectMake(-1, 0, self.view.frame.width + 1, 64)
+        navBar.frame = CGRect(x: -1, y: 0, width: self.view.frame.width + 1, height: 64)
         navBar.backgroundColor = UIColor(red: 55.0/255.0, green: 55.0/255.0, blue: 55.0/255.0, alpha: 1.0)
         self.view.addSubview(navBar)
         
         // Shadow effect.
         navBar.layer.shadowRadius = 1
         navBar.layer.shadowOpacity = 1
-        navBar.layer.shadowColor = UIColor.blackColor().CGColor
-        navBar.layer.shadowOffset = CGSizeZero
+        navBar.layer.shadowColor = UIColor.black.cgColor
+        navBar.layer.shadowOffset = CGSize.zero
         navBar.layer.shouldRasterize = true
-        navBar.layer.shadowPath = UIBezierPath(rect: navBar.bounds).CGPath
+        navBar.layer.shadowPath = UIBezierPath(rect: navBar.bounds).cgPath
         
         // Set up side menu.
-        SideMenuManager.menuLeftNavigationController = storyboard!.instantiateViewControllerWithIdentifier("SideMenuNavigationController") as? UISideMenuNavigationController
+        SideMenuManager.menuLeftNavigationController = storyboard!.instantiateViewController(withIdentifier: "SideMenuNavigationController") as? UISideMenuNavigationController
         
         SideMenuManager.menuFadeStatusBar = false
         SideMenuManager.menuShadowOpacity = 0.0
-        SideMenuManager.menuPresentMode = .ViewSlideInOut
+        SideMenuManager.menuPresentMode = .viewSlideInOut
         
         // Loading activity indicator.
-        let activityIndicator = NVActivityIndicatorView(frame: CGRect(x: (self.view.frame.size.width/2 - 25), y: (self.view.frame.size.height/2 - 25), width: 50, height: 50), type: NVActivityIndicatorType.BallClipRotatePulse, color: UIColor.whiteColor())
-        activityIndicator.startAnimation()
+        let activityIndicator = NVActivityIndicatorView(frame: CGRect(x: (self.view.frame.size.width/2 - 25), y: (self.view.frame.size.height/2 - 25), width: 50, height: 50), type: NVActivityIndicatorType.ballClipRotatePulse, color: UIColor.white)
+        activityIndicator.startAnimating()
         self.view.addSubview(activityIndicator)
         
         
         // Get webpage and cookies.
-        let request = NSURLRequest(URL: NSURL(string: "https://www.whoscored.com/AboutUs")!) 
-        let webView:UIWebView = UIWebView(frame: CGRectMake(0, 0, 0, 0))
+        let request = URLRequest(url: URL(string: "https://www.whoscored.com/AboutUs")!) 
+        let webView:UIWebView = UIWebView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         webView.loadRequest(request)
         self.view.addSubview(webView)
         webView.delegate = self

@@ -56,12 +56,12 @@ class Player {
         let data = getDataFromUrl("Player", Parameters: self.parameters, modelLastMode: "") as String
         var json : JSON?
         
-        if let dataFromString = data.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
+        if let dataFromString = data.data(using: String.Encoding.utf8, allowLossyConversion: false) {
                 json = JSON(data: dataFromString)
             }
         
         // Set Model-Last-Mode Key
-        self.modelLastMode = String(json!["Model-Last-Mode"][0])
+        self.modelLastMode = String(describing: json!["Model-Last-Mode"][0])
         
         // Parse the data to get the personal details. Personal details never need to be loaded
         // From url again after the player has been initialised.
@@ -140,7 +140,7 @@ class Player {
     
     // Get statistics from url given the category (such as offensive or passing), the titles of the statistics, the
     // Values of the statistics in the JSON, and which values are integers and which are doubles.
-    func getStatistics(subCatergory: String, titles: [String], valueNames: [String], integerValues: [Int], doubleValues: [Int]) -> [[String]] {
+    func getStatistics(_ subCatergory: String, titles: [String], valueNames: [String], integerValues: [Int], doubleValues: [Int]) -> [[String]] {
         
         // Set the correct category for the request.
         self.parameters["subcategory"] = subCatergory
@@ -149,7 +149,7 @@ class Player {
         let data = getDataFromUrl("Player", Parameters: self.parameters, modelLastMode: self.modelLastMode) as String
         var json : JSON?
         
-        if let dataFromString = data.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
+        if let dataFromString = data.data(using: String.Encoding.utf8, allowLossyConversion: false) {
             json = JSON(data: dataFromString)
         }
         
@@ -170,7 +170,10 @@ class Player {
         for (_, stat) in json!["playerTableStats"] {
             // Stats which are weighted averages and have double values.
             for double in doubleValues {
-                statistics[double][1] = String(round((Double(statistics[double][1])! + (stat[valueNames[double]].double! * (stat["minsPlayed"].double! / Double(statistics[1][1])!)))*10)/10)
+                //statistics[double][1] = String(round((Double(statistics[double][1])! + (stat[valueNames[double]].double! * (stat["minsPlayed"].double! / Double(statistics[1][1])!)))*10)/10)
+                
+                let temp = round((Double(statistics[double][1])! + (stat[valueNames[double]].double! * (stat["minsPlayed"].double! / Double(statistics[1][1])!)))*10)/10
+                statistics[double][1] = String(temp)
             }
         }
         

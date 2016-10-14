@@ -1,0 +1,37 @@
+PODS:
+  - Kanna (2.0.0)
+  - NVActivityIndicatorView (3.0)
+  - SideMenu (2.0.3)
+  - SwiftyJSON (2.3.2)
+
+DEPENDENCIES:
+  - Kanna (from `https://github.com/tid-kijyun/Kanna.git`, branch `swift3.0`)
+  - NVActivityIndicatorView
+  - SideMenu
+  - SwiftyJSON (from `https://github.com/BaiduHiDeviOS/SwiftyJSON.git`, branch `swift3`)
+
+EXTERNAL SOURCES:
+  Kanna:
+    :branch: swift3.0
+    :git: https://github.com/tid-kijyun/Kanna.git
+  SwiftyJSON:
+    :branch: swift3
+    :git: https://github.com/BaiduHiDeviOS/SwiftyJSON.git
+
+CHECKOUT OPTIONS:
+  Kanna:
+    :commit: 109249451c32e14dac541bfbfeaa91b4dcb47a87
+    :git: https://github.com/tid-kijyun/Kanna.git
+  SwiftyJSON:
+    :commit: de5dc3b1b421805769590d331178551bbb0e5733
+    :git: https://github.com/BaiduHiDeviOS/SwiftyJSON.git
+
+SPEC CHECKSUMS:
+  Kanna: 8d60d86a3580f7dee732811e5163a5e3e41a32a7
+  NVActivityIndicatorView: 81953b5e65093ba79edf4fe7268e002039ca5268
+  SideMenu: f179260f85c68ed9b283b4a505600f2e6cbdfb10
+  SwiftyJSON: 6118fb49d7519c4d31a0c1f3d5af936e9047b556
+
+PODFILE CHECKSUM: 01e7b948fc617ac53401213c115ec8f8e5aecb62
+
+COCOAPODS: 1.0.1

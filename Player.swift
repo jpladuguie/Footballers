@@ -170,7 +170,6 @@ class Player {
         for (_, stat) in json!["playerTableStats"] {
             // Stats which are weighted averages and have double values.
             for double in doubleValues {
-                //statistics[double][1] = String(round((Double(statistics[double][1])! + (stat[valueNames[double]].double! * (stat["minsPlayed"].double! / Double(statistics[1][1])!)))*10)/10)
                 
                 let temp = round((Double(statistics[double][1])! + (stat[valueNames[double]].double! * (stat["minsPlayed"].double! / Double(statistics[1][1])!)))*10)/10
                 statistics[double][1] = String(temp)

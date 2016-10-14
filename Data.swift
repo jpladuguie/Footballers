@@ -105,6 +105,7 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
                                     positions = positions + "\"" + li.text! + "\", "
                                 }
                                 
+                                // Remove last two characters of string to parse it correctly into JSON.
                                 positions = positions.substring(to: positions.index(before: positions.endIndex))
                                 positions = positions.substring(to: positions.index(before: positions.endIndex))
                                 positions = positions + "]"

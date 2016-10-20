@@ -31,7 +31,7 @@ class playerStatCell: UITableViewCell {
         
         // Stat value label.
         self.statValueLabel = UITextView()
-        self.statValueLabel.frame = CGRect(x: ((self.contentView.frame.width / 3) * 2), y: 0, width: (self.contentView.frame.width / 3) - 10, height: 40)
+        self.statValueLabel.frame = CGRect(x: ((self.contentView.frame.width / 3) * 2), y: 0, width: (self.contentView.frame.width / 3) + 45, height: 40)
         self.statValueLabel.textAlignment = .right
         self.statValueLabel.font = UIFont.boldSystemFont(ofSize: 15.0)
         self.statValueLabel.textColor = UIColor.white

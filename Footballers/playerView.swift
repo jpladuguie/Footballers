@@ -63,7 +63,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         self.personalDetails = player.getPersonalDetails()
         
         // Stats table view.
-        self.statsTableView = UITableView(frame: CGRect(x: 0, y: 160, width: 320, height: self.view.frame.height - 160))
+        self.statsTableView = UITableView(frame: CGRect(x: 0, y: 160, width: self.view.frame.width, height: self.view.frame.height - 160))
         self.statsTableView.register(playerTopCell.self, forCellReuseIdentifier: NSStringFromClass(playerTopCell.self))
         self.statsTableView.register(playerSecondCell.self, forCellReuseIdentifier: NSStringFromClass(playerSecondCell.self))
         self.statsTableView.register(playerStatCell.self, forCellReuseIdentifier: NSStringFromClass(playerStatCell.self))

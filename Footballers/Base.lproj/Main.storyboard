@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="16A239j" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="pA4-ec-Ksq">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="pA4-ec-Ksq">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -30,9 +31,9 @@
                         <viewControllerLayoutGuide type="bottom" id="q2u-sy-gL4"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="xsH-Pk-CkF">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
                         <segue destination="GTs-3N-ne6" kind="presentation" identifier="teamsMenuSegue" id="W9V-Vb-Hb0"/>
@@ -51,9 +52,9 @@
                         <viewControllerLayoutGuide type="bottom" id="0y5-kT-Hzw"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="juG-1Q-a3B">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7ie-Pf-OH3" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -69,9 +70,9 @@
                         <viewControllerLayoutGuide type="bottom" id="QKa-th-nwf"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="uGM-FA-KuE">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
                         <segue destination="GTs-3N-ne6" kind="presentation" identifier="rankingsMenuSegue" id="8nZ-Ql-avh"/>
@@ -90,9 +91,9 @@
                         <viewControllerLayoutGuide type="bottom" id="e5Z-48-mst"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="MZ3-e2-ga9">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
                         <segue destination="GTs-3N-ne6" kind="presentation" identifier="favouritesMenuSegue" id="1iO-ol-2i4"/>
@@ -111,9 +112,9 @@
                         <viewControllerLayoutGuide type="bottom" id="NXA-94-BAt"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Jf3-CU-lch">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
                         <segue destination="GTs-3N-ne6" kind="presentation" identifier="compareMenuSegue" id="arQ-ed-r8Q"/>
@@ -132,9 +133,9 @@
                         <viewControllerLayoutGuide type="bottom" id="Dcu-VG-ACZ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="BZS-yR-BLZ">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="GC6-69-7ti"/>
                     <connections>
@@ -178,9 +179,9 @@
                         <viewControllerLayoutGuide type="bottom" id="VA3-ze-vft"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Gqh-Sc-Vac">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="A0d-Ue-odP"/>
                     <connections>
@@ -200,9 +201,9 @@
                         <viewControllerLayoutGuide type="bottom" id="J7H-MR-M6e"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="7zN-tm-eQN">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="ylQ-1w-9Tf"/>
                     <connections>

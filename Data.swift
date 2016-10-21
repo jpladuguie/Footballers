@@ -1,6 +1,7 @@
 import Foundation
 import Kanna
 import SwiftyJSON
+import CoreData
 
 // Gets data from Whoscored.com, for the type specified, which can be for Player, Team, or Player/Team
 // Rankings. The parameters are the ones used in the HTTP request, and the Model-Last-Mode key is
@@ -10,12 +11,18 @@ import SwiftyJSON
 func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode : String) -> NSString {
     
     // Initialise variables.
+    // modelLastMode if it hasn't been already passed to the function.
     var key: String = ""
+    // Url to load the webpage from.
     var htmlUrl: String = ""
+    // Url to load the json data from the API.
     var apiUrl: String = ""
+    // Data which is obtained through the webpage.
     var htmlData: String = ""
+    // Data to be returned at the end of the function.
     var data: String = ""
     
+    // Switch type depending on what type of data is desired.
     switch Type {
     case "Player":
         htmlUrl = "https://www.whoscored.com/Players/" + Parameters["playerId"]!
@@ -30,7 +37,7 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
         htmlUrl = "https://www.whoscored.com/Statistics"
         apiUrl = "https://www.whoscored.com/StatisticsFeed/1/GetTeamStatistics?"
     default:
-        print("Error in data type.")
+        print("Incorrect value passed to Data function for statistics type.")
     }
     
     
@@ -65,6 +72,7 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
             // Available from the API so must be taken from the HTML.
             if let doc = Kanna.HTML(html: html as String, encoding: String.Encoding.utf8) {
                 
+                // Get the club crest image url.
                 var imageUrl: String!
                 for img in doc.css("img") {
                     if img["class"] == "team-emblem" {
@@ -72,6 +80,7 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
                     }
                 }
                 
+                // Create the first part of htmlData.
                 htmlData = (htmlData as String) + ", \"htmlData\" : {\"teamImageUrl\" : \"" + imageUrl + "\""
                 
                 // Positions have their own JSON object as they are an array.
@@ -79,33 +88,36 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
                 for dl in doc.css("dl") {
                     if dl["class"] == "player-info-block" {
                         for dt in dl.css("dt") {
+                            // Get the player's current team.
                             if dt.text == "Current Team:" {
                                 for a in dl.css("a") {
                                     htmlData = (htmlData as String) + ", \"teamName\" : \"" + a.text! + "\""
                                 }
                             }
+                            // Get the player's shirt number.
                             else if dt.text == "Shirt Number:" {
                                 for dd in dl.css("dd") {
                                     htmlData = (htmlData as String) + ", \"shirtNumber\" : \"" + dd.text! + "\""
                                 }
                             }
+                            // Get the player's nationality; the actual country name and not the region code.
                             else if dt.text == "Nationality:" {
                                 for span in dl.css("span") {
                                     if span.text != "" {
                                         
+                                        // Remove any whitespace surrounding the text.
                                         let nationality = span.text!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                                        
                                         htmlData = (htmlData as String) + ", \"nationality\" : \"" + nationality + "\"}, "
                                     }
                                 }
                             }
-                                
+                            // Get a list of all the player's positions.
                             else if dt.text == "Positions:" {         
                                 for li in dl.css("li") {
                                     positions = positions + "\"" + li.text! + "\", "
                                 }
                                 
-                                // Remove last two characters of string to parse it correctly into JSON.
+                                // Remove last two characters of string to parse it correctly into json.
                                 positions = positions.substring(to: positions.index(before: positions.endIndex))
                                 positions = positions.substring(to: positions.index(before: positions.endIndex))
                                 positions = positions + "]"
@@ -113,6 +125,7 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
                         }
                     }
                 }
+                // Add all the html data together.
                 htmlData = (htmlData as String) + positions
             }
         }
@@ -160,57 +173,50 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
     catch let error as NSError {
         print(error)
     }
-        
-    // Add the Model-Last-Mode key to the data.
-    data = data.substring(to: data.characters.index(before: data.endIndex))
-    data = data.substring(to: data.characters.index(before: data.endIndex))
-    data = data + ", \"Model-Last-Mode\": [\"" + key + "\"]"
     
-    // Add htmlData to the data.
-    data = data + (htmlData as String) + "}"
+    if Type == "Player" {
+        // Add the Model-Last-Mode key to the data.
+        data = data.substring(to: data.characters.index(before: data.endIndex))
+        data = data.substring(to: data.characters.index(before: data.endIndex))
+        data = data + ", \"Model-Last-Mode\": [\"" + key + "\"]"
+    
+        // Add htmlData to the data.
+        data = data + (htmlData as String) + "}"
+    }
     
     // Return the data and Model-Last-Mode key back to the caller of the function.
-    //print(data)
-    
-    /*dispatch_async(dispatch_get_main_queue()){
-        /*let window = UIApplication.sharedApplication().delegate?.window
-        let rootViewController = window!!.rootViewController
-        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        let setViewController = mainStoryboard.instantiateViewControllerWithIdentifier("loadingViewId")
-        rootViewController?.presentViewController(setViewController, animated: true, completion: nil)*/
-        
-        
-        let window = UIApplication.sharedApplication().delegate?.window
-        let rootViewController = window!!.rootViewController
-        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        let setViewController = mainStoryboard.instantiateViewControllerWithIdentifier("loadingViewId")
-        
-       // let navController = UINavigationController(rootViewController: setViewController)
-        
-        rootViewController?.navigationController?.presentViewController(setViewController, animated: true, completion: nil)
-    }*/
-    
     return data as NSString
     
 }
 
-
 // Checks whether player with given id is saved in favourites.
 func isPlayerInFavourites(_ playerId: String) -> Bool {
-    var json: JSON?
-    
-    // Get favourites data from file.
-    let path = Bundle.main.path(forResource: "favourites", ofType: "txt")
-    let text = try? NSString(contentsOfFile: path! as String, encoding: String.Encoding.utf8.rawValue)
-    if let dataFromString = text!.data(using: String.Encoding.utf8.rawValue, allowLossyConversion: false) {
-        json = JSON(data: dataFromString)
+    // Set up data container.
+    let container = NSPersistentContainer(name: "playerFavouritesDataModel")
+    container.loadPersistentStores { storeDescription, error in
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        if let error = error {
+            print("Unable to load playerFavouritesDataModel. Error: \(error)")
+        }
     }
     
+    // Create a fetch request.
+    var players = [PlayerFavouritesData]()
+    let request = PlayerFavouritesData.createFetchRequest()
+    request.predicate = NSPredicate(format: String("playerId == '" + playerId + "'"))
     
-    for (_, player) in json!["players"] {
-        if String(describing: player["playerId"]) == playerId {
+    // Get all players with matching id.
+    do {
+        players = try container.viewContext.fetch(request)
+        // If there are no matches, return false, else return true.
+        if players.count == 0 {
+            return false
+        }
+        else {
             return true
         }
+    } catch {
+        print("Unable to access playerFavouritesDataModel.")
     }
     
     return false
@@ -218,12 +224,96 @@ func isPlayerInFavourites(_ playerId: String) -> Bool {
 
 // Adds a player to favourites.
 func savePlayerToFavourites(_ playerData: [String: String]) {
+    // Set up data container.
+    let container = NSPersistentContainer(name: "playerFavouritesDataModel")
+    container.loadPersistentStores { storeDescription, error in
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        if let error = error {
+            print("Unable to load playerFavouritesDataModel. Error: \(error)")
+        }
+    }
     
+    // Creates a player model with the correct data.
+    let player = PlayerFavouritesData(context: container.viewContext)
+    player.playerId = playerData["playerId"]
+    player.name = playerData["name"]
+    player.regionCode = playerData["regionCode"]
+    
+    // Saves the player to playerFavouritesDataModel.
+    do {
+        try container.viewContext.save()
+    } catch {
+        print("An error occurred while saving to playerFavouritesDataModel: \(error)")
+    }
 }
 
-// Adds a player to favourites.
+// Removes a player from favourites.
 func removePlayerFromFavourites(_ playerData: [String: String]) {
+    // Set up data container.
+    let container = NSPersistentContainer(name: "playerFavouritesDataModel")
+    container.loadPersistentStores { storeDescription, error in
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        if let error = error {
+            print("Unable to load playerFavouritesDataModel. Error: \(error)")
+        }
+    }
     
+    // Get the player to delete from the model.
+    var players = [PlayerFavouritesData]()
+    let request = PlayerFavouritesData.createFetchRequest()
+    request.predicate = NSPredicate(format: String("playerId == '" + playerData["playerId"]! + "'"))
+    
+    do {
+        players = try container.viewContext.fetch(request)
+        if players.count == 0 {
+            print("Unable to delete player as not found in playerFavouritesDataModel.")
+        }
+        else {
+            // Delete player.
+            let player = players[0]
+            container.viewContext.delete(player)
+        }
+    } catch {
+        print("Unable to access playerFavouritesDataModel.")
+    }
+    
+    // Save changes to playerFavouritesDataModel.
+    do {
+        try container.viewContext.save()
+    } catch {
+        print("An error occurred while saving to playerFavouritesDataModel: \(error)")
+    }
+}
+
+// Returns all the player saved in favourites.
+func getPlayersFromFavourites() -> [[String]] {
+    // Set up data container.
+    let container = NSPersistentContainer(name: "playerFavouritesDataModel")
+    container.loadPersistentStores { storeDescription, error in
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        if let error = error {
+            print("Unable to load playerFavouritesDataModel. \(error)")
+        }
+    }
+    
+    // Set up players array.
+    var playerData = [[String]]()
+    var players = [PlayerFavouritesData]()
+    let request = PlayerFavouritesData.createFetchRequest()
+    
+    do {
+        players = try container.viewContext.fetch(request)
+        print(players.count)
+    } catch {
+        print("Unable to access playerFavouritesDataModel.")
+    }
+    
+    // Add each player to the array and return it.
+    for player in players {
+        playerData.append([player.playerId!, player.name!, player.regionCode!])
+    }
+    
+    return playerData
 }
 
 

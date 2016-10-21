@@ -21,7 +21,6 @@ class playerTopCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = UIColor.clear
         self.contentView.frame = self.bounds
-        print(self.contentView.frame)
         selectionStyle = .none
         
         // Flag image.

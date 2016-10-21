@@ -186,11 +186,12 @@
                     <navigationItem key="navigationItem" id="A0d-Ue-odP"/>
                     <connections>
                         <segue destination="GTs-3N-ne6" kind="presentation" identifier="homeMenuSegue" id="m5p-Kd-Af4"/>
+                        <segue destination="1wd-lr-6Br" kind="show" identifier="homePlayerSegue" id="b1K-CR-g7j"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X5M-72-cOA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3015" y="462"/>
+            <point key="canvasLocation" x="2986" y="462"/>
         </scene>
         <!--Loading View-->
         <scene sceneID="f8l-FM-FGC">
@@ -234,7 +235,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="om8-JI-iPD"/>
         <segue reference="m5p-Kd-Af4"/>
+        <segue reference="5jI-Xj-CU4"/>
+        <segue reference="b1K-CR-g7j"/>
     </inferredMetricsTieBreakers>
 </document>

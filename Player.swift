@@ -8,20 +8,26 @@ import SwiftyJSON
 class Player {
     
     // Initialise variables.
+    // Player id.
     let id: String
+    // Url for player profile image and team crest image.
     let imageUrl: String
     let teamImageUrl: String
+    // Array of playing positions.
     var positions = [String]()
+    // Player personal details, e.g. age, nationality and height.
     var personalDetails = [[String]]()
+    // Statistics dictionaries.
     var summaryStats = [[String]]()
     var offensiveStats = [[String]]()
     var defensiveStats = [[String]]()
     var passingStats = [[String]]()
+    // Parameters and key for data requests.
     var parameters = [String: String]()
     var modelLastMode: String
     
     init(id: String) {
-        // Set ID as well as the url for the player's image.
+        // Set ID and player profile image url.
         self.id = id
         self.imageUrl = "https://d2zywfiolv4f83.cloudfront.net/img/players/" + id + ".jpg"
         
@@ -52,7 +58,8 @@ class Player {
             "includeZeroValues" : "true",
             "numberOfPlayersToPick" : "" ]
         
-        // Get the data from the url, and create a JSON object to parse it.
+        // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as 
+        // This is the first time the data is being called.
         let data = getDataFromUrl("Player", Parameters: self.parameters, modelLastMode: "") as String
         var json : JSON?
         
@@ -171,12 +178,14 @@ class Player {
             // Stats which are weighted averages and have double values.
             for double in doubleValues {
                 
+                // They need to be summed according to numbe of games played, and the weighted average can 
+                // Then be found by dividing by the amount.
                 let temp = round((Double(statistics[double][1])! + (stat[valueNames[double]].double! * (stat["minsPlayed"].double! / Double(statistics[1][1])!)))*10)/10
                 statistics[double][1] = String(temp)
             }
         }
         
-        // Check if any incorrect values.
+        // Check if any incorrect values. If so, set them to zero.
         for i in 0 ..< statistics.count {
             if statistics[i][1] == "nan" {
                 statistics[i][1] = "0"

@@ -14,7 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         // Set font of navigation bar title.
@@ -23,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             NSForegroundColorAttributeName : UIColor.white
         ]
         
+        // Set the status bar colour to white.
         application.statusBarStyle = .lightContent
         
         return true

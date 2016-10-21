@@ -42,6 +42,13 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     
     // Favourites button pressed.
     @IBAction func favouriteButtonTouched(_ sender: UIButton) {
+        if isPlayerFavourite == true {
+            removePlayerFromFavourites(self.playerData)
+        }
+        else {
+            savePlayerToFavourites(self.playerData)
+        }
+        
         // Negate isPlayerFavourite.
         isPlayerFavourite = !isPlayerFavourite!
         

@@ -19,5 +19,8 @@ extension PlayerData {
     @NSManaged public var playerId: String?
     @NSManaged public var name: String?
     @NSManaged public var regionCode: String?
+    @NSManaged public var historicRating: String?
+    @NSManaged public var currentRating: String?
+    @NSManaged public var overallRating: String?
 
 }

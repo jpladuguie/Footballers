@@ -316,4 +316,186 @@ func getPlayersFromFavourites() -> [[String]] {
     return playerData
 }
 
+// Get all player statistics.
+func reloadPlayerData() {
+    
+    let container = NSPersistentContainer(name: "playerDataModel")
+    
+    container.loadPersistentStores { storeDescription, error in
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        
+        if let error = error {
+            print("Unable to load playerDataModel. \(error)")
+        }
+    }
+
+    // Get data.
+    let parameters = [
+        "category" : "summary",
+        "subcategory" : "all",
+        "statsAccumulationType" : "0",
+        "isCurrent" : "true",
+        "playerId" : "",
+        "teamIds" : "",
+        "matchId" : "",
+        "stageId" : "",
+        "tournamentOptions" : "2,3,4,5,22",
+        "sortBy": "rating",
+        "sortAscending" : "false",
+        "age" : "",
+        "ageComparisonType" : "",
+        "appearances" : "",
+        "appearancesComparisonType" : "",
+        "field" : "Overall",
+        "nationality" : "",
+        "positionOptions" : "",
+        "timeOfTheGameEnd" : "",
+        "timeOfTheGameStart" : "",
+        "isMinApp" : "false",
+        "page" : "",
+        "includeZeroValues" : "",
+        "numberOfPlayersToPick" : "2127" ]
+    
+    // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as
+    // This is the first time the data is being called.
+    let data = getDataFromUrl("Player Ranking", Parameters: parameters, modelLastMode: "") as String
+    var json : JSON!
+    
+    if let dataFromString = data.data(using: String.Encoding.utf8, allowLossyConversion: false) {
+        json = JSON(data: dataFromString)
+    }
+    
+    for (_, playerJson):(String, JSON) in json["playerTableStats"] {
+            let player = PlayerData(context: container.viewContext)
+            player.playerId = String(describing: playerJson["playerId"])
+            player.name = String(describing: playerJson["name"])
+            player.regionCode = String(describing: playerJson["regionCode"])
+            player.currentRating = String(describing: playerJson["rating"])
+        }
+    
+    // Save changes to playerDataModel.
+    do {
+        try container.viewContext.save()
+    } catch {
+        print("An error occurred while saving to playerDataModel: \(error)")
+    }
+}
+
+func getPlayerData() -> [[String]] {
+    
+    // Set up data container.
+    let container = NSPersistentContainer(name: "playerDataModel")
+    container.loadPersistentStores { storeDescription, error in
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        if let error = error {
+            print("Unable to load playerDataModel. \(error)")
+        }
+    }
+    
+    // Set up players array.
+    var playerData = [[String]]()
+    var players = [PlayerData]()
+    let request = PlayerData.createFetchRequest()
+    
+    do {
+        players = try container.viewContext.fetch(request)
+        print(players.count)
+    } catch {
+        print("Unable to access playerFavouritesDataModel.")
+    }
+    
+    // Add each player to the array and return it.
+    for player in players {
+        playerData.append([player.playerId!, player.name!, player.regionCode!])
+    }
+    
+    return playerData
+    
+}
+
+func getHistoricRating(playerId: String) -> String {
+    
+    // Get data.
+    let parameters = [
+        "category" : "summary",
+        "subcategory" : "all",
+        "statsAccumulationType" : "0",
+        "isCurrent" : "false",
+        "playerId" : playerId,
+        "teamIds" : "",
+        "matchId" : "",
+        "stageId" : "",
+        "tournamentOptions" : "2,3,4,5,22",
+        "sortBy": "seasonId",
+        "sortAscending" : "",
+        "age" : "",
+        "ageComparisonType" : "",
+        "appearances" : "",
+        "appearancesComparisonType" : "",
+        "field" : "Overall",
+        "nationality" : "",
+        "positionOptions" : "",
+        "timeOfTheGameEnd" : "",
+        "timeOfTheGameStart" : "",
+        "isMinApp" : "false",
+        "page" : "",
+        "includeZeroValues" : "true",
+        "numberOfPlayersToPick" : "" ]
+    
+    // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as
+    // This is the first time the data is being called.
+    let data = getDataFromUrl("Player", Parameters: parameters, modelLastMode: "") as String
+    var json : JSON!
+    
+    if let dataFromString = data.data(using: String.Encoding.utf8, allowLossyConversion: false) {
+        json = JSON(data: dataFromString)
+    }
+    
+    var totalMatchesPlayed: Float = 0.0
+    var currentTotal: Float = 0.0
+    
+    for (_, season):(String, JSON) in json["playerTableStats"] {
+        currentTotal += (Float(String(describing: season["rating"]))! * Float(String(describing: season["apps"]))!)
+        totalMatchesPlayed += Float(String(describing: season["apps"]))!
+    }
+    
+    return String(Float(currentTotal / totalMatchesPlayed))
+}
+
+func getHistoricPlayerData() {
+    
+    // Set up data container.
+    let container = NSPersistentContainer(name: "playerDataModel")
+    container.loadPersistentStores { storeDescription, error in
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        if let error = error {
+            print("Unable to load playerDataModel. \(error)")
+        }
+    }
+    
+    // Set up players array.
+    var playerData = [[String]]()
+    var players = [PlayerData]()
+    let request = PlayerData.createFetchRequest()
+    let sort = NSSortDescriptor(key: "currentRating", ascending: false)
+    request.sortDescriptors = [sort]
+    
+    do {
+        players = try container.viewContext.fetch(request)
+        print(players.count)
+    } catch {
+        print("Unable to access playerFavouritesDataModel.")
+    }
+    
+    // Add each player to the array and return it.
+    for player in players {
+        print(player.name)
+        print(getHistoricRating(playerId: player.playerId!))
+    }
+
+    
+    
+    
+}
+
 

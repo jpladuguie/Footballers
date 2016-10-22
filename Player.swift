@@ -41,7 +41,7 @@ class Player {
             "teamIds" : "",
             "matchId" : "",
             "stageId" : "",
-            "tournamentOptions" : "",
+            "tournamentOptions" : "2,3,4,5,22",
             "sortBy": "Rating",
             "sortAscending" : "",
             "age" : "",

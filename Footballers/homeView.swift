@@ -14,6 +14,8 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var topScorersTable: UITableView!
     var topScorersData = [[String]]()
     var selectedPlayerId: String?
+    var scrollView: UIScrollView!
+    var mainView: UIView!
 
     @IBAction func menuOpened(_ sender: AnyObject) {
         performSegue(withIdentifier: "homeMenuSegue", sender: nil)
@@ -23,14 +25,14 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidAppear(animated)
         
         // Stats table view.
-        self.topScorersTable = UITableView(frame: CGRect(x: 0, y: 160, width: self.view.frame.width, height: 400))
+        self.topScorersTable = UITableView(frame: CGRect(x: 0, y: 160, width: self.view.frame.width, height: 200))
         self.topScorersTable.delegate = self
         self.topScorersTable.dataSource = self
         self.topScorersTable.register(UITableViewCell.self, forCellReuseIdentifier: "searchCell")
         self.topScorersTable.separatorStyle = UITableViewCellSeparatorStyle.none
         self.topScorersTable.backgroundColor = UIColor.clear
         self.topScorersTable.alpha = 0.0
-        self.view.addSubview(self.topScorersTable)
+        self.mainView.addSubview(self.topScorersTable)
         
         UIView.animate(withDuration: 1.0, animations: {
             self.topScorersTable.alpha = 1.0
@@ -42,6 +44,16 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         currentPage = "Home"
         self.title = "Home"
+        
+        // Set up views.
+        self.mainView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 2000))
+        
+        // Scroll view needed to fit content on screen.
+        self.scrollView = UIScrollView(frame: self.view.bounds)
+        self.scrollView.backgroundColor = UIColor(red: 70.0/255.0, green: 70.0/255.0, blue: 70.0/255.0, alpha: 1.0)
+        self.scrollView.contentSize = self.mainView.bounds.size
+        self.scrollView.addSubview(self.mainView)
+        view.addSubview(self.scrollView)
         
         // Set background.
         self.view.backgroundColor = UIColor(red: 70.0/255.0, green: 70.0/255.0, blue: 70.0/255.0, alpha: 1.0)
@@ -98,7 +110,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
             "isMinApp" : "false",
             "page" : "",
             "includeZeroValues" : "",
-            "numberOfPlayersToPick" : "50" ]
+            "numberOfPlayersToPick" : "5" ]
         
         // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as
         // This is the first time the data is being called.
@@ -109,26 +121,15 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
             json = JSON(data: dataFromString)
         }
         
-        //print(json)
-        
-        //for player in (json?["playerTableStats"])! {
-        //    print(player[1]["name"])
-        //}
-        
-        
-        var i = 0
-        while i < 50 {
-            topScorersData.append([String(describing: json["playerTableStats"][i]["regionCode"]), String(describing: json["playerTableStats"][i]["name"]), String(describing: json["playerTableStats"][i]["goal"]), String(describing: json["playerTableStats"][i]["playerId"])])
-            i += 1
+        for (_, playerJson):(String, JSON) in json["playerTableStats"] {
+            topScorersData.append([String(describing: playerJson["regionCode"]), String(describing: playerJson["name"]), String(describing: playerJson["goal"]), String(describing: playerJson["playerId"])])
         }
-        
-        print(topScorersData)
         
     }
     
     // Number of rows in tableview.
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 50 
+        return self.topScorersData.count
     }
     
     
@@ -165,19 +166,19 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.layer.anchorPointZ = CGFloat((indexPath as NSIndexPath).row)
         return cell*/
         
-        var cell:UITableViewCell?
         
-        cell = self.topScorersTable.dequeueReusableCell(withIdentifier: "searchCell")! as UITableViewCell
-        cell!.backgroundColor = UIColor.clear
+        
+        let cell: UITableViewCell = self.topScorersTable.dequeueReusableCell(withIdentifier: "searchCell")! as UITableViewCell
+        cell.backgroundColor = UIColor.clear
         
         // Player name.
-        cell?.textLabel?.text = self.topScorersData[(indexPath as NSIndexPath).row][1]
-        cell?.textLabel?.textColor = UIColor.white
-        cell?.textLabel?.font = UIFont(name: (cell?.textLabel?.font?.fontName)!, size:14)
+        cell.textLabel?.text = self.topScorersData[(indexPath as NSIndexPath).row][1]
+        cell.textLabel?.textColor = UIColor.white
+        cell.textLabel?.font = UIFont(name: (cell.textLabel?.font?.fontName)!, size:14)
         // Flage image.
-        cell!.imageView?.image = UIImage(named: String(self.topScorersData[(indexPath as NSIndexPath).row][0]).uppercased())
+        cell.imageView?.image = UIImage(named: String(self.topScorersData[(indexPath as NSIndexPath).row][0]).uppercased())
         
-        return cell!
+        return cell
         
     }
     

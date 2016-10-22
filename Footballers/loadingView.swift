@@ -9,15 +9,11 @@
 import UIKit
 import NVActivityIndicatorView
 import SideMenu
-import CoreData
-import SwiftyJSON
 
 var cookies: [HTTPCookie] = [HTTPCookie]()
 var currentPage: String = String()
 
 class loadingView: UIViewController, UIWebViewDelegate {
-    
-    var container: NSPersistentContainer!
     
     // Function is called once the webView finishes loading. It stores the cookies from the request, and calls the segue to the home screen.
     func webViewDidFinishLoad(_ webView: UIWebView) {
@@ -29,6 +25,8 @@ class loadingView: UIViewController, UIWebViewDelegate {
                             
                             cookies = HTTPCookie.cookies(withResponseHeaderFields: fields, for: response.url!)
                             HTTPCookieStorage.shared.setCookies(cookies, for: response.url!, mainDocumentURL: nil)
+                            
+                            //reloadPlayerData()
                             
                             performSegue(withIdentifier: "loadingSegue", sender: nil)
                             
@@ -81,86 +79,8 @@ class loadingView: UIViewController, UIWebViewDelegate {
         webView.loadRequest(request as URLRequest)
         self.view.addSubview(webView)
         webView.delegate = self
-        
-        /*var json: JSON!
-        
-        let path = Bundle.main.path(forResource: "playerData", ofType: "txt")
-        let text = try? NSString(contentsOfFile: path! as String, encoding: String.Encoding.utf8.rawValue)
-        if let dataFromString = text!.data(using: String.Encoding.utf8.rawValue, allowLossyConversion: false) {
-            json = JSON(data: dataFromString)
-        }
-        
-        // INIT
-        self.container = NSPersistentContainer(name: "playerDataModel")
-        
-        self.container.loadPersistentStores { storeDescription, error in
-            self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            
-            if let error = error {
-                print("Unresolved error \(error)")
-            }
-        }
-        
-        /*
-        for (key, subJson):(String, JSON) in json["players"] {
-            let player = PlayerData(context: self.container.viewContext)
-            player.playerId = String(describing: subJson["playerId"])
-            player.name = String(describing: subJson["name"])
-            player.regionCode = String(describing: subJson["regionCode"])
-        }
-        
-        self.saveContext()*/
-        
-        
-        var commitPredicate: NSPredicate?
-        commitPredicate = NSPredicate(format: "name CONTAINS[c] 'aaron'")
-        
-        // FETCH
-        var objects = [PlayerData]()
-        let request = PlayerData.createFetchRequest()
-        //let sort = NSSortDescriptor(key: "name", ascending: false)
-        //request.sortDescriptors = [sort]
-        request.predicate = commitPredicate
-        
-        do {
-            objects = try container.viewContext.fetch(request)
-            print("Got \(objects.count) commits")
-        } catch {
-            print("Fetch failed")
-        }
-        
-        for object in objects {
-            print(object.name)
-        }
-        */
-        
-        
-        /*var i = 0
-        while i < 5 {
-            let player = PlayerFavouritesData(context: self.container.viewContext)
-            player.playerId = String(describing: json["players"][i]["playerId"])
-            player.name = String(describing: json["players"][i]["name"])
-            player.regionCode = String(describing: json["players"][i]["regionCode"])
-            
-            i += 1
-        }
-        
-        self.saveContext()*/
-        
-
-        
     }
     
-    func saveContext() {
-        if self.container.viewContext.hasChanges {
-            do {
-                try self.container.viewContext.save()
-            } catch {
-                print("An error occurred while saving: \(error)")
-            }
-        }
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

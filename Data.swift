@@ -189,6 +189,54 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
     
 }
 
+// Gets player rankings depending on what type of ranking and number of players.
+func getPlayerRankings(type: String, numberToGet: String) -> [[String]] {
+    
+    var players: [[String]] = [[String]]()
+    
+    // Get data.
+    var parameters = [
+        "category" : "summary",
+        "subcategory" : "all",
+        "statsAccumulationType" : "0",
+        "isCurrent" : "true",
+        "playerId" : "",
+        "teamIds" : "",
+        "matchId" : "",
+        "stageId" : "",
+        "tournamentOptions" : "2,3,4,5,22",
+        "sortBy": type,
+        "sortAscending" : "false",
+        "age" : "",
+        "ageComparisonType" : "",
+        "appearances" : "",
+        "appearancesComparisonType" : "",
+        "field" : "Overall",
+        "nationality" : "",
+        "positionOptions" : "",
+        "timeOfTheGameEnd" : "",
+        "timeOfTheGameStart" : "",
+        "isMinApp" : "true",
+        "page" : "",
+        "includeZeroValues" : "",
+        "numberOfPlayersToPick" : numberToGet ]
+    
+    // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as
+    // This is the first time the data is being called.
+    let data = getDataFromUrl("Player Ranking", Parameters: parameters, modelLastMode: "") as String
+    var json : JSON!
+    
+    if let dataFromString = data.data(using: String.Encoding.utf8, allowLossyConversion: false) {
+        json = JSON(data: dataFromString)
+    }
+    
+    for (_, playerJson):(String, JSON) in json["playerTableStats"] {
+        players.append([String(describing: playerJson["regionCode"]), String(describing: playerJson["name"]), String(describing: playerJson[type]), String(describing: playerJson["playerId"]), String(describing: playerJson["teamName"])])
+    }
+
+    return players
+}
+
 // Checks whether player with given id is saved in favourites.
 func isPlayerInFavourites(_ playerId: String) -> Bool {
     // Set up data container.

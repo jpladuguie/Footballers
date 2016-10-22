@@ -10,35 +10,36 @@ import UIKit
 
 class rankingTableCell: UITableViewCell {
 
-    var statNameLabel: UITextView!
-    var statValueLabel: UITextView!
+    var flagImage: UIImageView!
+    var statNameLabel: UILabel!
+    var statValueLabel: UILabel!
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = UIColor.clear
-        selectionStyle = .none
+        selectionStyle = .gray
         
+        // Flag image.
+        self.flagImage = UIImageView()
+        self.flagImage.frame = CGRect(x: 20, y: 11.5, width: 23, height: 17)
+        self.contentView.addSubview(flagImage)
         
         // Stat name label.
-        self.statNameLabel = UITextView()
-        self.statNameLabel.frame = CGRect(x: 100, y: 0, width: ((self.contentView.frame.width / 3) * 2) - 10, height: 40)
+        self.statNameLabel = UILabel()
+        self.statNameLabel.frame = CGRect(x: 55, y: 0, width: self.contentView.frame.width, height: 40)
         self.statNameLabel.textAlignment = .left
-        self.statNameLabel.font = UIFont.systemFont(ofSize: 15.0)
+        self.statNameLabel.font = UIFont.systemFont(ofSize: 16.0)
         self.statNameLabel.textColor = UIColor.white
         self.statNameLabel.backgroundColor = UIColor.clear
-        self.statNameLabel.isScrollEnabled = false
-        self.statNameLabel.isSelectable = false
         self.addSubview(self.statNameLabel)
         
         // Stat value label.
-        self.statValueLabel = UITextView()
-        self.statValueLabel.frame = CGRect(x: ((self.contentView.frame.width / 3) * 2), y: 0, width: (self.contentView.frame.width / 3) + 45, height: 40)
+        self.statValueLabel = UILabel()
+        self.statValueLabel.frame = CGRect(x: self.contentView.frame.width, y: 0, width: 35, height: 40)
         self.statValueLabel.textAlignment = .right
-        self.statValueLabel.font = UIFont.boldSystemFont(ofSize: 15.0)
+        self.statValueLabel.font = UIFont.boldSystemFont(ofSize: 16.0)
         self.statValueLabel.textColor = UIColor.white
         self.statValueLabel.backgroundColor = UIColor.clear
-        self.statValueLabel.isScrollEnabled = false
-        self.statValueLabel.isSelectable = false
         self.addSubview(self.statValueLabel)
         
         // Flag icon.

@@ -46,7 +46,6 @@ class rankingsView: UIViewController {
         navBar.layer.shadowOffset = CGSize.zero
         navBar.layer.shouldRasterize = true
         navBar.layer.shadowPath = UIBezierPath(rect: navBar.bounds).cgPath
-        
     }
 
 

@@ -24,7 +24,7 @@ class playerSecondCell: UITableViewCell {
         
         // Height value label.
         self.heightValueLabel = UITextView()
-        self.heightValueLabel.frame = CGRect(x: 0, y: 0, width: self.contentView.frame.width / 3, height: 45)
+        self.heightValueLabel.frame = CGRect(x: 0, y: 0, width: 125, height: 45)
         self.heightValueLabel.textAlignment = .center
         self.heightValueLabel.font = UIFont.systemFont(ofSize: 35.0)
         self.heightValueLabel.textColor = UIColor.white
@@ -35,7 +35,7 @@ class playerSecondCell: UITableViewCell {
         
         // Height label.
         self.heightLabel = UITextView()
-        self.heightLabel.frame = CGRect(x: 0, y: 45, width: self.contentView.frame.width / 3, height: 45)
+        self.heightLabel.frame = CGRect(x: 0, y: 45, width: 125, height: 45)
         self.heightLabel.text = "Height (cm)"
         self.heightLabel.textAlignment = .center
         self.heightLabel.font = UIFont.systemFont(ofSize: 13.0)
@@ -47,7 +47,7 @@ class playerSecondCell: UITableViewCell {
         
         // Number value label.
         self.numberValueLabel = UITextView()
-        self.numberValueLabel.frame = CGRect(x: self.contentView.frame.width / 3, y: 0, width: self.contentView.frame.width / 3, height: 45)
+        self.numberValueLabel.frame = CGRect(x: 125, y: 0, width: 125, height: 45)
         self.numberValueLabel.textAlignment = .center
         self.numberValueLabel.font = UIFont.systemFont(ofSize: 35.0)
         self.numberValueLabel.textColor = UIColor.white
@@ -58,7 +58,7 @@ class playerSecondCell: UITableViewCell {
         
         // Number label.
         self.numberLabel = UITextView()
-        self.numberLabel.frame = CGRect(x: self.contentView.frame.width / 3, y: 45, width: self.contentView.frame.width / 3, height: 45)
+        self.numberLabel.frame = CGRect(x: 125, y: 45, width: 125, height: 45)
         self.numberLabel.text = "Shirt Number"
         self.numberLabel.textAlignment = .center
         self.numberLabel.font = UIFont.systemFont(ofSize: 13.0)
@@ -70,7 +70,7 @@ class playerSecondCell: UITableViewCell {
         
         // Weight value label.
         self.weightValueLabel = UITextView()
-        self.weightValueLabel.frame = CGRect(x: (self.contentView.frame.width / 3) * 2, y: 0, width: self.contentView.frame.width / 3, height: 45)
+        self.weightValueLabel.frame = CGRect(x: 250, y: 0, width: 125, height: 45)
         self.weightValueLabel.textAlignment = .center
         self.weightValueLabel.font = UIFont.systemFont(ofSize: 35.0)
         self.weightValueLabel.textColor = UIColor.white
@@ -81,7 +81,7 @@ class playerSecondCell: UITableViewCell {
         
         // Weight label.
         self.weightLabel = UITextView()
-        self.weightLabel.frame = CGRect(x: (self.contentView.frame.width / 3) * 2, y: 45, width: self.contentView.frame.width / 3, height: 45)
+        self.weightLabel.frame = CGRect(x: 250, y: 45, width: 125, height: 45)
         self.weightLabel.text = "Weight (kg)"
         self.weightLabel.textAlignment = .center
         self.weightLabel.font = UIFont.systemFont(ofSize: 13.0)

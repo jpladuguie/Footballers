@@ -43,6 +43,7 @@
 		E8A0CF471DBAC0CE0047C036 /* playerFavouritesDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E8A0CF451DBAC0CE0047C036 /* playerFavouritesDataModel.xcdatamodeld */; };
 		E8A0CF4A1DBAC1130047C036 /* PlayerFavouritesData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A0CF481DBAC1130047C036 /* PlayerFavouritesData+CoreDataClass.swift */; };
 		E8A0CF4B1DBAC1130047C036 /* PlayerFavouritesData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A0CF491DBAC1130047C036 /* PlayerFavouritesData+CoreDataProperties.swift */; };
+		E8C0FCB71DBBB0D800260964 /* DrawCharts.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C0FCB61DBBB0D800260964 /* DrawCharts.swift */; };
 		E8C713E81D7DF3BF00B717F2 /* playerTopCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C713E71D7DF3BF00B717F2 /* playerTopCell.swift */; };
 		E8DE7BB71DBA81960031D83D /* rankingTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DE7BB61DBA81960031D83D /* rankingTableCell.swift */; };
 		E8DE7BBA1DBAAA1D0031D83D /* playerDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E8DE7BB81DBAAA1D0031D83D /* playerDataModel.xcdatamodeld */; };
@@ -91,6 +92,7 @@
 		E8A0CF461DBAC0CE0047C036 /* playerFavouritesDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = playerFavouritesDataModel.xcdatamodel; sourceTree = "<group>"; };
 		E8A0CF481DBAC1130047C036 /* PlayerFavouritesData+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerFavouritesData+CoreDataClass.swift"; sourceTree = "<group>"; };
 		E8A0CF491DBAC1130047C036 /* PlayerFavouritesData+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerFavouritesData+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		E8C0FCB61DBBB0D800260964 /* DrawCharts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawCharts.swift; sourceTree = "<group>"; };
 		E8C713E71D7DF3BF00B717F2 /* playerTopCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerTopCell.swift; sourceTree = "<group>"; };
 		E8DE7BB61DBA81960031D83D /* rankingTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = rankingTableCell.swift; sourceTree = "<group>"; };
 		E8DE7BB91DBAAA1D0031D83D /* playerDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = playerDataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 		E87F5AE41D78B82500C10A38 = {
 			isa = PBXGroup;
 			children = (
+				E8C0FCB61DBBB0D800260964 /* DrawCharts.swift */,
 				E87F5B021D78B86400C10A38 /* Player.swift */,
 				E87F5B031D78B86400C10A38 /* Data.swift */,
 				E82125921D78B9B80024D016 /* playerData.txt */,
@@ -341,6 +344,7 @@
 				E8C713E81D7DF3BF00B717F2 /* playerTopCell.swift in Sources */,
 				E8DE7BB71DBA81960031D83D /* rankingTableCell.swift in Sources */,
 				E82125901D78B99E0024D016 /* homeView.swift in Sources */,
+				E8C0FCB71DBBB0D800260964 /* DrawCharts.swift in Sources */,
 				E8A0CF471DBAC0CE0047C036 /* playerFavouritesDataModel.xcdatamodeld in Sources */,
 				E8A0CF4B1DBAC1130047C036 /* PlayerFavouritesData+CoreDataProperties.swift in Sources */,
 				E81059C41D807A6800EE205E /* playerStatCell.swift in Sources */,

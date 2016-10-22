@@ -10,6 +10,7 @@ target 'Footballers' do
   pod 'Kanna', git: 'https://github.com/tid-kijyun/Kanna.git', branch: 'swift3.0'
   pod 'SideMenu'
   pod 'NVActivityIndicatorView'
+  pod 'Charts', :git => 'https://github.com/danielgindi/Charts.git', :branch => 'master'
 
 end
 

@@ -32,6 +32,9 @@ import Kanna
 import SwiftyJSON
 import CoreData
 
+// Global cookies variable needed for each HTTP request and generated in loadingView.
+var cookies: [HTTPCookie] = [HTTPCookie]()
+
 // Set global variable for HTTP request parameters
 let globalParameters = [
     "category" : "summary",
@@ -139,7 +142,7 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
                 htmlData = (htmlData as String) + ", \"htmlData\" : {\"teamImageUrl\" : \"" + imageUrl + "\""
                 
                 // Positions have their own JSON object as they are an array.
-                var positions : String = "\"positions\" : ["
+                var positions : String = "}, \"positions\" : ["
                 for dl in doc.css("dl") {
                     if dl["class"] == "player-info-block" {
                         for dt in dl.css("dt") {
@@ -149,25 +152,25 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
                                     htmlData = (htmlData as String) + ", \"teamName\" : \"" + a.text! + "\""
                                 }
                             }
-                            // Get the player's shirt number.
+                                // Get the player's shirt number.
                             else if dt.text == "Shirt Number:" {
                                 for dd in dl.css("dd") {
                                     htmlData = (htmlData as String) + ", \"shirtNumber\" : \"" + dd.text! + "\""
                                 }
                             }
-                            // Get the player's nationality; the actual country name and not the region code.
+                                // Get the player's nationality; the actual country name and not the region code.
                             else if dt.text == "Nationality:" {
                                 for span in dl.css("span") {
                                     if span.text != "" {
-                                        
+                                    
                                         // Remove any whitespace surrounding the text.
                                         let nationality = span.text!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                                        htmlData = (htmlData as String) + ", \"nationality\" : \"" + nationality + "\"}, "
+                                        htmlData = (htmlData as String) + ", \"nationality\" : \"" + nationality + "\""
                                     }
                                 }
                             }
-                            // Get a list of all the player's positions.
-                            else if dt.text == "Positions:" {         
+                                // Get a list of all the player's positions.
+                            else if dt.text == "Positions:" {
                                 for li in dl.css("li") {
                                     positions = positions + "\"" + li.text! + "\", "
                                 }
@@ -175,16 +178,16 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
                                 // Remove last two characters of string to parse it correctly into json.
                                 positions = positions.substring(to: positions.index(before: positions.endIndex))
                                 positions = positions.substring(to: positions.index(before: positions.endIndex))
-                                positions = positions + "]"
                             }
                         }
                     }
                 }
                 // Add all the html data together.
+                positions = positions + "]"
                 htmlData = (htmlData as String) + positions
             }
         }
-        // Catch any errors in getting the data.
+            // Catch any errors in getting the data.
         catch let error as NSError {
             print(error)
         }
@@ -238,6 +241,8 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
         // Add htmlData to the data.
         data = data + (htmlData as String) + "}"
     }
+    
+    print(data)
     
     // Return the data and Model-Last-Mode key back to the caller of the function.
     return data as NSString

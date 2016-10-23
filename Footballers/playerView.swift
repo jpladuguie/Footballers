@@ -35,7 +35,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     // Activity indicator.
     var activityIndicator: NVActivityIndicatorView!
     
-    // Back button pressed.
+    // Called when back button pressed.
     @IBAction func backButtonTouched(_ sender: UIButton) {
         navigationController?.popViewController(animated: true)
     }
@@ -68,6 +68,8 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         // Declare player
         self.player = Player(id: self.playerData["playerId"]!)
         self.personalDetails = player.getPersonalDetails()
+        
+        print(self.personalDetails)
         
         // Stats table view.
         self.statsTableView = UITableView(frame: CGRect(x: 0, y: 160, width: self.view.frame.width, height: self.view.frame.height - 160))
@@ -170,9 +172,8 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         self.topBar.layer.shouldRasterize = true
         self.topBar.layer.shadowPath = UIBezierPath(rect: topBar.bounds).cgPath
         
-        // Loading activity indicator.
-        self.activityIndicator = NVActivityIndicatorView(frame: CGRect(x: (self.view.frame.size.width/2 - 25), y: (self.view.frame.size.height/2 - 25), width: 50, height: 50), type: NVActivityIndicatorType.ballClipRotatePulse, color: UIColor.white)
-        self.activityIndicator.startAnimating()
+        // Create loading activity indicator.
+        self.activityIndicator = configureActivityIndicator(viewController: self)
         self.view.addSubview(self.activityIndicator)
         
         // Back bar button.
@@ -210,7 +211,9 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
             let topCell: playerTopCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerTopCell.self), for: indexPath) as! playerTopCell
             
             // Set values.
-            topCell.flagImage.image = UIImage(named: self.personalDetails[5][1].uppercased())!
+            let image = UIImage(named: self.personalDetails[5][1].uppercased())
+            
+            topCell.flagImage.image = image
             topCell.countryLabel.text = self.personalDetails[6][1]
             topCell.ageLabel.text = self.personalDetails[2][1]
             

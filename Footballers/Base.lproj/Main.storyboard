@@ -202,6 +202,7 @@
                         <outlet property="pieChartView" destination="2fJ-Ar-clv" id="B34-ff-Ugo"/>
                         <segue destination="GTs-3N-ne6" kind="presentation" identifier="homeMenuSegue" id="m5p-Kd-Af4"/>
                         <segue destination="1wd-lr-6Br" kind="show" identifier="homePlayerSegue" id="b1K-CR-g7j"/>
+                        <segue destination="1LQ-si-es3" kind="show" identifier="homeRankingSegue" id="iKM-2c-yhs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X5M-72-cOA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -250,8 +251,9 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="8nZ-Ql-avh"/>
-        <segue reference="lVa-MB-Zow"/>
+        <segue reference="m5p-Kd-Af4"/>
         <segue reference="5jI-Xj-CU4"/>
+        <segue reference="b1K-CR-g7j"/>
+        <segue reference="iKM-2c-yhs"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -11,53 +11,85 @@ import NVActivityIndicatorView
 
 class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    // Default values for page title and ranking type.
+    var rankingType: String! = "goal"
+    var rankingTitle: String! = "Top Scorers"
+    
+    // Player data array and tableView.
+    var players = [[String]]()
     var statsTableView: UITableView!
     
-    var rankingType: String!
-    var rankingTitle: String!
-    
-    var players = [[String]]()
+    // Selected playerId for segue to playerView.
     var selectedPlayerId: String?
     
     // Activity indicator.
     var activityIndicator: NVActivityIndicatorView!
-
+    
+    // Called when menu button is pressed.
     @IBAction func menuOpened(_ sender: AnyObject) {
         performSegue(withIdentifier: "rankingsMenuSegue", sender: nil)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        self.players = getPlayerRankings(type: "goal", numberToGet: "100")
-        
-        self.statsTableView = UITableView(frame: CGRect(x: 0, y: 100, width: self.view.frame.width, height: self.view.frame.height - (self.navigationController?.navigationBar.frame.height)!))
-        self.statsTableView.delegate = self
-        self.statsTableView.dataSource = self
-        self.statsTableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
-        self.statsTableView.separatorStyle = UITableViewCellSeparatorStyle.none
-        self.statsTableView.backgroundColor = lightGrey
-        self.statsTableView.alpha = 0.0
-        self.view.addSubview(self.statsTableView)
-        
-        UIView.animate(withDuration: 1.0, animations: {
-            self.statsTableView.alpha = 1.0
-        }, completion: { (complete: Bool) in
-                self.activityIndicator.removeFromSuperview()
-                return
-            })
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set the current page and title.
         currentPage = "Rankings"
-        self.title = "Top Scorers"
+        self.title = self.rankingTitle
         
+        // Set up the View Controller.
         setUpView(viewController: self)
         
-        // Loading activity indicator.
-        self.activityIndicator = NVActivityIndicatorView(frame: CGRect(x: (self.view.frame.size.width/2 - 25), y: (self.view.frame.size.height/2 - 25), width: 50, height: 50), type: NVActivityIndicatorType.ballClipRotatePulse, color: UIColor.white)
-        self.activityIndicator.startAnimating()
+        // Create loading activity indicator.
+        self.activityIndicator = configureActivityIndicator(viewController: self)
         self.view.addSubview(self.activityIndicator)
+        
+        DispatchQueue.global(qos: .background).async {
+            // Get the data needed for the tableView.
+            self.players = getPlayerRankings(type: self.rankingType, numberToGet: "100")
+            DispatchQueue.main.async {
+                
+                // Create player label.
+                let playerLabel = UILabel(frame: CGRect(x: 95.0, y: Double((self.navigationController?.navigationBar.frame.height)! + 25.0), width: 100.0, height: 30.0))
+                // Set the colour to white, add the text and add to view.
+                playerLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
+                playerLabel.text = "Player"
+                playerLabel.textColor = UIColor.white
+                playerLabel.alpha = 0.0
+                self.view.addSubview(playerLabel)
+                
+                
+                // Create statistic label.
+                let statlabel = UILabel(frame: CGRect(x: 200.0, y: Double((self.navigationController?.navigationBar.frame.height)! + 25.0), width: Double(self.view.frame.width - 220.0), height: 30.0))
+                // Set the colour to white, add the text and add to view.
+                statlabel.font = UIFont.boldSystemFont(ofSize: 20.0)
+                statlabel.text = "Goals"
+                statlabel.textAlignment = .right
+                statlabel.textColor = UIColor.white
+                statlabel.alpha = 0.0
+                self.view.addSubview(statlabel)
+                
+                // Create the tableView with the data,
+                self.statsTableView = UITableView(frame: CGRect(x: 0, y: 100, width: self.view.frame.width, height: self.view.frame.height - 100))
+                self.statsTableView.delegate = self
+                self.statsTableView.dataSource = self
+                self.statsTableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
+                self.statsTableView.separatorStyle = UITableViewCellSeparatorStyle.none
+                self.statsTableView.backgroundColor = lightGrey
+                self.statsTableView.alpha = 0.0
+                self.view.addSubview(self.statsTableView)
+                
+                UIView.animate(withDuration: 1.0, animations: {
+                    self.statsTableView.alpha = 1.0
+                    playerLabel.alpha = 1.0
+                    statlabel.alpha = 1.0
+                    self.activityIndicator.alpha = 0.0
+                    }, completion: { (complete: Bool) in
+                        self.activityIndicator.removeFromSuperview()
+                        return
+                })
+            }
+        }
     }
     
     // Number of rows in tableview.
@@ -73,14 +105,16 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         // Create cell.
         let rankingCell: rankingTableCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(rankingTableCell.self), for: indexPath) as! rankingTableCell
-        
             
         rankingCell.rankingLabel.text = String(indexPath.row + 1)
         rankingCell.statNameLabel.text = self.players[(indexPath as NSIndexPath).row][1]
         rankingCell.statValueLabel.text = self.players[(indexPath as NSIndexPath).row][3]
-        rankingCell.flagImage.image = try UIImage(named: String(self.players[(indexPath as NSIndexPath).row][2].uppercased() + ""))!
+        
+        let image = UIImage(named: String(self.players[(indexPath as NSIndexPath).row][2].uppercased() + ""))
+        
+        rankingCell.flagImage.image = image
             
-            // Set cell.
+        // Set cell.
         cell = rankingCell
         return cell
     }

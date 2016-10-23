@@ -9,6 +9,9 @@
 import UIKit
 import SwiftyJSON
 
+// View Controller for the side menu. It contains the search bar and 'cancel' button, as well as
+// Two table views; one to show the various pages, such as 'Home' and 'Rankings', and one to show
+// Results when searching for players.
 class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
     // Tableviews.

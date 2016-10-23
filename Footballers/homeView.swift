@@ -9,58 +9,66 @@
 import UIKit
 import SwiftyJSON
 import Charts
+import NVActivityIndicatorView
 
+// The main home View Controller.
 class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var topScorersButton: UIButton!
+    // The data and Table View for the top scorers list.
     var topScorersTable: UITableView!
     var topScorersData = [[String]]()
     
-    var topAssistsButton: UIButton!
+    // The data and Table View for the most assists horizontal bar chart.
     var topAssistsTable: UITableView!
     var topAssistsData = [[String]]()
     
+    // The data and player stats for the top passer statistics.
     var topPasserData = [[String]]()
     var topPassingPlayerTitle: UIButton!
     
-    var selectedPlayerId: String?
+    // The scrollView and mainView views.
     var scrollView: UIScrollView!
     var mainView: UIView!
     
+    // The player id or ranking type needed for a segue when a player or ranking table is selected.
+    var selectedPlayerId: String?
+    var selectedRanking: String?
+    
+    // Activity indicator.
+    var activityIndicator: NVActivityIndicatorView!
+    
+    // Charts.
     @IBOutlet weak var barChartView: BarChartView!
     @IBOutlet weak var pieChartView: PieChartView!
     @IBOutlet weak var AssistsChartView: HorizontalBarChartView!
     
+    // Called when menu button is pressed.
     @IBAction func menuOpened(_ sender: AnyObject) {
         performSegue(withIdentifier: "homeMenuSegue", sender: nil)
     }
     
-    @IBAction func topScorersPressed(sender: UIButton) {
-        print("Top Scorers")
+    // Handle buttons being pressed.
+    @IBAction func subTitlePressed(sender: UIButton) {
+        switch sender.tag {
+            case 0:
+                self.selectedRanking = "goal"
+                performSegue(withIdentifier: "homeRankingSegue", sender: nil)
+            case 1:
+                self.selectedRanking = "assistTotal"
+                performSegue(withIdentifier: "homeRankingSegue", sender: nil)
+            default:
+                print("Error: inocorrect subTitle identifier.")
+        }
     }
     
-    @IBAction func topAssistsPressed(sender: UIButton) {
-        print("Most Assists")
-    }
-    
-    @IBAction func passingPressed(sender: UIButton) {
-        print("Passing")
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    // Initiate all the subViews, and fade them in.
+    func createSubViews() {
         
+        // Add titles and subtitles.
         addTitle(yPosition: 110, text: "Goals and Assists")
-        
-        // Top scorers button
-        self.topScorersButton = UIButton(frame: CGRect(x: 20, y: 165, width: self.view.frame.width - 40, height: 30))
-        self.topScorersButton?.tintColor = UIColor.white
-        self.topScorersButton?.titleLabel?.font = UIFont.boldSystemFont(ofSize: 22.0)
-        self.topScorersButton?.setTitle("Top Scorers", for: .normal)
-        self.topScorersButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
-        self.topScorersButton?.addTarget(self, action: #selector(topScorersPressed), for: .touchUpInside)
-        self.topScorersButton.alpha = 0.0
-        self.mainView.addSubview(self.topScorersButton!)
+        addTitle(yPosition: 600, text: "Passing")
+        addSubtitle(yPosition: 165, text: "Top Scorers", tag: 0)
+        addSubtitle(yPosition: 415, text: "Most Assists", tag: 1)
         
         // Top scorers table view.
         self.topScorersTable = UITableView(frame: CGRect(x: 0, y: 200, width: self.view.frame.width, height: 200))
@@ -72,16 +80,6 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.topScorersTable.isScrollEnabled = false
         self.topScorersTable.alpha = 0.0
         self.mainView.addSubview(self.topScorersTable)
-        
-        // Top assists button
-        self.topAssistsButton = UIButton(frame: CGRect(x: 20, y: 415, width: self.view.frame.width - 40, height: 30))
-        self.topAssistsButton?.tintColor = UIColor.white
-        self.topAssistsButton?.titleLabel?.font = UIFont.boldSystemFont(ofSize: 22.0)
-        self.topAssistsButton?.setTitle("Most Assists", for: .normal)
-        self.topAssistsButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
-        self.topAssistsButton?.addTarget(self, action: #selector(topAssistsPressed), for: .touchUpInside)
-        self.topAssistsButton.alpha = 0.0
-        self.mainView.addSubview(self.topAssistsButton!)
         
         // Assists bar chart
         AssistsChartView.frame = CGRect(x: 12, y: 450, width: self.view.frame.width + 30, height: 140)
@@ -99,8 +97,6 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.topAssistsTable.alpha = 0.0
         self.mainView.addSubview(self.topAssistsTable)
         
-        addTitle(yPosition: 600, text: "Passing")
-        
         // Passing pie chart
         pieChartView.frame = CGRect(x: self.view.frame.width - 160, y: 650, width: 140 , height: 140)
         pieChartView = configurePieChart(pieChart: pieChartView, chartValue: Double(self.topPasserData[0][3])!)
@@ -111,25 +107,24 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.topPassingPlayerTitle.titleLabel?.font = UIFont.systemFont(ofSize: 20.0)
         self.topPassingPlayerTitle.setTitle(self.topPasserData[0][1], for: .normal)
         self.topPassingPlayerTitle.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
-        self.topPassingPlayerTitle.addTarget(self, action: #selector(topScorersPressed), for: .touchUpInside)
+        self.topPassingPlayerTitle.addTarget(self, action: #selector(subTitlePressed), for: .touchUpInside)
         self.topPassingPlayerTitle.alpha = 0.0
         self.mainView.addSubview(self.topPassingPlayerTitle)
         
-        
-        
+        // Fade items in.
         UIView.animate(withDuration: 1.0, animations: {
-            
-            self.topScorersButton.alpha = 1.0
             self.topScorersTable.alpha = 1.0
-            
-            self.topAssistsButton.alpha = 1.0
-            
             self.topPassingPlayerTitle.alpha = 1.0
+            // Fade out activity indicator.
+            self.activityIndicator.alpha = 0.0
             }, completion: { (complete: Bool) in
+                // Once animations have finished.
                 UIView.animate(withDuration: 0.5, animations: {
+                    // Fade in values for horizontal bar chart once it has finished animating.
                     self.topAssistsTable.alpha = 1.0
+                    // Remove activity indicator from view.
+                    self.activityIndicator.removeFromSuperview()
                     })
-                
                 return
         })
     }
@@ -137,83 +132,112 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set the current page and title.
         currentPage = "Home"
         self.title = "Home"
         
-        // Set up views.
+        // Set up the views. The screen is taken up by the scrollView, and inside the scrollView
+        // Is the mainView. Everytime a subView is added to the screen, it must be added to the
+        // mainView.
         self.mainView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 2000))
         
-        // Scroll view needed to fit content on screen.
+        // Set up the scrollView. This is needed to fit everything on the screen and allow the 
+        // View to be scrolled vertically.
         self.scrollView = UIScrollView(frame: self.view.bounds)
         self.scrollView.backgroundColor = lightGrey
         self.scrollView.contentSize = self.mainView.bounds.size
         self.scrollView.addSubview(self.mainView)
         view.addSubview(self.scrollView)
         
+        // Keep scrollView in position.
+        self.automaticallyAdjustsScrollViewInsets = false
+        
+        // Set up the View Controller.
         setUpView(viewController: self)
         
-        self.topScorersData = getPlayerRankings(type: "goal", numberToGet: "5")
-        self.topAssistsData = getPlayerRankings(type: "assistTotal", numberToGet: "3")
-        self.topPasserData = getPlayerRankings(type: "passSuccess", numberToGet: "1")
-    }
-    
-    // Number of rows in tableview.
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var cells = 0
-        if tableView == self.topScorersTable {
-            cells = 5
-        }
-        else {
-            cells = 3
-        }
+        // Create loading activity indicator.
+        self.activityIndicator = configureActivityIndicator(viewController: self)
+        self.view.addSubview(self.activityIndicator)
         
-        return cells
+        // Get the data in the background, and once it has finished create all the subviews.
+        DispatchQueue.global(qos: .background).async {
+            // Get the data needed for the tableViews.
+            self.topScorersData = getPlayerRankings(type: "goal", numberToGet: "5")
+            self.topAssistsData = getPlayerRankings(type: "assistTotal", numberToGet: "3")
+            self.topPasserData = getPlayerRankings(type: "passSuccess", numberToGet: "1")
+            DispatchQueue.main.async {
+                // Create all the subViews with the data,
+                self.createSubViews()
+            }
+        }
     }
     
-    // Set up tableview cells.
+    // Set the number of rows in the tableView.
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // Top Scorers table.
+        if tableView == self.topScorersTable {
+            return 5
+        }
+        // Top Assists table.
+        else {
+            return 3
+        }
+    }
+    
+    // Set up tableView cells.
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         // Create cell.
         var cell:UITableViewCell
         
+        // If the tableView is topScorersTable, create a custom cell.
         if tableView == self.topScorersTable {
         
-            // Create cell.
+            // Create the custom cell using the rankingTableCell class..
             let rankingCell: rankingTableCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(rankingTableCell.self), for: indexPath) as! rankingTableCell
             
+            // Move the everything slightly to the left, as the ranking numbers will only
+            // Be between 1 and 5, so space for only one digit is needed and not 3 which
+            // Is the default.
             rankingCell.rankingLabel.frame = CGRect(x: 20, y: 0, width: 10, height: 40)
             rankingCell.flagImage.frame = CGRect(x: 40, y: 11.5, width: 23, height: 17)
             rankingCell.statNameLabel.frame = CGRect(x: 75, y: 0, width: 320, height: 40)
             
+            // Assign the correct values to the tableView cell.
             rankingCell.rankingLabel.text = String(indexPath.row + 1)
             rankingCell.statNameLabel.text = self.topScorersData[(indexPath as NSIndexPath).row][1]
             rankingCell.statValueLabel.text = self.topScorersData[(indexPath as NSIndexPath).row][3]
             rankingCell.flagImage.image = UIImage(named: String(self.topScorersData[(indexPath as NSIndexPath).row][2].uppercased() + ""))!
         
-            // Set cell.
+            // Set the cell.
             cell = rankingCell
         }
+        // If the tableView is the topAssistsTable, use the default tableView cell.
         else {
             
+            // Create the cell.
             cell = tableView.dequeueReusableCell(withIdentifier: "cell")! as UITableViewCell
             
+            // Prevent the cell being selected and assign the correct data.
             cell.selectionStyle = .none
             cell.textLabel?.text = self.topAssistsData[indexPath.row][1]
             cell.textLabel?.textColor = lightGrey
             cell.backgroundColor = UIColor.clear
         }
         
+        // Return the cell.
         cell.layer.anchorPointZ = CGFloat((indexPath as NSIndexPath).row)
         return cell
     }
     
-    // Change height for specific rows.
+    // Set the row height for all tableViews to 40.0.
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 40.0
     }
     
-    // Player selected
+    // Called when a tableViewCell is selected, i.e. a player has been clicked on.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Select the correct playerId depending on which tableView the selected cell is in.
         if tableView == self.topScorersTable {
             self.topScorersTable.deselectRow(at: indexPath, animated: true)
             self.selectedPlayerId = self.topScorersData[(indexPath as NSIndexPath).row][0]
@@ -223,44 +247,73 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
             self.selectedPlayerId = self.topAssistsData[(indexPath as NSIndexPath).row][0]
         }
         
+        // Perform the segue to the player view.
         performSegue(withIdentifier: "homePlayerSegue", sender: self)
     }
     
-    // Select a player
+    // Called when a segue is about to be performed.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // If a player has been selected, send the correct playerId to the playerView.
         if(segue.identifier == "homePlayerSegue") {
             let playerClass = (segue.destination as! playerView)
             playerClass.playerData["playerId"] = self.selectedPlayerId
-            
+        }
+        // If a ranking has been selected, send the correct type of ranking to rankingsView.
+        else if (segue.identifier == "homeRankingSegue") {
+            let rankingClass = (segue.destination as! rankingsView)
+            rankingClass.rankingType = self.selectedRanking
         }
     }
     
+    // Add a title and divider to the view. The x position and size of the title is constant,
+    // But the y position can be varied depending on how far down the screen the title needs to be.
     func addTitle(yPosition: Double, text: String) {
         
-        // Title
+        // Create the title.
         let title = UILabel(frame: CGRect(x: 20.0, y: yPosition, width: Double(self.view.frame.width - 40.0), height: 30.0))
-        title.tintColor = UIColor.white
+        // Set the colour to white, add the text and add to view.
         title.font = UIFont.systemFont(ofSize: 28.0)
         title.text = text
         title.textColor = UIColor.white
         title.alpha = 0.0
         self.mainView.addSubview(title)
         
-        // Divider
+        // Create the divider.
         let divider = UIImageView(image: UIImage(named: "whiteLine.png"))
+        // Set its size and add it to view.
         divider.frame = CGRect(x: 20.0, y: yPosition + 40.0, width: Double(self.view.frame.width - 40.0), height: 1.0)
         divider.alpha = 0.0
         self.mainView.addSubview(divider)
         
-        // Animate
+        // Fade the title and divider in.
         UIView.animate(withDuration: 1.0, animations: {
             title.alpha = 1.0
             divider.alpha = 1.0
         })
     }
     
-    func addSubtitle(yPosition: Double, text: String) {
+    // Add a subtitle to view depending on the y position, as the x position and size are constant.
+    // The tag is needed so that when the subtitle is selected, the correct segue is performed.
+    func addSubtitle(yPosition: Double, text: String, tag: Int) {
         
+        // Create the subtitle.
+        let subTitle = UIButton(frame: CGRect(x: 20.0, y: yPosition, width: Double(self.view.frame.width - 40.0), height: 30.0))
+        // Set the colour to white and add the title.
+        subTitle.tintColor = UIColor.white
+        subTitle.titleLabel?.font = UIFont.boldSystemFont(ofSize: 22.0)
+        subTitle.setTitle(text, for: .normal)
+        subTitle.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
+        // Add the tag to the button and set the function to be called when it's pressed.
+        subTitle.addTarget(self, action: #selector(subTitlePressed), for: .touchUpInside)
+        subTitle.tag = tag
+        subTitle.alpha = 0.0
+        // Add it to view.
+        self.mainView.addSubview(subTitle)
+        
+        // Fade the subtitle in.
+        UIView.animate(withDuration: 1.0, animations: {
+            subTitle.alpha = 1.0
+        })
     }
     
     override func didReceiveMemoryWarning() {

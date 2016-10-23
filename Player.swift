@@ -1,3 +1,11 @@
+//
+//  Player.swift
+//  Footballers
+//
+//  Created by Jean-Pierre Laduguie on 17/08/2016.
+//  Copyright © 2016 jp. All rights reserved.
+//
+
 import Foundation
 import SwiftyJSON
 
@@ -32,31 +40,11 @@ class Player {
         self.imageUrl = "https://d2zywfiolv4f83.cloudfront.net/img/players/" + id + ".jpg"
         
         // Set parameters for the data request of summary statistics.
-        self.parameters = [
-            "category" : "summary",
-            "subcategory" : "all",
-            "statsAccumulationType" : "0",
-            "isCurrent" : "true",
-            "playerId" : self.id,
-            "teamIds" : "",
-            "matchId" : "",
-            "stageId" : "",
-            "tournamentOptions" : "2,3,4,5,22",
-            "sortBy": "Rating",
-            "sortAscending" : "",
-            "age" : "",
-            "ageComparisonType" : "",
-            "appearances" : "",
-            "appearancesComparisonType" : "",
-            "field" : "Overall",
-            "nationality" : "",
-            "positionOptions" : "",
-            "timeOfTheGameEnd" : "",
-            "timeOfTheGameStart" : "",
-            "isMinApp" : "false",
-            "page" : "",
-            "includeZeroValues" : "true",
-            "numberOfPlayersToPick" : "" ]
+        self.parameters = globalParameters
+        self.parameters["playerId"] = self.id
+        self.parameters["sortBy"] = "Rating"
+        self.parameters["isMinApp"] = "false"
+        self.parameters["includeZeroValues"] = "true"
         
         // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as 
         // This is the first time the data is being called.
@@ -194,5 +182,4 @@ class Player {
         
         return statistics
     }
-
 }

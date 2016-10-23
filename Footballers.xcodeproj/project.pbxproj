@@ -12,6 +12,7 @@
 		E81059C41D807A6800EE205E /* playerStatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81059C31D807A6800EE205E /* playerStatCell.swift */; };
 		E81059D01D80B19800EE205E /* playerSecondCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81059CF1D80B19800EE205E /* playerSecondCell.swift */; };
 		E8180C431D7CBB2400043884 /* defaultPlayerImage.png in Resources */ = {isa = PBXBuildFile; fileRef = E8180C421D7CBB2400043884 /* defaultPlayerImage.png */; };
+		E8188FE41DBD0A0B0044CE74 /* ViewControllerFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8188FE31DBD0A0B0044CE74 /* ViewControllerFunctions.swift */; };
 		E821258D1D78B99E0024D016 /* loadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125881D78B99E0024D016 /* loadingView.swift */; };
 		E821258E1D78B99E0024D016 /* playerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125891D78B99E0024D016 /* playerView.swift */; };
 		E821258F1D78B99E0024D016 /* teamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E821258A1D78B99E0024D016 /* teamsView.swift */; };
@@ -31,7 +32,6 @@
 		E82125AB1D78C0EC0024D016 /* compareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125AA1D78C0EC0024D016 /* compareView.swift */; };
 		E82125AD1D78C24C0024D016 /* favouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125AC1D78C24C0024D016 /* favouritesView.swift */; };
 		E84E1ADD1D7B367A00A0BC48 /* favouriteButtonFull.png in Resources */ = {isa = PBXBuildFile; fileRef = E84E1ADC1D7B367A00A0BC48 /* favouriteButtonFull.png */; };
-		E84E1ADF1D7B4B4200A0BC48 /* favourites.txt in Resources */ = {isa = PBXBuildFile; fileRef = E84E1ADE1D7B4B4200A0BC48 /* favourites.txt */; };
 		E84E1AE21D7B6B5F00A0BC48 /* greyLine.png in Resources */ = {isa = PBXBuildFile; fileRef = E84E1AE01D7B6B5F00A0BC48 /* greyLine.png */; };
 		E84E1AE31D7B6B5F00A0BC48 /* whiteLine.png in Resources */ = {isa = PBXBuildFile; fileRef = E84E1AE11D7B6B5F00A0BC48 /* whiteLine.png */; };
 		E87F5AF11D78B82500C10A38 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87F5AF01D78B82500C10A38 /* AppDelegate.swift */; };
@@ -59,6 +59,7 @@
 		E81059C31D807A6800EE205E /* playerStatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerStatCell.swift; sourceTree = "<group>"; };
 		E81059CF1D80B19800EE205E /* playerSecondCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerSecondCell.swift; sourceTree = "<group>"; };
 		E8180C421D7CBB2400043884 /* defaultPlayerImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = defaultPlayerImage.png; sourceTree = "<group>"; };
+		E8188FE31DBD0A0B0044CE74 /* ViewControllerFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerFunctions.swift; sourceTree = "<group>"; };
 		E82125881D78B99E0024D016 /* loadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = loadingView.swift; sourceTree = "<group>"; };
 		E82125891D78B99E0024D016 /* playerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerView.swift; sourceTree = "<group>"; };
 		E821258A1D78B99E0024D016 /* teamsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = teamsView.swift; sourceTree = "<group>"; };
@@ -78,7 +79,6 @@
 		E82125AA1D78C0EC0024D016 /* compareView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = compareView.swift; sourceTree = "<group>"; };
 		E82125AC1D78C24C0024D016 /* favouritesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = favouritesView.swift; sourceTree = "<group>"; };
 		E84E1ADC1D7B367A00A0BC48 /* favouriteButtonFull.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favouriteButtonFull.png; sourceTree = "<group>"; };
-		E84E1ADE1D7B4B4200A0BC48 /* favourites.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = favourites.txt; sourceTree = "<group>"; };
 		E84E1AE01D7B6B5F00A0BC48 /* greyLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greyLine.png; sourceTree = "<group>"; };
 		E84E1AE11D7B6B5F00A0BC48 /* whiteLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteLine.png; sourceTree = "<group>"; };
 		E87F5AED1D78B82500C10A38 /* Footballers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Footballers.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,11 +125,11 @@
 		E87F5AE41D78B82500C10A38 = {
 			isa = PBXGroup;
 			children = (
+				E8188FE31DBD0A0B0044CE74 /* ViewControllerFunctions.swift */,
 				E8C0FCB61DBBB0D800260964 /* DrawCharts.swift */,
 				E87F5B021D78B86400C10A38 /* Player.swift */,
 				E87F5B031D78B86400C10A38 /* Data.swift */,
 				E82125921D78B9B80024D016 /* playerData.txt */,
-				E84E1ADE1D7B4B4200A0BC48 /* favourites.txt */,
 				E87F5AEF1D78B82500C10A38 /* Footballers */,
 				E87F5AEE1D78B82500C10A38 /* Products */,
 				91B8F189B9FCF175F4CA6E8F /* Pods */,
@@ -263,7 +263,6 @@
 				E821259D1D78B9B80024D016 /* menuButton.png in Resources */,
 				E87F5AFB1D78B82500C10A38 /* LaunchScreen.storyboard in Resources */,
 				E821259F1D78B9B80024D016 /* team.png in Resources */,
-				E84E1ADF1D7B4B4200A0BC48 /* favourites.txt in Resources */,
 				E8180C431D7CBB2400043884 /* defaultPlayerImage.png in Resources */,
 				E82125A71D78BDBC0024D016 /* Images.xcassets in Resources */,
 				E821259E1D78B9B80024D016 /* home.png in Resources */,
@@ -358,6 +357,7 @@
 				E87F5B051D78B86400C10A38 /* Data.swift in Sources */,
 				E82125A91D78BF9A0024D016 /* rankingsView.swift in Sources */,
 				E82125AD1D78C24C0024D016 /* favouritesView.swift in Sources */,
+				E8188FE41DBD0A0B0044CE74 /* ViewControllerFunctions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,9 +12,6 @@ import Charts
 
 class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var goalsAndAssistsTitle: UILabel!
-    var goalsAndAssistsDivider: UIImageView!
-    
     var topScorersButton: UIButton!
     var topScorersTable: UITableView!
     var topScorersData = [[String]]()
@@ -23,8 +20,6 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var topAssistsTable: UITableView!
     var topAssistsData = [[String]]()
     
-    var passingTitle: UIButton!
-    var passingDivider: UIImageView!
     var topPasserData = [[String]]()
     var topPassingPlayerTitle: UIButton!
     
@@ -55,20 +50,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        // Goals and Assists Title
-        self.goalsAndAssistsTitle = UILabel(frame: CGRect(x: 20, y: 110, width: self.view.frame.width - 40, height: 30))
-        self.goalsAndAssistsTitle?.tintColor = UIColor.white
-        self.goalsAndAssistsTitle?.font = UIFont.systemFont(ofSize: 28.0)
-        self.goalsAndAssistsTitle?.text = "Goals and Assists"
-        self.goalsAndAssistsTitle?.textColor = UIColor.white
-        self.goalsAndAssistsTitle.alpha = 0.0
-        self.mainView.addSubview(self.goalsAndAssistsTitle!)
-        
-        // Divider
-        self.goalsAndAssistsDivider = UIImageView(image: UIImage(named: "whiteLine.png"))
-        self.goalsAndAssistsDivider.frame = CGRect(x: 20, y: 150, width: self.view.frame.width - 40, height: 1)
-        self.goalsAndAssistsDivider.alpha = 0.0
-        self.mainView.addSubview(self.goalsAndAssistsDivider)
+        addTitle(yPosition: 110, text: "Goals and Assists")
         
         // Top scorers button
         self.topScorersButton = UIButton(frame: CGRect(x: 20, y: 165, width: self.view.frame.width - 40, height: 30))
@@ -103,7 +85,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         // Assists bar chart
         AssistsChartView.frame = CGRect(x: 12, y: 450, width: self.view.frame.width + 30, height: 140)
-        AssistsChartView = configureHorizontalBarChart(barChart: AssistsChartView, values: [self.topAssistsData[0][2], self.topAssistsData[1][2], self.topAssistsData[2][2]] )
+        AssistsChartView = configureHorizontalBarChart(barChart: AssistsChartView, values: [self.topAssistsData[0][3], self.topAssistsData[1][3], self.topAssistsData[2][3]] )
         self.mainView.addSubview(AssistsChartView)
         
         // Assists table view.
@@ -117,25 +99,11 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.topAssistsTable.alpha = 0.0
         self.mainView.addSubview(self.topAssistsTable)
         
-        // Passing stats title
-        self.passingTitle = UIButton(frame: CGRect(x: 20, y: 600, width: self.view.frame.width - 40, height: 30))
-        self.passingTitle?.tintColor = UIColor.white
-        self.passingTitle?.titleLabel?.font = UIFont.systemFont(ofSize: 28.0)
-        self.passingTitle?.setTitle("Passing", for: .normal)
-        self.passingTitle.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
-        self.passingTitle?.addTarget(self, action: #selector(topScorersPressed), for: .touchUpInside)
-        self.passingTitle.alpha = 0.0
-        self.mainView.addSubview(self.passingTitle!)
-        
-        // Passing divider
-        self.passingDivider = UIImageView(image: UIImage(named: "whiteLine.png"))
-        self.passingDivider.frame = CGRect(x: 20, y: 640, width: self.view.frame.width - 40, height: 1)
-        self.passingDivider.alpha = 0.0
-        self.mainView.addSubview(self.passingDivider)
+        addTitle(yPosition: 600, text: "Passing")
         
         // Passing pie chart
         pieChartView.frame = CGRect(x: self.view.frame.width - 160, y: 650, width: 140 , height: 140)
-        pieChartView = configurePieChart(pieChart: pieChartView, chartValue: Double(self.topPasserData[0][2])!)
+        pieChartView = configurePieChart(pieChart: pieChartView, chartValue: Double(self.topPasserData[0][3])!)
         self.mainView.addSubview(pieChartView)
         
         self.topPassingPlayerTitle = UIButton(frame: CGRect(x: 20, y: 650, width: self.view.frame.width - 160, height: 30))
@@ -150,20 +118,14 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         
         UIView.animate(withDuration: 1.0, animations: {
-            self.goalsAndAssistsTitle.alpha = 1.0
-            self.goalsAndAssistsDivider.alpha = 1.0
             
             self.topScorersButton.alpha = 1.0
             self.topScorersTable.alpha = 1.0
             
             self.topAssistsButton.alpha = 1.0
             
-            self.passingTitle.alpha = 1.0
-            self.passingDivider.alpha = 1.0
             self.topPassingPlayerTitle.alpha = 1.0
             }, completion: { (complete: Bool) in
-                print("done")
-                
                 UIView.animate(withDuration: 0.5, animations: {
                     self.topAssistsTable.alpha = 1.0
                     })
@@ -183,40 +145,12 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         // Scroll view needed to fit content on screen.
         self.scrollView = UIScrollView(frame: self.view.bounds)
-        self.scrollView.backgroundColor = UIColor(red: 70.0/255.0, green: 70.0/255.0, blue: 70.0/255.0, alpha: 1.0)
+        self.scrollView.backgroundColor = lightGrey
         self.scrollView.contentSize = self.mainView.bounds.size
         self.scrollView.addSubview(self.mainView)
         view.addSubview(self.scrollView)
         
-        // Set background.
-        self.view.backgroundColor = UIColor(red: 70.0/255.0, green: 70.0/255.0, blue: 70.0/255.0, alpha: 1.0)
-        
-        // Menu bar button
-        let menuButton = UIButton(type: UIButtonType.custom) as UIButton
-        menuButton.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
-        menuButton.setImage(UIImage(named: "menuButton.png"), for: UIControlState())
-        menuButton.addTarget(self, action: #selector(homeView.menuOpened(_:)), for:.touchUpInside)
-        
-        let leftBarButton = UIBarButtonItem()
-        leftBarButton.customView = menuButton
-        self.navigationItem.leftBarButtonItem = leftBarButton
-        
-        // Navigation bar.
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        
-        let navBar = UIView()
-        navBar.frame = CGRect(x: -1, y: 0, width: self.view.frame.width + 1, height: 64)
-        navBar.backgroundColor = UIColor(red: 55.0/255.0, green: 55.0/255.0, blue: 55.0/255.0, alpha: 1.0)
-        self.view.addSubview(navBar)
-        
-        // Shadow effect.
-        navBar.layer.shadowRadius = 1
-        navBar.layer.shadowOpacity = 1
-        navBar.layer.shadowColor = UIColor.black.cgColor
-        navBar.layer.shadowOffset = CGSize.zero
-        navBar.layer.shouldRasterize = true
-        navBar.layer.shadowPath = UIBezierPath(rect: navBar.bounds).cgPath
+        setUpView(viewController: self)
         
         self.topScorersData = getPlayerRankings(type: "goal", numberToGet: "5")
         self.topAssistsData = getPlayerRankings(type: "assistTotal", numberToGet: "3")
@@ -253,8 +187,8 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             rankingCell.rankingLabel.text = String(indexPath.row + 1)
             rankingCell.statNameLabel.text = self.topScorersData[(indexPath as NSIndexPath).row][1]
-            rankingCell.statValueLabel.text = self.topScorersData[(indexPath as NSIndexPath).row][2]
-            rankingCell.flagImage.image = UIImage(named: String(self.topScorersData[(indexPath as NSIndexPath).row][0].uppercased() + ""))!
+            rankingCell.statValueLabel.text = self.topScorersData[(indexPath as NSIndexPath).row][3]
+            rankingCell.flagImage.image = UIImage(named: String(self.topScorersData[(indexPath as NSIndexPath).row][2].uppercased() + ""))!
         
             // Set cell.
             cell = rankingCell
@@ -265,7 +199,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             cell.selectionStyle = .none
             cell.textLabel?.text = self.topAssistsData[indexPath.row][1]
-            cell.textLabel?.textColor = UIColor(red: 70.0/255.0, green: 70.0/255.0, blue: 70.0/255.0, alpha: 1.0)
+            cell.textLabel?.textColor = lightGrey
             cell.backgroundColor = UIColor.clear
         }
         
@@ -282,11 +216,11 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView == self.topScorersTable {
             self.topScorersTable.deselectRow(at: indexPath, animated: true)
-            self.selectedPlayerId = self.topScorersData[(indexPath as NSIndexPath).row][3]
+            self.selectedPlayerId = self.topScorersData[(indexPath as NSIndexPath).row][0]
         }
         else {
             self.topAssistsTable.deselectRow(at: indexPath, animated: true)
-            self.selectedPlayerId = self.topAssistsData[(indexPath as NSIndexPath).row][3]
+            self.selectedPlayerId = self.topAssistsData[(indexPath as NSIndexPath).row][0]
         }
         
         performSegue(withIdentifier: "homePlayerSegue", sender: self)
@@ -299,6 +233,34 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
             playerClass.playerData["playerId"] = self.selectedPlayerId
             
         }
+    }
+    
+    func addTitle(yPosition: Double, text: String) {
+        
+        // Title
+        let title = UILabel(frame: CGRect(x: 20.0, y: yPosition, width: Double(self.view.frame.width - 40.0), height: 30.0))
+        title.tintColor = UIColor.white
+        title.font = UIFont.systemFont(ofSize: 28.0)
+        title.text = text
+        title.textColor = UIColor.white
+        title.alpha = 0.0
+        self.mainView.addSubview(title)
+        
+        // Divider
+        let divider = UIImageView(image: UIImage(named: "whiteLine.png"))
+        divider.frame = CGRect(x: 20.0, y: yPosition + 40.0, width: Double(self.view.frame.width - 40.0), height: 1.0)
+        divider.alpha = 0.0
+        self.mainView.addSubview(divider)
+        
+        // Animate
+        UIView.animate(withDuration: 1.0, animations: {
+            title.alpha = 1.0
+            divider.alpha = 1.0
+        })
+    }
+    
+    func addSubtitle(yPosition: Double, text: String) {
+        
     }
     
     override func didReceiveMemoryWarning() {

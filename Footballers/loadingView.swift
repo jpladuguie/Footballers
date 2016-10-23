@@ -41,7 +41,7 @@ class loadingView: UIViewController, UIWebViewDelegate {
         super.viewDidLoad()
         
         // Set the background grey.
-        self.view.backgroundColor = UIColor(red: 70.0/255.0, green: 70.0/255.0, blue: 70.0/255.0, alpha: 1.0)
+        self.view.backgroundColor = lightGrey
         
         // Navigation bar.
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
@@ -49,7 +49,7 @@ class loadingView: UIViewController, UIWebViewDelegate {
         
         let navBar = UIView()
         navBar.frame = CGRect(x: -1, y: 0, width: self.view.frame.width + 1, height: 64)
-        navBar.backgroundColor = UIColor(red: 55.0/255.0, green: 55.0/255.0, blue: 55.0/255.0, alpha: 1.0)
+        navBar.backgroundColor = darkGrey
         self.view.addSubview(navBar)
         
         // Shadow effect.
@@ -72,18 +72,17 @@ class loadingView: UIViewController, UIWebViewDelegate {
         activityIndicator.startAnimating()
         self.view.addSubview(activityIndicator)
         
-        
         // Get webpage and cookies.
         let request = NSURLRequest(url: URL(string: "https://www.whoscored.com/AboutUs")!)
         let webView:UIWebView = UIWebView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         webView.loadRequest(request as URLRequest)
         self.view.addSubview(webView)
         webView.delegate = self
+        
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 }

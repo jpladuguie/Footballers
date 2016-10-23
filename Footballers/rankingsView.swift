@@ -34,7 +34,7 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.statsTableView.dataSource = self
         self.statsTableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
         self.statsTableView.separatorStyle = UITableViewCellSeparatorStyle.none
-        self.statsTableView.backgroundColor = UIColor(red: 70.0/255.0, green: 70.0/255.0, blue: 70.0/255.0, alpha: 1.0)
+        self.statsTableView.backgroundColor = lightGrey
         self.statsTableView.alpha = 0.0
         self.view.addSubview(self.statsTableView)
         
@@ -52,32 +52,7 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
         currentPage = "Rankings"
         self.title = "Top Scorers"
         
-        // Set background.
-        self.view.backgroundColor = UIColor(red: 70.0/255.0, green: 70.0/255.0, blue: 70.0/255.0, alpha: 1.0)
-        
-        // Menu bar button
-        let menuButton = UIButton(type: UIButtonType.custom) as UIButton
-        menuButton.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
-        menuButton.setImage(UIImage(named: "menuButton.png"), for: UIControlState())
-        menuButton.addTarget(self, action: #selector(rankingsView.menuOpened(_:)), for:.touchUpInside)
-        
-        let leftBarButton = UIBarButtonItem()
-        leftBarButton.customView = menuButton
-        self.navigationItem.leftBarButtonItem = leftBarButton
-        
-        // Navigation bar.
-        let navBar = UIView()
-        navBar.frame = CGRect(x: -1, y: 0, width: self.view.frame.width + 1, height: 64)
-        navBar.backgroundColor = UIColor(red: 55.0/255.0, green: 55.0/255.0, blue: 55.0/255.0, alpha: 1.0)
-        self.view.addSubview(navBar)
-        
-        // Shadow effect.
-        navBar.layer.shadowRadius = 1
-        navBar.layer.shadowOpacity = 1
-        navBar.layer.shadowColor = UIColor.black.cgColor
-        navBar.layer.shadowOffset = CGSize.zero
-        navBar.layer.shouldRasterize = true
-        navBar.layer.shadowPath = UIBezierPath(rect: navBar.bounds).cgPath
+        setUpView(viewController: self)
         
         // Loading activity indicator.
         self.activityIndicator = NVActivityIndicatorView(frame: CGRect(x: (self.view.frame.size.width/2 - 25), y: (self.view.frame.size.height/2 - 25), width: 50, height: 50), type: NVActivityIndicatorType.ballClipRotatePulse, color: UIColor.white)
@@ -102,8 +77,8 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
             
         rankingCell.rankingLabel.text = String(indexPath.row + 1)
         rankingCell.statNameLabel.text = self.players[(indexPath as NSIndexPath).row][1]
-        rankingCell.statValueLabel.text = self.players[(indexPath as NSIndexPath).row][2]
-        rankingCell.flagImage.image = try UIImage(named: String(self.players[(indexPath as NSIndexPath).row][0].uppercased() + ""))!
+        rankingCell.statValueLabel.text = self.players[(indexPath as NSIndexPath).row][3]
+        rankingCell.flagImage.image = try UIImage(named: String(self.players[(indexPath as NSIndexPath).row][2].uppercased() + ""))!
             
             // Set cell.
         cell = rankingCell
@@ -118,7 +93,7 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
     // Player selected
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.statsTableView.deselectRow(at: indexPath, animated: true)
-        self.selectedPlayerId = self.players[(indexPath as NSIndexPath).row][3]
+        self.selectedPlayerId = self.players[(indexPath as NSIndexPath).row][0]
         performSegue(withIdentifier: "rankingsPlayerSegue", sender: self)
     }
     

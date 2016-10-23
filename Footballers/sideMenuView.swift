@@ -37,7 +37,7 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
         super.viewDidLoad()
         
         // Set grey background.
-        self.view.backgroundColor = UIColor(red: 55.0/255.0, green: 55.0/255.0, blue: 55.0/255.0, alpha: 1.0)
+        self.view.backgroundColor = darkGrey
         
         // Set the menu items, the names of the images of the corresponding icons, and their sizes.
         self.menuItems = ["Home", "Teams", "Rankings", "Compare", "Favourites"]
@@ -66,7 +66,6 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
         let searchBox = UIView.init(frame: CGRect(x: 10, y: 0, width: 30, height: 40))
         self.searchField.leftView = searchBox;
         self.searchField.leftViewMode = UITextFieldViewMode.always
-        
         self.view.addSubview(self.searchField)
         
         // Create cancel button for search bar.
@@ -83,7 +82,7 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.menuTableView.delegate = self
         self.menuTableView.dataSource = self
         self.menuTableView.alwaysBounceVertical = false
-        self.menuTableView.backgroundColor = UIColor(red: 55.0/255.0, green: 55.0/255.0, blue: 55.0/255.0, alpha: 1.0)
+        self.menuTableView.backgroundColor = darkGrey
         self.menuTableView.rowHeight = 50.0
         self.menuTableView.separatorStyle = UITableViewCellSeparatorStyle.none
         self.view.addSubview(self.menuTableView)
@@ -94,7 +93,7 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.searchTableView.delegate = self
         self.searchTableView.dataSource = self
         self.searchTableView.alwaysBounceVertical = false
-        self.searchTableView.backgroundColor = UIColor(red: 55.0/255.0, green: 55.0/255.0, blue: 55.0/255.0, alpha: 1.0)
+        self.searchTableView.backgroundColor = darkGrey
         self.searchTableView.alpha = 0.0
         self.searchTableView.rowHeight = 40.0
         self.searchTableView.separatorStyle = UITableViewCellSeparatorStyle.none

@@ -1,7 +1,63 @@
+//
+//  Data.swift
+//  Footballers
+//
+//  Created by Jean-Pierre Laduguie on 18/08/2016.
+//  Copyright © 2016 jp. All rights reserved.
+//
+
+// Everything to do with managing data. Functions are:
+//
+// getDataFromUrl - gets the data from the API depending on the type (i.e. player, player
+//                  ranking, team) and returns it as a string with JSON encoding.
+// getPlayerRankings - gets a 2d array of ranked players, depending on what statistic wanted
+//                     (such as goals, assists etc) and the number needed. Returns the data
+//                     as a 2d array, giving the player name, id, regionCode, statistic and team
+//                     name.
+// isPlayerInFavourites - returns a boolean value depending on whether the player with the given
+//                        id is stored in favourites in CoreData memory.
+// savePlayerToFavourites - given a player id, regionCode and name, saves it to favourites in
+//                          CoreData memory.
+// removePlayerFromFavourites - given a plauyer id, removes the player from favourites in 
+//                              CoreData memory.
+// getPlayersFromFavourites - returns all the players saved in favourites in CoreData memoory as
+//                            a 2d array, with each player having an id, name and regionCode.
+// reloadPlayerData - gets the entire list of player from the API sorted by current rating,
+//                    and stores each one in CoreData memory.
+// getPlayerData - returns a 2d array of every player stored in CoreData memory. 
+//
+
 import Foundation
 import Kanna
 import SwiftyJSON
 import CoreData
+
+// Set global variable for HTTP request parameters
+let globalParameters = [
+    "category" : "summary",
+    "subcategory" : "all",
+    "statsAccumulationType" : "0",
+    "isCurrent" : "true",
+    "playerId" : "",
+    "teamIds" : "",
+    "matchId" : "",
+    "stageId" : "",
+    "tournamentOptions" : "2,3,4,5,22",
+    "sortBy": "",
+    "sortAscending" : "",
+    "age" : "",
+    "ageComparisonType" : "",
+    "appearances" : "",
+    "appearancesComparisonType" : "",
+    "field" : "Overall",
+    "nationality" : "",
+    "positionOptions" : "",
+    "timeOfTheGameEnd" : "",
+    "timeOfTheGameStart" : "",
+    "isMinApp" : "",
+    "page" : "",
+    "includeZeroValues" : "",
+    "numberOfPlayersToPick" : "" ]
 
 // Gets data from Whoscored.com, for the type specified, which can be for Player, Team, or Player/Team
 // Rankings. The parameters are the ones used in the HTTP request, and the Model-Last-Mode key is
@@ -40,11 +96,10 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
         print("Incorrect value passed to Data function for statistics type.")
     }
     
-    
     // If the Model-Last-Mode key is empty, get it by loading the page.
     if modelLastMode == "" {
         
-        // Get the cookies for the url, and create a HTTP request.
+        // Get the cookies for the url, and create an HTTP request.
         let url = URL(string: htmlUrl)
         let jar = HTTPCookieStorage.shared
         jar.setCookies(cookies, for: url, mainDocumentURL: url)
@@ -189,51 +244,34 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
     
 }
 
-// Gets player rankings depending on what type of ranking and number of players.
+// Gets player rankings from the API depending on what type of ranking and number of players.
 func getPlayerRankings(type: String, numberToGet: String) -> [[String]] {
     
+    // Set up a variable to store the players in.
     var players: [[String]] = [[String]]()
     
-    // Get data.
-    var parameters = [
-        "category" : "summary",
-        "subcategory" : "all",
-        "statsAccumulationType" : "0",
-        "isCurrent" : "true",
-        "playerId" : "",
-        "teamIds" : "",
-        "matchId" : "",
-        "stageId" : "",
-        "tournamentOptions" : "2,3,4,5,22",
-        "sortBy": type,
-        "sortAscending" : "false",
-        "age" : "",
-        "ageComparisonType" : "",
-        "appearances" : "",
-        "appearancesComparisonType" : "",
-        "field" : "Overall",
-        "nationality" : "",
-        "positionOptions" : "",
-        "timeOfTheGameEnd" : "",
-        "timeOfTheGameStart" : "",
-        "isMinApp" : "true",
-        "page" : "",
-        "includeZeroValues" : "",
-        "numberOfPlayersToPick" : numberToGet ]
+    // Set the parameters for the HTTP request.
+    var parameters = globalParameters
+    parameters["sortBy"] = type
+    parameters["numberOfPlayersToPick"] = numberToGet
+    parameters["sortAscending"] = "false"
+    parameters["isMinApp"] = "true"
     
-    // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as
-    // This is the first time the data is being called.
+    // Get the data from the url, and create a JSON object to parse it.
     let data = getDataFromUrl("Player Ranking", Parameters: parameters, modelLastMode: "") as String
     var json : JSON!
-    
     if let dataFromString = data.data(using: String.Encoding.utf8, allowLossyConversion: false) {
         json = JSON(data: dataFromString)
     }
     
+    // Loop through each player in the data, and append the player to the players variable.
+    // Each player is an array with the values for playerId, name, regionCode, statisticValue and
+    // teamName.
     for (_, playerJson):(String, JSON) in json["playerTableStats"] {
-        players.append([String(describing: playerJson["regionCode"]), String(describing: playerJson["name"]), String(describing: playerJson[type]), String(describing: playerJson["playerId"]), String(describing: playerJson["teamName"])])
+        players.append([String(describing: playerJson["playerId"]), String(describing: playerJson["name"]), String(describing: playerJson["regionCode"]), String(describing: playerJson[type]), String(describing: playerJson["teamName"])])
     }
-
+    
+    // Return the values.
     return players
 }
 
@@ -251,6 +289,7 @@ func isPlayerInFavourites(_ playerId: String) -> Bool {
     // Create a fetch request.
     var players = [PlayerFavouritesData]()
     let request = PlayerFavouritesData.createFetchRequest()
+    // Set the predicate to look for players with a matching playerId.
     request.predicate = NSPredicate(format: String("playerId == '" + playerId + "'"))
     
     // Get all players with matching id.
@@ -267,6 +306,7 @@ func isPlayerInFavourites(_ playerId: String) -> Bool {
         print("Unable to access playerFavouritesDataModel.")
     }
     
+    // Return false if an error occured.
     return false
 }
 
@@ -296,7 +336,7 @@ func savePlayerToFavourites(_ playerData: [String: String]) {
 }
 
 // Removes a player from favourites.
-func removePlayerFromFavourites(_ playerData: [String: String]) {
+func removePlayerFromFavourites(_ playerId: String) {
     // Set up data container.
     let container = NSPersistentContainer(name: "playerFavouritesDataModel")
     container.loadPersistentStores { storeDescription, error in
@@ -309,10 +349,13 @@ func removePlayerFromFavourites(_ playerData: [String: String]) {
     // Get the player to delete from the model.
     var players = [PlayerFavouritesData]()
     let request = PlayerFavouritesData.createFetchRequest()
-    request.predicate = NSPredicate(format: String("playerId == '" + playerData["playerId"]! + "'"))
+    // Set up a predicate to look for a player with a matching playerId.
+    request.predicate = NSPredicate(format: String("playerId == '" + playerId + "'"))
     
+    // Find all players with a matching id.
     do {
         players = try container.viewContext.fetch(request)
+        // If no players found.
         if players.count == 0 {
             print("Unable to delete player as not found in playerFavouritesDataModel.")
         }
@@ -344,14 +387,16 @@ func getPlayersFromFavourites() -> [[String]] {
         }
     }
     
-    // Set up players array.
+    // Set up players variable to store the data.
     var playerData = [[String]]()
+    
+    // Create the request.
     var players = [PlayerFavouritesData]()
     let request = PlayerFavouritesData.createFetchRequest()
     
+    // Get the players.
     do {
         players = try container.viewContext.fetch(request)
-        print(players.count)
     } catch {
         print("Unable to access playerFavouritesDataModel.")
     }
@@ -364,11 +409,27 @@ func getPlayersFromFavourites() -> [[String]] {
     return playerData
 }
 
-// Get all player statistics.
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////
+
+
+
+// Reload all player statistics.
 func reloadPlayerData() {
     
+    //
     let container = NSPersistentContainer(name: "playerDataModel")
-    
     container.loadPersistentStores { storeDescription, error in
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         
@@ -378,31 +439,11 @@ func reloadPlayerData() {
     }
 
     // Get data.
-    let parameters = [
-        "category" : "summary",
-        "subcategory" : "all",
-        "statsAccumulationType" : "0",
-        "isCurrent" : "true",
-        "playerId" : "",
-        "teamIds" : "",
-        "matchId" : "",
-        "stageId" : "",
-        "tournamentOptions" : "2,3,4,5,22",
-        "sortBy": "rating",
-        "sortAscending" : "false",
-        "age" : "",
-        "ageComparisonType" : "",
-        "appearances" : "",
-        "appearancesComparisonType" : "",
-        "field" : "Overall",
-        "nationality" : "",
-        "positionOptions" : "",
-        "timeOfTheGameEnd" : "",
-        "timeOfTheGameStart" : "",
-        "isMinApp" : "false",
-        "page" : "",
-        "includeZeroValues" : "",
-        "numberOfPlayersToPick" : "2127" ]
+    var parameters = globalParameters
+    parameters["sortBy"] = "rating"
+    parameters["numberOfPlayersToPick"] = "2127"
+    parameters["sortAscending"] = "false"
+    parameters["isMinApp"] = "false"
     
     // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as
     // This is the first time the data is being called.
@@ -464,31 +505,11 @@ func getPlayerData() -> [[String]] {
 func getHistoricRating(playerId: String) -> String {
     
     // Get data.
-    let parameters = [
-        "category" : "summary",
-        "subcategory" : "all",
-        "statsAccumulationType" : "0",
-        "isCurrent" : "false",
-        "playerId" : playerId,
-        "teamIds" : "",
-        "matchId" : "",
-        "stageId" : "",
-        "tournamentOptions" : "2,3,4,5,22",
-        "sortBy": "seasonId",
-        "sortAscending" : "",
-        "age" : "",
-        "ageComparisonType" : "",
-        "appearances" : "",
-        "appearancesComparisonType" : "",
-        "field" : "Overall",
-        "nationality" : "",
-        "positionOptions" : "",
-        "timeOfTheGameEnd" : "",
-        "timeOfTheGameStart" : "",
-        "isMinApp" : "false",
-        "page" : "",
-        "includeZeroValues" : "true",
-        "numberOfPlayersToPick" : "" ]
+    var parameters = globalParameters
+    parameters["playerId"] = playerId
+    parameters["sortBy"] = "seasonId"
+    parameters["includeZeroValues"] = "true"
+    parameters["isMinApp"] = "false"
     
     // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as
     // This is the first time the data is being called.
@@ -522,7 +543,6 @@ func getHistoricPlayerData() {
     }
     
     // Set up players array.
-    var playerData = [[String]]()
     var players = [PlayerData]()
     let request = PlayerData.createFetchRequest()
     let sort = NSSortDescriptor(key: "currentRating", ascending: false)
@@ -540,10 +560,6 @@ func getHistoricPlayerData() {
         print(player.name)
         print(getHistoricRating(playerId: player.playerId!))
     }
-
-    
-    
-    
 }
 
 

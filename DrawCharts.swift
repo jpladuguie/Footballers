@@ -26,6 +26,7 @@ func configurePieChart(pieChart: PieChartView, chartValue: Double) -> PieChartVi
     pieChart.chartDescription?.text = ""
     pieChart.isUserInteractionEnabled = false
     
+    
     pieChart.animate(xAxisDuration: 1, yAxisDuration: 1)
     
     pieChart.data = pieChartData

@@ -45,7 +45,7 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.menuIconSizes = [[32, 32], [26, 32], [32, 18], [31, 32], [32, 32]]
         
         // Create search bar.
-        self.searchField.frame = CGRect(x: 10, y: 25, width: 170, height: 40)
+        self.searchField.frame = CGRect(x: 10, y: 25, width: 210, height: 40)
         self.searchField.autocorrectionType = UITextAutocorrectionType.no
         self.searchField.attributedPlaceholder = NSAttributedString(string:"Search for players...",
                                                                attributes:[NSForegroundColorAttributeName: UIColor.lightGray])
@@ -70,21 +70,15 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.view.addSubview(self.searchField)
         
         // Create cancel button for search bar.
-        self.cancelButton = UIButton(frame: CGRect(x: 180, y: 25, width: 60, height: 40))
+        self.cancelButton = UIButton(frame: CGRect(x: 220, y: 25, width: 60, height: 40))
         self.cancelButton.titleLabel!.font = UIFont.systemFont(ofSize: 15)
         self.cancelButton.setTitle("Cancel", for: UIControlState())
         self.cancelButton.addTarget(self, action: #selector(searchCanceled), for: .touchUpInside)
         self.cancelButton.alpha = 0.0
         self.view.addSubview(self.cancelButton)
         
-        // Create divider between search bar and tableview.
-        /*let dividerImage = UIImage(named: "whiteLine.png")
-        let divider = UIImageView(image: dividerImage!)
-        divider.frame = CGRect(x: 10, y: 63, width: 220, height: 1)
-        view.addSubview(divider)*/
-        
         // Create menu tableview.
-        self.menuTableView.frame = CGRect(x: 0, y: 100, width: 240, height: 400)
+        self.menuTableView.frame = CGRect(x: 0, y: 100, width: 280, height: 400)
         self.menuTableView.register(UITableViewCell.self, forCellReuseIdentifier: "menuCell")
         self.menuTableView.delegate = self
         self.menuTableView.dataSource = self
@@ -95,7 +89,7 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.view.addSubview(self.menuTableView)
         
         // Create search tableview.
-        self.searchTableView.frame = CGRect(x: 0, y: 80, width: 240, height: 400)
+        self.searchTableView.frame = CGRect(x: 0, y: 80, width: 280, height: 400)
         self.searchTableView.register(UITableViewCell.self, forCellReuseIdentifier: "searchCell")
         self.searchTableView.delegate = self
         self.searchTableView.dataSource = self

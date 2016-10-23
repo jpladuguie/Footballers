@@ -76,6 +76,7 @@
                     </view>
                     <connections>
                         <segue destination="GTs-3N-ne6" kind="presentation" identifier="rankingsMenuSegue" id="8nZ-Ql-avh"/>
+                        <segue destination="1wd-lr-6Br" kind="show" identifier="rankingsPlayerSegue" id="lVa-MB-Zow"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oju-eq-KGY" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -249,8 +250,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="m5p-Kd-Af4"/>
+        <segue reference="8nZ-Ql-avh"/>
+        <segue reference="lVa-MB-Zow"/>
         <segue reference="5jI-Xj-CU4"/>
-        <segue reference="b1K-CR-g7j"/>
     </inferredMetricsTieBreakers>
 </document>

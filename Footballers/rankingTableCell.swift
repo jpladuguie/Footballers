@@ -10,6 +10,7 @@ import UIKit
 
 class rankingTableCell: UITableViewCell {
 
+    var rankingLabel: UILabel!
     var flagImage: UIImageView!
     var statNameLabel: UILabel!
     var statValueLabel: UILabel!
@@ -19,14 +20,23 @@ class rankingTableCell: UITableViewCell {
         backgroundColor = UIColor.clear
         selectionStyle = .gray
         
+        // Ranking label.
+        self.rankingLabel = UILabel()
+        self.rankingLabel.frame = CGRect(x: 20, y: 0, width: 30, height: 40)
+        self.rankingLabel.textAlignment = .right
+        self.rankingLabel.font = UIFont.systemFont(ofSize: 16.0)
+        self.rankingLabel.textColor = UIColor.white
+        self.rankingLabel.backgroundColor = UIColor.clear
+        self.addSubview(self.rankingLabel)
+        
         // Flag image.
         self.flagImage = UIImageView()
-        self.flagImage.frame = CGRect(x: 20, y: 11.5, width: 23, height: 17)
+        self.flagImage.frame = CGRect(x: 60, y: 11.5, width: 23, height: 17)
         self.contentView.addSubview(flagImage)
         
         // Stat name label.
         self.statNameLabel = UILabel()
-        self.statNameLabel.frame = CGRect(x: 55, y: 0, width: self.contentView.frame.width, height: 40)
+        self.statNameLabel.frame = CGRect(x: 95, y: 0, width: self.contentView.frame.width, height: 40)
         self.statNameLabel.textAlignment = .left
         self.statNameLabel.font = UIFont.systemFont(ofSize: 16.0)
         self.statNameLabel.textColor = UIColor.white
@@ -41,13 +51,6 @@ class rankingTableCell: UITableViewCell {
         self.statValueLabel.textColor = UIColor.white
         self.statValueLabel.backgroundColor = UIColor.clear
         self.addSubview(self.statValueLabel)
-        
-        // Flag icon.
-        
-        
-
-        
-        
         
     }
     

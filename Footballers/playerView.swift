@@ -77,7 +77,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         self.statsTableView.delegate = self
         self.statsTableView.dataSource = self
         self.statsTableView.separatorStyle = UITableViewCellSeparatorStyle.none
-        self.statsTableView.backgroundColor = UIColor.clear
+        self.statsTableView.backgroundColor = UIColor(red: 70.0/255.0, green: 70.0/255.0, blue: 70.0/255.0, alpha: 1.0)
         self.statsTableView.alpha = 0
         self.view.addSubview(self.statsTableView)
         self.view.bringSubview(toFront: self.topBar)
@@ -140,7 +140,9 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
             nameLabel.alpha = 1.0
             teamLabel.alpha = 1.0
             self.statsTableView.alpha = 1.0
-            self.activityIndicator.alpha = 0.0
+            }, completion: { (complete: Bool) in
+                self.activityIndicator.removeFromSuperview()
+                return
         })
     }
     

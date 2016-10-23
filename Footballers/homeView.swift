@@ -10,7 +10,7 @@ import UIKit
 import SwiftyJSON
 import Charts
 
-class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, ChartViewDelegate {
+class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var goalsAndAssistsTitle: UILabel!
     var goalsAndAssistsDivider: UIImageView!
@@ -102,12 +102,12 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, Ch
         self.mainView.addSubview(self.topAssistsButton!)
         
         // Assists bar chart
-        AssistsChartView.frame = CGRect(x: 20, y: 450, width: self.view.frame.width , height: 140)
+        AssistsChartView.frame = CGRect(x: 12, y: 450, width: self.view.frame.width + 30, height: 140)
         AssistsChartView = configureHorizontalBarChart(barChart: AssistsChartView, values: [self.topAssistsData[0][2], self.topAssistsData[1][2], self.topAssistsData[2][2]] )
         self.mainView.addSubview(AssistsChartView)
         
         // Assists table view.
-        self.topAssistsTable = UITableView(frame: CGRect(x: 25, y: 460, width: self.view.frame.width, height: 140))
+        self.topAssistsTable = UITableView(frame: CGRect(x: 40, y: 460, width: self.view.frame.width, height: 140))
         self.topAssistsTable.delegate = self
         self.topAssistsTable.dataSource = self
         self.topAssistsTable.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -247,6 +247,11 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, Ch
             // Create cell.
             let rankingCell: rankingTableCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(rankingTableCell.self), for: indexPath) as! rankingTableCell
             
+            rankingCell.rankingLabel.frame = CGRect(x: 20, y: 0, width: 10, height: 40)
+            rankingCell.flagImage.frame = CGRect(x: 40, y: 11.5, width: 23, height: 17)
+            rankingCell.statNameLabel.frame = CGRect(x: 75, y: 0, width: 320, height: 40)
+            
+            rankingCell.rankingLabel.text = String(indexPath.row + 1)
             rankingCell.statNameLabel.text = self.topScorersData[(indexPath as NSIndexPath).row][1]
             rankingCell.statValueLabel.text = self.topScorersData[(indexPath as NSIndexPath).row][2]
             rankingCell.flagImage.image = UIImage(named: String(self.topScorersData[(indexPath as NSIndexPath).row][0].uppercased() + ""))!

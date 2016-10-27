@@ -20,7 +20,7 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
     var statsTableView: UITableView!
     
     // Selected playerId for segue to playerView.
-    var selectedPlayerId: String?
+    var selectedPlayerData = [String: String]()
     
     // Activity indicator.
     var activityIndicator: NVActivityIndicatorView!
@@ -127,7 +127,9 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
     // Player selected
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.statsTableView.deselectRow(at: indexPath, animated: true)
-        self.selectedPlayerId = self.players[(indexPath as NSIndexPath).row][0]
+        self.selectedPlayerData["playerId"] = self.players[(indexPath as NSIndexPath).row][0]
+        self.selectedPlayerData["name"] = self.players[(indexPath as NSIndexPath).row][1]
+        self.selectedPlayerData["regionCode"] = self.players[(indexPath as NSIndexPath).row][2]
         performSegue(withIdentifier: "rankingsPlayerSegue", sender: self)
     }
     
@@ -135,7 +137,7 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == "rankingsPlayerSegue") {
             let playerClass = (segue.destination as! playerView)
-            playerClass.playerData["playerId"] = self.selectedPlayerId
+            playerClass.playerData = self.selectedPlayerData
             
         }
     }

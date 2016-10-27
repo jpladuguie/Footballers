@@ -42,6 +42,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     
     // Favourites button pressed.
     @IBAction func favouriteButtonTouched(_ sender: UIButton) {
+        
         if isPlayerFavourite == true {
             removePlayerFromFavourites(self.playerData["playerId"]!)
         }
@@ -68,8 +69,6 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         // Declare player
         self.player = Player(id: self.playerData["playerId"]!)
         self.personalDetails = player.getPersonalDetails()
-        
-        print(self.personalDetails)
         
         // Stats table view.
         self.statsTableView = UITableView(frame: CGRect(x: 0, y: 160, width: self.view.frame.width, height: self.view.frame.height - 160))

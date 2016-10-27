@@ -98,6 +98,7 @@
                     </view>
                     <connections>
                         <segue destination="GTs-3N-ne6" kind="presentation" identifier="favouritesMenuSegue" id="1iO-ol-2i4"/>
+                        <segue destination="1wd-lr-6Br" kind="show" identifier="favouritesPlayerSegue" id="R0a-Hf-pja"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vc9-zE-iEx" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -251,9 +252,9 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="m5p-Kd-Af4"/>
+        <segue reference="1iO-ol-2i4"/>
         <segue reference="5jI-Xj-CU4"/>
-        <segue reference="b1K-CR-g7j"/>
         <segue reference="iKM-2c-yhs"/>
+        <segue reference="R0a-Hf-pja"/>
     </inferredMetricsTieBreakers>
 </document>

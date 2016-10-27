@@ -8,11 +8,35 @@
 
 import UIKit
 
-class favouritesView: UIViewController {
+class favouritesView: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    // Player data array and tableView.
+    var players = [[String]]()
+    var playersTableView: UITableView!
+    var isTableViewSetUp: Bool = false
+    
+    // Selected playerId for segue to playerView.
+    var selectedPlayerData = [String: String]()
     
     // Called when menu button is pressed.
     @IBAction func menuOpened(_ sender: AnyObject) {
         performSegue(withIdentifier: "favouritesMenuSegue", sender: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        self.players = getPlayersFromFavourites()
+        if self.players.count != 0 {
+            if isTableViewSetUp == false {
+                setUpTableView()
+                isTableViewSetUp = true
+            }
+            else {
+                self.playersTableView.reloadData()
+            }
+        }
+        else {
+            setUpErrorMessage()
+        }
     }
     
     override func viewDidLoad() {
@@ -22,6 +46,110 @@ class favouritesView: UIViewController {
         self.title = "Favourites"
         
         setUpView(viewController: self)
+        
+        self.players = getPlayersFromFavourites()
+        
+        if self.players.count != 0 {
+            setUpTableView()
+            isTableViewSetUp = true
+        }
+        else {
+            setUpErrorMessage()
+        }
+    }
+    
+    // Number of rows in tableview.
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.players.count
+    }
+    
+    // Set up tableview cells.
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        // Create cell.
+        var cell:UITableViewCell
+        
+        // Create cell.
+        let rankingCell: rankingTableCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(rankingTableCell.self), for: indexPath) as! rankingTableCell
+        
+        rankingCell.rankingLabel.text = String(indexPath.row + 1)
+        rankingCell.statNameLabel.text = self.players[(indexPath as NSIndexPath).row][1]
+        //rankingCell.statValueLabel.text = self.players[(indexPath as NSIndexPath).row][3]
+        
+        let image = UIImage(named: String(self.players[(indexPath as NSIndexPath).row][2].uppercased() + ""))
+        
+        rankingCell.flagImage.image = image
+        
+        // Set cell.
+        cell = rankingCell
+        return cell
+    }
+    
+    // Change height for specific rows.
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 40.0
+    }
+    
+    // Player selected
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.playersTableView.deselectRow(at: indexPath, animated: true)
+        self.selectedPlayerData["playerId"] = self.players[(indexPath as NSIndexPath).row][0]
+        self.selectedPlayerData["name"] = self.players[(indexPath as NSIndexPath).row][1]
+        self.selectedPlayerData["regionCode"] = self.players[(indexPath as NSIndexPath).row][2]
+        performSegue(withIdentifier: "favouritesPlayerSegue", sender: self)
+    }
+    
+    // Select a player
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if(segue.identifier == "favouritesPlayerSegue") {
+            let playerClass = (segue.destination as! playerView)
+            playerClass.playerData = self.selectedPlayerData
+            
+        }
+    }
+    
+    func setUpTableView() {
+        
+        // Create player label.
+        let playerLabel = UILabel(frame: CGRect(x: 95.0, y: Double((self.navigationController?.navigationBar.frame.height)! + 25.0), width: 100.0, height: 30.0))
+        // Set the colour to white, add the text and add to view.
+        playerLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
+        playerLabel.text = "Player"
+        playerLabel.textColor = UIColor.white
+        playerLabel.alpha = 0.0
+        self.view.addSubview(playerLabel)
+        
+        // Create table view.
+        self.playersTableView = UITableView(frame: CGRect(x: 0, y: 100, width: self.view.frame.width, height: self.view.frame.height - 100))
+        self.playersTableView.delegate = self
+        self.playersTableView.dataSource = self
+        self.playersTableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
+        self.playersTableView.separatorStyle = UITableViewCellSeparatorStyle.none
+        self.playersTableView.backgroundColor = lightGrey
+        self.playersTableView.alpha = 0.0
+        self.view.addSubview(self.playersTableView)
+        
+        UIView.animate(withDuration: 1.0, animations: {
+            self.playersTableView.alpha = 1.0
+            playerLabel.alpha = 1.0
+        })
+    }
+    
+    func setUpErrorMessage() {
+        
+        // Create error label.
+        let errorLabel = UILabel(frame: CGRect(x: (self.view.frame.width / 2) - 150, y: (self.view.frame.height / 2) - 15, width: 300, height: 30))
+        // Set the colour to white, add the text and add to view.
+        errorLabel.font = UIFont.systemFont(ofSize: 25.0)
+        errorLabel.text = "No players in favourites."
+        errorLabel.textColor = UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1.0)
+        errorLabel.textAlignment = .center
+        errorLabel.alpha = 0.0
+        self.view.addSubview(errorLabel)
+        
+        UIView.animate(withDuration: 1.0, animations: {
+            errorLabel.alpha = 1.0
+        })
     }
 
     override func didReceiveMemoryWarning() {

@@ -31,7 +31,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var mainView: UIView!
     
     // The player id or ranking type needed for a segue when a player or ranking table is selected.
-    var selectedPlayerId: String?
+    var selectedPlayerData = [String: String]()
     var selectedRanking: String?
     
     // Activity indicator.
@@ -238,14 +238,20 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     // Called when a tableViewCell is selected, i.e. a player has been clicked on.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Select the correct playerId depending on which tableView the selected cell is in.
+        let playerData: [String]
         if tableView == self.topScorersTable {
             self.topScorersTable.deselectRow(at: indexPath, animated: true)
-            self.selectedPlayerId = self.topScorersData[(indexPath as NSIndexPath).row][0]
+            playerData = self.topScorersData[(indexPath as NSIndexPath).row]
         }
         else {
             self.topAssistsTable.deselectRow(at: indexPath, animated: true)
-            self.selectedPlayerId = self.topAssistsData[(indexPath as NSIndexPath).row][0]
+            playerData = self.topAssistsData[(indexPath as NSIndexPath).row]
         }
+        
+        // Assign value to selectedPlayerData.
+        self.selectedPlayerData["playerId"] = playerData[0]
+        self.selectedPlayerData["name"] = playerData[1]
+        self.selectedPlayerData["regionCode"] = playerData[2]
         
         // Perform the segue to the player view.
         performSegue(withIdentifier: "homePlayerSegue", sender: self)
@@ -256,7 +262,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         // If a player has been selected, send the correct playerId to the playerView.
         if(segue.identifier == "homePlayerSegue") {
             let playerClass = (segue.destination as! playerView)
-            playerClass.playerData["playerId"] = self.selectedPlayerId
+            playerClass.playerData = self.selectedPlayerData
         }
         // If a ranking has been selected, send the correct type of ranking to rankingsView.
         else if (segue.identifier == "homeRankingSegue") {

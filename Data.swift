@@ -242,8 +242,6 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
         data = data + (htmlData as String) + "}"
     }
     
-    print(data)
-    
     // Return the data and Model-Last-Mode key back to the caller of the function.
     return data as NSString
     
@@ -406,8 +404,11 @@ func getPlayersFromFavourites() -> [[String]] {
         print("Unable to access playerFavouritesDataModel.")
     }
     
+    
+    
     // Add each player to the array and return it.
     for player in players {
+        print(player.name!)
         playerData.append([player.playerId!, player.name!, player.regionCode!])
     }
     

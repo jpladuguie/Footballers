@@ -38,7 +38,7 @@ class playerSecondCell: UITableViewCell {
         self.heightLabel.frame = CGRect(x: 0, y: 45, width: 125, height: 45)
         self.heightLabel.text = "Height (cm)"
         self.heightLabel.textAlignment = .center
-        self.heightLabel.font = UIFont.systemFont(ofSize: 13.0, weight: -1.0)
+        self.heightLabel.font = UIFont.systemFont(ofSize: 13.0, weight: UIFontWeightUltraLight)
         self.heightLabel.textColor = UIColor.white
         self.heightLabel.backgroundColor = UIColor.clear
         self.heightLabel.isScrollEnabled = false
@@ -61,7 +61,7 @@ class playerSecondCell: UITableViewCell {
         self.numberLabel.frame = CGRect(x: 125, y: 45, width: 125, height: 45)
         self.numberLabel.text = "Shirt Number"
         self.numberLabel.textAlignment = .center
-        self.numberLabel.font = UIFont.systemFont(ofSize: 13.0, weight: -1.0)
+        self.numberLabel.font = UIFont.systemFont(ofSize: 13.0, weight: UIFontWeightUltraLight)
         self.numberLabel.textColor = UIColor.white
         self.numberLabel.backgroundColor = UIColor.clear
         self.numberLabel.isScrollEnabled = false
@@ -84,7 +84,7 @@ class playerSecondCell: UITableViewCell {
         self.weightLabel.frame = CGRect(x: 250, y: 45, width: 125, height: 45)
         self.weightLabel.text = "Weight (kg)"
         self.weightLabel.textAlignment = .center
-        self.weightLabel.font = UIFont.systemFont(ofSize: 13.0, weight: -1.0)
+        self.weightLabel.font = UIFont.systemFont(ofSize: 13.0, weight: UIFontWeightUltraLight)
         self.weightLabel.textColor = UIColor.white
         self.weightLabel.backgroundColor = UIColor.clear
         self.weightLabel.isScrollEnabled = false

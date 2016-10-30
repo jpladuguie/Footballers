@@ -32,7 +32,7 @@ class playerTopCell: UITableViewCell {
         self.countryLabel = UITextView()
         self.countryLabel.frame = CGRect(x: 0, y: 45, width: 125, height: 50)
         self.countryLabel.textAlignment = .center
-        self.countryLabel.font = UIFont.systemFont(ofSize: 13.0, weight: -1.0)
+        self.countryLabel.font = UIFont.systemFont(ofSize: 13.0, weight: UIFontWeightUltraLight)
         self.countryLabel.textColor = UIColor.white
         self.countryLabel.backgroundColor = UIColor.clear
         self.countryLabel.isScrollEnabled = false
@@ -55,7 +55,7 @@ class playerTopCell: UITableViewCell {
         self.ageDescLabel.frame = CGRect(x: 125, y: 45, width: 125, height: 30)
         self.ageDescLabel.text = "Age"
         self.ageDescLabel.textAlignment = .center
-        self.ageDescLabel.font = UIFont.systemFont(ofSize: 13.0, weight: -1.0)
+        self.ageDescLabel.font = UIFont.systemFont(ofSize: 13.0, weight: UIFontWeightUltraLight)
         self.ageDescLabel.textColor = UIColor.white
         self.ageDescLabel.backgroundColor = UIColor.clear
         self.ageDescLabel.isScrollEnabled = false
@@ -71,7 +71,7 @@ class playerTopCell: UITableViewCell {
         self.teamLabel = UITextView()
         self.teamLabel.frame = CGRect(x: 250, y: 45, width: 125, height: 50)
         self.teamLabel.textAlignment = .center
-        self.teamLabel.font = UIFont.systemFont(ofSize: 13.0, weight: -1.0)
+        self.teamLabel.font = UIFont.systemFont(ofSize: 13.0, weight: UIFontWeightUltraLight)
         self.teamLabel.textColor = UIColor.white
         self.teamLabel.backgroundColor = UIColor.clear
         self.teamLabel.isScrollEnabled = false

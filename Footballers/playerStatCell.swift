@@ -22,7 +22,7 @@ class playerStatCell: UITableViewCell {
         self.statNameLabel = UILabel()
         self.statNameLabel.frame = CGRect(x: 20, y: 0, width: self.contentView.frame.width, height: 40)
         self.statNameLabel.textAlignment = .left
-        self.statNameLabel.font = UIFont.systemFont(ofSize: 16.0, weight: -1.0)
+        self.statNameLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightUltraLight)
         self.statNameLabel.textColor = UIColor.white
         self.statNameLabel.backgroundColor = UIColor.clear
         self.addSubview(self.statNameLabel)
@@ -31,7 +31,7 @@ class playerStatCell: UITableViewCell {
         self.statValueLabel = UILabel()
         self.statValueLabel.frame = CGRect(x: ((self.contentView.frame.width / 3) * 2), y: 0, width: (self.contentView.frame.width / 3) + 35, height: 40)
         self.statValueLabel.textAlignment = .right
-        self.statValueLabel.font = UIFont.systemFont(ofSize: 16.0, weight: 0.4)
+        self.statValueLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightHeavy)
         self.statValueLabel.textColor = UIColor.white
         self.statValueLabel.backgroundColor = UIColor.clear
         self.addSubview(self.statValueLabel)

@@ -169,7 +169,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
             //}
             
             //updatePlayerDatabase()
-            print(returnPlayerRatings(id: "11119"))
+            //print(returnPlayerRatings(id: "11119"))
             
             
             // Get the data needed for the tableViews.

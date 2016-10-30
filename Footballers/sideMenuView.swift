@@ -223,6 +223,8 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
                 // Create a fetch request.
                 var players = [PlayerData]()
                 let request = PlayerData.createFetchRequest()
+                let sort = NSSortDescriptor(key: "rating", ascending: false)
+                request.sortDescriptors = [sort]
                 // Set the predicate to look for players with a matching playerId.
                 let predicate = "name BEGINSWITH[cd] '" + string! + "' OR name CONTAINS[cd] ' " + string! + "'"
                 request.predicate = NSPredicate(format: predicate)

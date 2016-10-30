@@ -290,6 +290,9 @@ func updatePlayerDatabase() {
     let defending = defendingData["playerTableStats"].array
     let passing = passingData["playerTableStats"].array
     
+    var total = Float(0.0)
+    var results = [Int]()
+    
     for (playerOverall, (playerAttacking, (playerDefending, playerPassing))) in zip(overall!, zip(attacking!, zip(defending!, passing!))) {
         let player = PlayerData(context: container.viewContext)
         
@@ -322,7 +325,14 @@ func updatePlayerDatabase() {
         player.defendingRating = generateDefendingRating(tackles: player.tacklePerGame as! Float, interceptions: player.interceptionPerGame as! Float, clearances: player.clearancePerGame as! Float, blocks: player.outfielderBlockPerGame as! Float, passesPerGame: player.totalPassesPerGame as! Float, passSuccess: player.passSuccess as Float!, rating: player.rating as! Float, positions: player.positions! as String) as NSNumber?
         player.passingRating = generatePassingRating(assists: player.assistTotal as! Int, keyPasses: player.keyPassPerGame as! Float, passesPerGame: player.totalPassesPerGame as! Float, passSuccess: player.passSuccess as! Float, crosses: player.crossesPerGame as! Float, apps: player.apps as! Int, rating: player.rating as! Float) as NSNumber?
         player.disciplineRating = generateDisciplineRating(fouls: player.foulsPerGame as! Float, yellowCards: player.yellowCard as! Int, redCards: player.redCard as! Int, apps: player.apps as! Int, rating: player.rating as! Float) as NSNumber?
+        
+        //print(player.name! + "  :  " + String(describing: player.attackingRating!))
+        total += Float(player.attackingRating!)
+        results.append(Int(player.passingRating!))
     }
+    
+    //print("AVERAGE: " + String(total/Float((overall?.count)!)))
+    print(results)
     
     // Save changes to playerDataModel.
     do {
@@ -376,7 +386,7 @@ func generateAttackingRating(goals: Int, assists: Int, dribbles: Float, shotsPer
     let goalsPerGame = Float(goals/apps)
     let assistsPerGame = Float(assists/apps)
     
-    return ((goalsPerGame*3 + dribbles*2 + assistsPerGame + keyPasses + shotsPerGame*3) * rating)
+    return ((goalsPerGame*3 + dribbles*2 + assistsPerGame + keyPasses + shotsPerGame*3 + 1) * rating)
 }
 
 func generateDefendingRating(tackles: Float, interceptions: Float, clearances: Float, blocks: Float, passesPerGame: Float, passSuccess: Float, rating: Float, positions: String) -> Float {

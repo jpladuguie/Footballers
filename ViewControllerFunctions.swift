@@ -72,7 +72,7 @@ func setUpView(viewController: UIViewController) {
 
 // Create ActivityIndicator centred in the middle of the view and return it.
 func configureActivityIndicator(viewController: UIViewController) -> NVActivityIndicatorView {
-    let activityIndicator = NVActivityIndicatorView(frame: CGRect(x: (viewController.view.frame.size.width/2 - 25), y: (viewController.view.frame.size.height/2 - 25), width: 50, height: 50), type: NVActivityIndicatorType.ballClipRotatePulse, color: UIColor.white)
+    let activityIndicator = NVActivityIndicatorView(frame: CGRect(x: (viewController.view.frame.size.width/2 - 25), y: (viewController.view.frame.size.height/2 - 25), width: 50, height: 50), type: NVActivityIndicatorType.ballClipRotate, color: UIColor.white)
     activityIndicator.startAnimating()
     
     return activityIndicator

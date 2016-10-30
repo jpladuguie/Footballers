@@ -48,35 +48,30 @@ class Player {
         
         // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as 
         // This is the first time the data is being called.
-        let data = getDataFromUrl("Player", Parameters: self.parameters, modelLastMode: "") as String
-        var json : JSON?
-        
-        if let dataFromString = data.data(using: String.Encoding.utf8, allowLossyConversion: false) {
-                json = JSON(data: dataFromString)
-            }
+        let data = getDataFromUrl("Player", Parameters: self.parameters, modelLastMode: "")
         
         // Set Model-Last-Mode Key
-        self.modelLastMode = String(describing: json!["Model-Last-Mode"][0])
+        self.modelLastMode = String(describing: data["Model-Last-Mode"][0])
         
         // Parse the data to get the personal details. Personal details never need to be loaded
         // From url again after the player has been initialised.
-        self.personalDetails.append(["Name", json!["playerTableStats"][0]["name"].rawString()!])
-        self.personalDetails.append(["Team", json!["htmlData"]["teamName"].rawString()!])
-        self.personalDetails.append(["Age", json!["playerTableStats"][0]["age"].rawString()!])
-        self.personalDetails.append(["Height", json!["playerTableStats"][0]["height"].rawString()!])
-        self.personalDetails.append(["Weight", json!["playerTableStats"][0]["weight"].rawString()!])
-        self.personalDetails.append(["Region Code", json!["playerTableStats"][0]["regionCode"].rawString()!])
-        self.personalDetails.append(["Nationality", json!["htmlData"]["nationality"].rawString()!])
-        self.personalDetails.append(["Shirt Number", json!["htmlData"]["shirtNumber"].rawString()!])
+        self.personalDetails.append(["Name", data["playerTableStats"][0]["name"].rawString()!])
+        self.personalDetails.append(["Team", data["htmlData"]["teamName"].rawString()!])
+        self.personalDetails.append(["Age", data["playerTableStats"][0]["age"].rawString()!])
+        self.personalDetails.append(["Height", data["playerTableStats"][0]["height"].rawString()!])
+        self.personalDetails.append(["Weight", data["playerTableStats"][0]["weight"].rawString()!])
+        self.personalDetails.append(["Region Code", data["playerTableStats"][0]["regionCode"].rawString()!])
+        self.personalDetails.append(["Nationality", data["htmlData"]["nationality"].rawString()!])
+        self.personalDetails.append(["Shirt Number", data["htmlData"]["shirtNumber"].rawString()!])
         
         // Parse the data to get the player positions. Like personal details, positions never need to be loaded
         // From url again after the player has been initialised.
-        for (_, subJson) in json!["positions"] {
+        for (_, subJson) in data["positions"] {
             self.positions.append(subJson.rawString()!)
         }
         
         // Set team image url.
-        self.teamImageUrl = json!["htmlData"]["teamImageUrl"].rawString()!
+        self.teamImageUrl = data["htmlData"]["teamImageUrl"].rawString()!
         
         // Set up summary statistic values. Like personal details, summary statistics never need to be loaded from url 
         // Again after the player has been initialised.
@@ -141,12 +136,7 @@ class Player {
         self.parameters["subcategory"] = subCatergory
         
         // Get the data from the url, and create a JSON object to parse it.
-        let data = getDataFromUrl("Player", Parameters: self.parameters, modelLastMode: self.modelLastMode) as String
-        var json : JSON?
-        
-        if let dataFromString = data.data(using: String.Encoding.utf8, allowLossyConversion: false) {
-            json = JSON(data: dataFromString)
-        }
+        let data = getDataFromUrl("Player", Parameters: self.parameters, modelLastMode: self.modelLastMode)
         
         // Create the statistics variable to be returned and fill it with empty variables.
         var statistics = [[String]]()
@@ -155,14 +145,14 @@ class Player {
         }
         
         // Parse the data to get the statistics.
-        for (_, stat) in json!["playerTableStats"] {
+        for (_, stat) in data["playerTableStats"] {
             // Stats which have integer values and are totals.
             for int in integerValues {
                 statistics[int][1] = String(Int(statistics[int][1])! + stat[valueNames[int]].int!)
             }
         }
         
-        for (_, stat) in json!["playerTableStats"] {
+        for (_, stat) in data["playerTableStats"] {
             // Stats which are weighted averages and have double values.
             for double in doubleValues {
                 

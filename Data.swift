@@ -67,7 +67,7 @@ let globalParameters = [
 // Not needed unless it is the first time the data is being called for a player. It returns the data,
 // The Model-Last-Mode key, and some data which is taken from the HTML and not available from the API.
 
-func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode : String) -> NSString {
+func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode : String) -> JSON {
     
     // Initialise variables.
     // modelLastMode if it hasn't been already passed to the function.
@@ -243,38 +243,126 @@ func getDataFromUrl(_ Type: String, Parameters: [String: String], modelLastMode 
     }
     
     // Return the data and Model-Last-Mode key back to the caller of the function.
-    return data as NSString
+    var json: JSON!
     
-}
-
-// Gets player rankings from the API depending on what type of ranking and number of players.
-func getPlayerRankings(type: String, numberToGet: String) -> [[String]] {
-    
-    // Set up a variable to store the players in.
-    var players: [[String]] = [[String]]()
-    
-    // Set the parameters for the HTTP request.
-    var parameters = globalParameters
-    parameters["sortBy"] = type
-    parameters["numberOfPlayersToPick"] = numberToGet
-    parameters["sortAscending"] = "false"
-    parameters["isMinApp"] = "true"
-    
-    // Get the data from the url, and create a JSON object to parse it.
-    let data = getDataFromUrl("Player Ranking", Parameters: parameters, modelLastMode: "") as String
-    var json : JSON!
     if let dataFromString = data.data(using: String.Encoding.utf8, allowLossyConversion: false) {
         json = JSON(data: dataFromString)
     }
     
-    // Loop through each player in the data, and append the player to the players variable.
-    // Each player is an array with the values for playerId, name, regionCode, statisticValue and
-    // teamName.
-    for (_, playerJson):(String, JSON) in json["playerTableStats"] {
-        players.append([String(describing: playerJson["playerId"]), String(describing: playerJson["name"]), String(describing: playerJson["regionCode"]), String(describing: playerJson[type]), String(describing: playerJson["teamName"])])
+    return json
+}
+
+
+
+func updatePlayerDatabase() {
+    
+    let container = NSPersistentContainer(name: "playerDataModel")
+    container.loadPersistentStores { storeDescription, error in
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        
+        if let error = error {
+            print("Unable to load playerDataModel. \(error)")
+        }
     }
     
-    // Return the values.
+    var parameters = globalParameters
+    parameters["sortBy"] = "Rating"
+    parameters["numberOfPlayersToPick"] = "2177"
+    parameters["isMinApp"] = "false"
+    
+    let data = getDataFromUrl("Player Ranking", Parameters: parameters, modelLastMode: "")
+    parameters["numberOfPlayersToPick"] = String(describing: data["paging"]["totalResults"])
+    
+    parameters["subcategory"] = "all"
+    let overallData = getDataFromUrl("Player Ranking", Parameters: parameters, modelLastMode: "")
+    
+    parameters["subcategory"] = "offensive"
+    let attackingData = getDataFromUrl("Player Ranking", Parameters: parameters, modelLastMode: "")
+    
+    parameters["subcategory"] = "defensive"
+    let defendingData = getDataFromUrl("Player Ranking", Parameters: parameters, modelLastMode: "")
+    
+    parameters["subcategory"] = "passing"
+    let passingData = getDataFromUrl("Player Ranking", Parameters: parameters, modelLastMode: "")
+    
+    let overall = overallData["playerTableStats"].array
+    let attacking = attackingData["playerTableStats"].array
+    let defending = defendingData["playerTableStats"].array
+    let passing = passingData["playerTableStats"].array
+    
+    for (playerOverall, (playerAttacking, (playerDefending, playerPassing))) in zip(overall!, zip(attacking!, zip(defending!, passing!))) {
+        let player = PlayerData(context: container.viewContext)
+        
+        player.aerialWonPerGame = Float(String(describing: playerOverall["aerialWonPerGame"])) as NSNumber?
+        player.apps = Int(String(describing: playerOverall["apps"])) as NSNumber?
+        player.assistTotal = Int(String(describing: playerOverall["assistTotal"])) as NSNumber?
+        //
+        player.clearancePerGame = Float(String(describing: playerDefending["clearancePerGame"])) as NSNumber?
+        //
+        //
+        player.dribbleWonPerGame = Float(String(describing: playerAttacking["dribbleWonPerGame"])) as NSNumber?
+        player.goal = Int(String(describing: playerOverall["goal"])) as NSNumber?
+        player.interceptionPerGame = Float(String(describing: playerDefending["interceptionPerGame"])) as NSNumber?
+        player.keyPassPerGame = Float(String(describing: playerPassing["keyPassPerGame"])) as NSNumber?
+        player.name = String(describing: playerOverall["name"])
+        player.outfielderBlockPerGame = Float(String(describing: playerDefending["outfielderBlockPerGame"])) as NSNumber?
+        //
+        player.passSuccess = Float(String(describing: playerOverall["passSuccess"])) as NSNumber?
+        player.playerId = String(describing: playerOverall["playerId"])
+        player.rating = Float(String(describing: playerOverall["rating"])) as NSNumber?
+        player.redCard = Int(String(describing: playerOverall["redCard"])) as NSNumber?
+        player.regionCode = String(describing: playerOverall["regionCode"])
+        player.shotsPerGame = Float(String(describing: playerAttacking["shotsPerGame"])) as NSNumber?
+        player.tacklePerGame = Float(String(describing: playerDefending["tacklePerGame"])) as NSNumber?
+        player.teamId = String(describing: playerOverall["teamId"]) as String?
+        player.teamName = String(describing: playerOverall["teamName"]) as String?
+        player.totalPassesPerGame = Float(String(describing: playerPassing["totalPassesPerGame"])) as NSNumber?
+        player.yellowCard = Int(String(describing: playerOverall["yellowCard"])) as NSNumber?
+    }
+    
+    // Save changes to playerDataModel.
+    do {
+        try container.viewContext.save()
+    } catch {
+        print("An error occurred while saving to playerDataModel: \(error)")
+    }
+}
+
+// Gets player rankings from the API depending on what type of ranking and number of players.
+func getPlayerRankings(type: String, numberToGet: Int) -> [[String]] {
+    
+    // Set up a variable to store the players in.
+    var players: [[String]] = [[String]]()
+    
+    // Set up data container.
+    let container = NSPersistentContainer(name: "playerDataModel")
+    container.loadPersistentStores { storeDescription, error in
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        if let error = error {
+            print("Unable to load playerDataModel. \(error)")
+        }
+    }
+    
+    // Set up players array.
+    var playerData = [PlayerData]()
+    let request = PlayerData.createFetchRequest()
+    let sort = NSSortDescriptor(key: type, ascending: false)
+    request.sortDescriptors = [sort]
+    
+    // Set minimum amount of appearances.
+    request.predicate = NSPredicate(format: String("apps > '5'"))
+    
+    do {
+        playerData = try container.viewContext.fetch(request)
+    } catch {
+        print("Unable to access playerFavouritesDataModel.")
+    }
+    
+    // Add each player to the array and return it.
+    for i in 0..<numberToGet {
+        players.append([playerData[i].playerId!, playerData[i].name!, playerData[i].regionCode!, String(describing: playerData[i].value(forKey: type)!), playerData[i].teamName!])
+    }
+    
     return players
 }
 
@@ -453,19 +541,14 @@ func reloadPlayerData() {
     
     // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as
     // This is the first time the data is being called.
-    let data = getDataFromUrl("Player Ranking", Parameters: parameters, modelLastMode: "") as String
-    var json : JSON!
+    let data = getDataFromUrl("Player Ranking", Parameters: parameters, modelLastMode: "")
     
-    if let dataFromString = data.data(using: String.Encoding.utf8, allowLossyConversion: false) {
-        json = JSON(data: dataFromString)
-    }
-    
-    for (_, playerJson):(String, JSON) in json["playerTableStats"] {
+    for (_, playerJson):(String, JSON) in data["playerTableStats"] {
             let player = PlayerData(context: container.viewContext)
             player.playerId = String(describing: playerJson["playerId"])
             player.name = String(describing: playerJson["name"])
             player.regionCode = String(describing: playerJson["regionCode"])
-            player.currentRating = String(describing: playerJson["rating"])
+            player.rating = Float(String(describing: playerJson["rating"])) as NSNumber?
         }
     
     // Save changes to playerDataModel.
@@ -519,17 +602,12 @@ func getHistoricRating(playerId: String) -> String {
     
     // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as
     // This is the first time the data is being called.
-    let data = getDataFromUrl("Player", Parameters: parameters, modelLastMode: "") as String
-    var json : JSON!
-    
-    if let dataFromString = data.data(using: String.Encoding.utf8, allowLossyConversion: false) {
-        json = JSON(data: dataFromString)
-    }
+    let data = getDataFromUrl("Player", Parameters: parameters, modelLastMode: "")
     
     var totalMatchesPlayed: Float = 0.0
     var currentTotal: Float = 0.0
     
-    for (_, season):(String, JSON) in json["playerTableStats"] {
+    for (_, season):(String, JSON) in data["playerTableStats"] {
         currentTotal += (Float(String(describing: season["rating"]))! * Float(String(describing: season["apps"]))!)
         totalMatchesPlayed += Float(String(describing: season["apps"]))!
     }

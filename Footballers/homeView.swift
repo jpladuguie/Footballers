@@ -161,10 +161,14 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         // Get the data in the background, and once it has finished create all the subviews.
         DispatchQueue.global(qos: .background).async {
+            
+            //updatePlayerDatabase()
+            print(getPlayerRankings(type: "goal", numberToGet: 5))
+            
             // Get the data needed for the tableViews.
-            self.topScorersData = getPlayerRankings(type: "goal", numberToGet: "5")
-            self.topAssistsData = getPlayerRankings(type: "assistTotal", numberToGet: "3")
-            self.topPasserData = getPlayerRankings(type: "passSuccess", numberToGet: "1")
+            self.topScorersData = getPlayerRankings(type: "goal", numberToGet: 5)
+            self.topAssistsData = getPlayerRankings(type: "assistTotal", numberToGet: 3)
+            self.topPasserData = getPlayerRankings(type: "passSuccess", numberToGet: 1)
             DispatchQueue.main.async {
                 // Create all the subViews with the data,
                 self.createSubViews()

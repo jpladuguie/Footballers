@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyJSON
+import CoreData
 
 // View Controller for the side menu. It contains the search bar and 'cancel' button, as well as
 // Two table views; one to show the various pages, such as 'Home' and 'Rankings', and one to show
@@ -201,68 +202,55 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         // Get text from text field, convert it to lower case and remove any special characters.
         let string = textField.text?.lowercased().folding(options: .diacriticInsensitive, locale: nil)
+        print(string)
         
         // If the text hasn't been cleared check if it matches any players.
         if string != "" {
             
-            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async(execute: {
+            DispatchQueue.global(qos: .background).async {
                 
                 var counter: Int = 0
                 self.searchedPlayers = []
                 
-                mainLoop: for (_, player) in self.json!["players"] {
-                    if string?.range(of: " ") == nil {
-                        let nameArray = String(describing: player["name"]).lowercased().folding(options: .diacriticInsensitive, locale: nil).components(separatedBy: " ")
-                        subLoop: for name in nameArray {
-                            if name.hasPrefix(string!) {
-                                
-                                var tempPlayer = [String: String]()
-                                
-                                for (name, item) in player {
-                                    tempPlayer[name] = String(describing: item)
-                                }
-                                
-                                self.searchedPlayers.append(tempPlayer)
-                                
-                                counter += 1
-                        
-                                if counter == 6 {
-                                    break mainLoop
-                                }
-                                
-                                break subLoop
-                            }
-                        }
-                    }
-                    else {
-                        let name = String(describing: player["name"]).lowercased().folding(options: .diacriticInsensitive, locale: nil)
-                        if name.range(of: string!) != nil {
-
-                            var tempPlayer = [String: String]()
-                            
-                            for (name, item) in player {
-                                tempPlayer[name] = String(describing: item)
-                            }
-                            
-                            self.searchedPlayers.append(tempPlayer)
-                            
-                            counter += 1
-                            
-                            if counter == 6 {
-                                break mainLoop
-                            }
-                        }
+                // Set up data container.
+                let container = NSPersistentContainer(name: "playerDataModel")
+                container.loadPersistentStores { storeDescription, error in
+                    container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+                    if let error = error {
+                        print("Unable to load playerDataModel. Error: \(error)")
                     }
                 }
                 
-                DispatchQueue.main.async(execute: { () -> Void in
+                // Create a fetch request.
+                var players = [PlayerData]()
+                let request = PlayerData.createFetchRequest()
+                // Set the predicate to look for players with a matching playerId.
+                let predicate = "name BEGINSWITH[cd] '" + string! + "' OR name CONTAINS[cd] ' " + string! + "'"
+                request.predicate = NSPredicate(format: predicate)
+                
+                // Get all players with matching id.g
+                do {
+                    players = try container.viewContext.fetch(request)
+                    // If there are no matches, return false, else return true.
+                } catch {
+                    print("Unable to access playerFavouritesDataModel.")
+                }
+                
+                for i in 0..<players.count {
+                    self.searchedPlayers.append(["playerId" :  players[i].playerId!, "name" : players[i].name!, "regionCode" : players[i].regionCode!])
+                    if i == 4 {
+                        break
+                    }
+                }
+                
+                DispatchQueue.main.async {
                     let range = NSMakeRange(0, self.searchTableView.numberOfSections)
                     let sections = IndexSet(integersIn: range.toRange() ?? 0..<0)
                     self.searchTableView.reloadSections(sections, with: .automatic)
-                })
-            })
+                }
+            }
         }
-            // If the text is empty or been cleared give an empty array.
+        // If the text is empty or been cleared give an empty array.
         else {
             self.searchedPlayers = []
             let range = NSMakeRange(0, self.searchTableView.numberOfSections)

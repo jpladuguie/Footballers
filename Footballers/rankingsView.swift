@@ -46,7 +46,7 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         DispatchQueue.global(qos: .background).async {
             // Get the data needed for the tableView.
-            self.players = getPlayerRankings(type: self.rankingType, numberToGet: "100")
+            self.players = getPlayerRankings(type: self.rankingType, numberToGet: 100)
             DispatchQueue.main.async {
                 
                 // Create player label.

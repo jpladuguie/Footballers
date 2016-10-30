@@ -163,7 +163,14 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         DispatchQueue.global(qos: .background).async {
             
             //updatePlayerDatabase()
-            print(getPlayerRankings(type: "goal", numberToGet: 5))
+            //let test = getPlayerRankings(type: "disciplineRating", numberToGet: 50)
+            //for i in 0..<50 {
+            //    print(test[i][1])
+            //}
+            
+            //updatePlayerDatabase()
+            print(returnPlayerRatings(id: "11119"))
+            
             
             // Get the data needed for the tableViews.
             self.topScorersData = getPlayerRankings(type: "goal", numberToGet: 5)

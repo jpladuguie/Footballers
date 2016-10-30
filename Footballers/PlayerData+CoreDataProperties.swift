@@ -21,9 +21,11 @@ extension PlayerData {
     @NSManaged public var assistTotal: NSNumber?
     @NSManaged public var attackingRating: NSNumber?
     @NSManaged public var clearancePerGame: NSNumber?
+    @NSManaged public var crossesPerGame: NSNumber?
     @NSManaged public var defendingRating: NSNumber?
     @NSManaged public var disciplineRating: NSNumber?
     @NSManaged public var dribbleWonPerGame: NSNumber?
+    @NSManaged public var foulsPerGame: NSNumber?
     @NSManaged public var goal: NSNumber?
     @NSManaged public var interceptionPerGame: NSNumber?
     @NSManaged public var keyPassPerGame: NSNumber?
@@ -32,6 +34,7 @@ extension PlayerData {
     @NSManaged public var passingRating: NSNumber?
     @NSManaged public var passSuccess: NSNumber?
     @NSManaged public var playerId: String?
+    @NSManaged public var positions: String?
     @NSManaged public var rating: NSNumber?
     @NSManaged public var redCard: NSNumber?
     @NSManaged public var regionCode: String?

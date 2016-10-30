@@ -49,6 +49,7 @@
 		E8DE7BBA1DBAAA1D0031D83D /* playerDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E8DE7BB81DBAAA1D0031D83D /* playerDataModel.xcdatamodeld */; };
 		E8DE7BBD1DBAAAEB0031D83D /* PlayerData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DE7BBB1DBAAAEB0031D83D /* PlayerData+CoreDataClass.swift */; };
 		E8DE7BBE1DBAAAEB0031D83D /* PlayerData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DE7BBC1DBAAAEB0031D83D /* PlayerData+CoreDataProperties.swift */; };
+		E8EDCA671DC57353003C7F0A /* Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EDCA661DC57353003C7F0A /* Favourites.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -98,6 +99,7 @@
 		E8DE7BB91DBAAA1D0031D83D /* playerDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = playerDataModel.xcdatamodel; sourceTree = "<group>"; };
 		E8DE7BBB1DBAAAEB0031D83D /* PlayerData+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerData+CoreDataClass.swift"; sourceTree = "<group>"; };
 		E8DE7BBC1DBAAAEB0031D83D /* PlayerData+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerData+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		E8EDCA661DC57353003C7F0A /* Favourites.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Favourites.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,8 +129,9 @@
 			children = (
 				E8188FE31DBD0A0B0044CE74 /* ViewControllerFunctions.swift */,
 				E8C0FCB61DBBB0D800260964 /* DrawCharts.swift */,
-				E87F5B021D78B86400C10A38 /* Player.swift */,
 				E87F5B031D78B86400C10A38 /* Data.swift */,
+				E87F5B021D78B86400C10A38 /* Player.swift */,
+				E8EDCA661DC57353003C7F0A /* Favourites.swift */,
 				E82125921D78B9B80024D016 /* playerData.txt */,
 				E87F5AEF1D78B82500C10A38 /* Footballers */,
 				E87F5AEE1D78B82500C10A38 /* Products */,
@@ -354,6 +357,7 @@
 				E87F5AF11D78B82500C10A38 /* AppDelegate.swift in Sources */,
 				E821258D1D78B99E0024D016 /* loadingView.swift in Sources */,
 				E8DE7BBA1DBAAA1D0031D83D /* playerDataModel.xcdatamodeld in Sources */,
+				E8EDCA671DC57353003C7F0A /* Favourites.swift in Sources */,
 				E87F5B051D78B86400C10A38 /* Data.swift in Sources */,
 				E82125A91D78BF9A0024D016 /* rankingsView.swift in Sources */,
 				E82125AD1D78C24C0024D016 /* favouritesView.swift in Sources */,

@@ -202,7 +202,6 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         // Get text from text field, convert it to lower case and remove any special characters.
         let string = textField.text?.lowercased().folding(options: .diacriticInsensitive, locale: nil)
-        print(string)
         
         // If the text hasn't been cleared check if it matches any players.
         if string != "" {

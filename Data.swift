@@ -296,19 +296,18 @@ func updatePlayerDatabase() {
         player.aerialWonPerGame = Float(String(describing: playerOverall["aerialWonPerGame"])) as NSNumber?
         player.apps = Int(String(describing: playerOverall["apps"])) as NSNumber?
         player.assistTotal = Int(String(describing: playerOverall["assistTotal"])) as NSNumber?
-        //
+        player.crossesPerGame = Float(String(describing: playerPassing["accurateCrossesPerGame"])) as NSNumber?
         player.clearancePerGame = Float(String(describing: playerDefending["clearancePerGame"])) as NSNumber?
-        //
-        //
         player.dribbleWonPerGame = Float(String(describing: playerAttacking["dribbleWonPerGame"])) as NSNumber?
+        player.foulsPerGame = Float(String(describing: playerDefending["foulsPerGame"])) as NSNumber?
         player.goal = Int(String(describing: playerOverall["goal"])) as NSNumber?
         player.interceptionPerGame = Float(String(describing: playerDefending["interceptionPerGame"])) as NSNumber?
         player.keyPassPerGame = Float(String(describing: playerPassing["keyPassPerGame"])) as NSNumber?
         player.name = String(describing: playerOverall["name"])
         player.outfielderBlockPerGame = Float(String(describing: playerDefending["outfielderBlockPerGame"])) as NSNumber?
-        //
         player.passSuccess = Float(String(describing: playerOverall["passSuccess"])) as NSNumber?
         player.playerId = String(describing: playerOverall["playerId"])
+        player.positions = String(describing: playerOverall["playedPositionsShort"])
         player.rating = Float(String(describing: playerOverall["rating"])) as NSNumber?
         player.redCard = Int(String(describing: playerOverall["redCard"])) as NSNumber?
         player.regionCode = String(describing: playerOverall["regionCode"])
@@ -318,6 +317,11 @@ func updatePlayerDatabase() {
         player.teamName = String(describing: playerOverall["teamName"]) as String?
         player.totalPassesPerGame = Float(String(describing: playerPassing["totalPassesPerGame"])) as NSNumber?
         player.yellowCard = Int(String(describing: playerOverall["yellowCard"])) as NSNumber?
+        
+        player.attackingRating = generateAttackingRating(goals: player.goal as! Int, assists: player.assistTotal as! Int, dribbles: player.dribbleWonPerGame as! Float, shotsPerGame: player.shotsPerGame as! Float, keyPasses: player.keyPassPerGame as! Float, apps: player.apps as! Int, rating: player.rating as! Float) as NSNumber?
+        player.defendingRating = generateDefendingRating(tackles: player.tacklePerGame as! Float, interceptions: player.interceptionPerGame as! Float, clearances: player.clearancePerGame as! Float, blocks: player.outfielderBlockPerGame as! Float, passesPerGame: player.totalPassesPerGame as! Float, passSuccess: player.passSuccess as Float!, rating: player.rating as! Float, positions: player.positions! as String) as NSNumber?
+        player.passingRating = generatePassingRating(assists: player.assistTotal as! Int, keyPasses: player.keyPassPerGame as! Float, passesPerGame: player.totalPassesPerGame as! Float, passSuccess: player.passSuccess as! Float, crosses: player.crossesPerGame as! Float, apps: player.apps as! Int, rating: player.rating as! Float) as NSNumber?
+        player.disciplineRating = generateDisciplineRating(fouls: player.foulsPerGame as! Float, yellowCards: player.yellowCard as! Int, redCards: player.redCard as! Int, apps: player.apps as! Int, rating: player.rating as! Float) as NSNumber?
     }
     
     // Save changes to playerDataModel.
@@ -366,200 +370,46 @@ func getPlayerRankings(type: String, numberToGet: Int) -> [[String]] {
     return players
 }
 
-// Checks whether player with given id is saved in favourites.
-func isPlayerInFavourites(_ playerId: String) -> Bool {
-    // Set up data container.
-    let container = NSPersistentContainer(name: "playerFavouritesDataModel")
-    container.loadPersistentStores { storeDescription, error in
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        if let error = error {
-            print("Unable to load playerFavouritesDataModel. Error: \(error)")
-        }
-    }
+
+
+func generateAttackingRating(goals: Int, assists: Int, dribbles: Float, shotsPerGame: Float, keyPasses: Float, apps: Int, rating: Float) -> Float {
+    let goalsPerGame = Float(goals/apps)
+    let assistsPerGame = Float(assists/apps)
     
-    // Create a fetch request.
-    var players = [PlayerFavouritesData]()
-    let request = PlayerFavouritesData.createFetchRequest()
-    // Set the predicate to look for players with a matching playerId.
-    request.predicate = NSPredicate(format: String("playerId == '" + playerId + "'"))
-    
-    // Get all players with matching id.
-    do {
-        players = try container.viewContext.fetch(request)
-        // If there are no matches, return false, else return true.
-        if players.count == 0 {
-            return false
-        }
-        else {
-            return true
-        }
-    } catch {
-        print("Unable to access playerFavouritesDataModel.")
-    }
-    
-    // Return false if an error occured.
-    return false
+    return ((goalsPerGame*3 + dribbles*2 + assistsPerGame + keyPasses + shotsPerGame*3) * rating)
 }
 
-// Adds a player to favourites.
-func savePlayerToFavourites(_ playerData: [String: String]) {
-    // Set up data container.
-    let container = NSPersistentContainer(name: "playerFavouritesDataModel")
-    container.loadPersistentStores { storeDescription, error in
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        if let error = error {
-            print("Unable to load playerFavouritesDataModel. Error: \(error)")
-        }
+func generateDefendingRating(tackles: Float, interceptions: Float, clearances: Float, blocks: Float, passesPerGame: Float, passSuccess: Float, rating: Float, positions: String) -> Float {
+    var multiplier: Float = 1.0
+    if String(positions.characters.prefix(2)) == "D(" {
+        multiplier = 2.0
     }
     
-    // Creates a player model with the correct data.
-    let player = PlayerFavouritesData(context: container.viewContext)
-    player.playerId = playerData["playerId"]
-    player.name = playerData["name"]
-    player.regionCode = playerData["regionCode"]
+    let passing = passSuccess*3 + passesPerGame*2
+    let defending = tackles*3 + blocks*2 + clearances*3 + interceptions
     
-    // Saves the player to playerFavouritesDataModel.
-    do {
-        try container.viewContext.save()
-    } catch {
-        print("An error occurred while saving to playerFavouritesDataModel: \(error)")
-    }
+    return ((defending + passing) * rating * multiplier)
 }
 
-// Removes a player from favourites.
-func removePlayerFromFavourites(_ playerId: String) {
-    // Set up data container.
-    let container = NSPersistentContainer(name: "playerFavouritesDataModel")
-    container.loadPersistentStores { storeDescription, error in
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        if let error = error {
-            print("Unable to load playerFavouritesDataModel. Error: \(error)")
-        }
-    }
-    
-    // Get the player to delete from the model.
-    var players = [PlayerFavouritesData]()
-    let request = PlayerFavouritesData.createFetchRequest()
-    // Set up a predicate to look for a player with a matching playerId.
-    request.predicate = NSPredicate(format: String("playerId == '" + playerId + "'"))
-    
-    // Find all players with a matching id.
-    do {
-        players = try container.viewContext.fetch(request)
-        // If no players found.
-        if players.count == 0 {
-            print("Unable to delete player as not found in playerFavouritesDataModel.")
-        }
-        else {
-            // Delete player.
-            let player = players[0]
-            container.viewContext.delete(player)
-        }
-    } catch {
-        print("Unable to access playerFavouritesDataModel.")
-    }
-    
-    // Save changes to playerFavouritesDataModel.
-    do {
-        try container.viewContext.save()
-    } catch {
-        print("An error occurred while saving to playerFavouritesDataModel: \(error)")
-    }
+func generatePassingRating(assists: Int, keyPasses: Float, passesPerGame: Float, passSuccess: Float, crosses: Float, apps: Int,  rating: Float) -> Float {
+    let assistsPerGame = Float(assists/apps)
+    return ((assistsPerGame*15 + keyPasses + crosses*1.5 + (passesPerGame + passSuccess)/25) * rating)
 }
 
-// Returns all the player saved in favourites.
-func getPlayersFromFavourites() -> [[String]] {
-    // Set up data container.
-    let container = NSPersistentContainer(name: "playerFavouritesDataModel")
-    container.loadPersistentStores { storeDescription, error in
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        if let error = error {
-            print("Unable to load playerFavouritesDataModel. \(error)")
-        }
-    }
-    
-    // Set up players variable to store the data.
-    var playerData = [[String]]()
-    
-    // Create the request.
-    var players = [PlayerFavouritesData]()
-    let request = PlayerFavouritesData.createFetchRequest()
-    
-    // Get the players.
-    do {
-        players = try container.viewContext.fetch(request)
-    } catch {
-        print("Unable to access playerFavouritesDataModel.")
-    }
-    
-    
-    
-    // Add each player to the array and return it.
-    for player in players {
-        print(player.name!)
-        playerData.append([player.playerId!, player.name!, player.regionCode!])
-    }
-    
-    return playerData
+func generateDisciplineRating(fouls: Float, yellowCards: Int, redCards: Int, apps: Int, rating: Float) -> Float {
+    let yellowCardsPerGame = Float(yellowCards/apps)
+    let redCardsPerGame = Float(redCards/apps)
+    return (rating/(redCardsPerGame*5 + yellowCardsPerGame + fouls + 1))
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-/////////////
-
-
-
-// Reload all player statistics.
-func reloadPlayerData() {
+func returnPlayerRatings(id: String) -> [Float] {
+    let topAttacking = getPlayerRankings(type: "attackingRating", numberToGet: 1)
+    let topDefending = getPlayerRankings(type: "defendingRating", numberToGet: 1)
+    let topPassing = getPlayerRankings(type: "passingRating", numberToGet: 1)
+    let topDiscipline = getPlayerRankings(type: "disciplineRating", numberToGet: 1)
     
-    //
-    let container = NSPersistentContainer(name: "playerDataModel")
-    container.loadPersistentStores { storeDescription, error in
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        
-        if let error = error {
-            print("Unable to load playerDataModel. \(error)")
-        }
-    }
-
-    // Get data.
-    var parameters = globalParameters
-    parameters["sortBy"] = "rating"
-    parameters["numberOfPlayersToPick"] = "2127"
-    parameters["sortAscending"] = "false"
-    parameters["isMinApp"] = "false"
-    
-    // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as
-    // This is the first time the data is being called.
-    let data = getDataFromUrl("Player Ranking", Parameters: parameters, modelLastMode: "")
-    
-    for (_, playerJson):(String, JSON) in data["playerTableStats"] {
-            let player = PlayerData(context: container.viewContext)
-            player.playerId = String(describing: playerJson["playerId"])
-            player.name = String(describing: playerJson["name"])
-            player.regionCode = String(describing: playerJson["regionCode"])
-            player.rating = Float(String(describing: playerJson["rating"])) as NSNumber?
-        }
-    
-    // Save changes to playerDataModel.
-    do {
-        try container.viewContext.save()
-    } catch {
-        print("An error occurred while saving to playerDataModel: \(error)")
-    }
-}
-
-func getPlayerData() -> [[String]] {
+    // Set up a variable to store the players in.
+    //var player: [String] = [String]()
     
     // Set up data container.
     let container = NSPersistentContainer(name: "playerDataModel")
@@ -571,79 +421,30 @@ func getPlayerData() -> [[String]] {
     }
     
     // Set up players array.
-    var playerData = [[String]]()
-    var players = [PlayerData]()
+    var playerData = [PlayerData]()
     let request = PlayerData.createFetchRequest()
     
+    // Set minimum amount of appearances.
+    request.predicate = NSPredicate(format: String("playerId == '" + id + "'"))
+    
     do {
-        players = try container.viewContext.fetch(request)
-        print(players.count)
+        playerData = try container.viewContext.fetch(request)
     } catch {
         print("Unable to access playerFavouritesDataModel.")
     }
     
-    // Add each player to the array and return it.
-    for player in players {
-        playerData.append([player.playerId!, player.name!, player.regionCode!])
-    }
+    let player = playerData[0]
     
-    return playerData
+    let attackingRating = Float((Float(player.attackingRating!)/Float(topAttacking[0][3])!)*100)
+    let defendingRating = Float((Float(player.defendingRating!)/Float(topDefending[0][3])!)*100)
+    let passingRating = Float((Float(player.passingRating!)/Float(topPassing[0][3])!)*100)
+    let disciplineRating = Float((Float(player.disciplineRating!)/Float(topDiscipline[0][3])!)*100)
     
+    return([attackingRating, defendingRating, passingRating, disciplineRating])
 }
 
-func getHistoricRating(playerId: String) -> String {
-    
-    // Get data.
-    var parameters = globalParameters
-    parameters["playerId"] = playerId
-    parameters["sortBy"] = "seasonId"
-    parameters["includeZeroValues"] = "true"
-    parameters["isMinApp"] = "false"
-    
-    // Get the data from the url, and create a JSON object to parse it. No modelLastMode is needed as
-    // This is the first time the data is being called.
-    let data = getDataFromUrl("Player", Parameters: parameters, modelLastMode: "")
-    
-    var totalMatchesPlayed: Float = 0.0
-    var currentTotal: Float = 0.0
-    
-    for (_, season):(String, JSON) in data["playerTableStats"] {
-        currentTotal += (Float(String(describing: season["rating"]))! * Float(String(describing: season["apps"]))!)
-        totalMatchesPlayed += Float(String(describing: season["apps"]))!
-    }
-    
-    return String(Float(currentTotal / totalMatchesPlayed))
-}
 
-func getHistoricPlayerData() {
-    
-    // Set up data container.
-    let container = NSPersistentContainer(name: "playerDataModel")
-    container.loadPersistentStores { storeDescription, error in
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        if let error = error {
-            print("Unable to load playerDataModel. \(error)")
-        }
-    }
-    
-    // Set up players array.
-    var players = [PlayerData]()
-    let request = PlayerData.createFetchRequest()
-    let sort = NSSortDescriptor(key: "currentRating", ascending: false)
-    request.sortDescriptors = [sort]
-    
-    do {
-        players = try container.viewContext.fetch(request)
-        print(players.count)
-    } catch {
-        print("Unable to access playerFavouritesDataModel.")
-    }
-    
-    // Add each player to the array and return it.
-    for player in players {
-        print(player.name)
-        print(getHistoricRating(playerId: player.playerId!))
-    }
-}
+
+
 
 

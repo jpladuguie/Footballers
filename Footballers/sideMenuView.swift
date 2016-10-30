@@ -208,7 +208,6 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
             
             DispatchQueue.global(qos: .background).async {
                 
-                var counter: Int = 0
                 self.searchedPlayers = []
                 
                 // Set up data container.

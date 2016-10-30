@@ -55,11 +55,11 @@ func configureHorizontalBarChart(barChart: HorizontalBarChartView, values: [Stri
     // Create the data for the chart, and an array for colours which is the same length
     // So that each bar is coloured.
     var dataEntries: [BarChartDataEntry] = []
-    var colors = [UIColor]()
+    var colours = [UIColor]()
     for i in 0..<values.count {
         let dataEntry = BarChartDataEntry(x: Double(i), y: Double(values[i])!)
         dataEntries.append(dataEntry)
-        colors.append(UIColor.white)
+        colours.append(UIColor.white)
     }
     
     // Set the minimum y value so that the chart shows all the data.
@@ -70,8 +70,8 @@ func configureHorizontalBarChart(barChart: HorizontalBarChartView, values: [Stri
     let chartData = BarChartData(dataSet: chartDataSet)
     
     // Set the colours for the chart to white, and the value colours so that they can't be seen.
-    chartDataSet.colors = colors
-    chartDataSet.valueColors = colors
+    chartDataSet.colors = colours
+    chartDataSet.valueColors = colours
     // Set the background clear and disable legend.
     barChart.backgroundColor = UIColor.clear
     barChart.legend.enabled = false

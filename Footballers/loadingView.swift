@@ -29,7 +29,7 @@ class loadingView: UIViewController, UIWebViewDelegate {
                             cookies = HTTPCookie.cookies(withResponseHeaderFields: fields, for: response.url!)
                             HTTPCookieStorage.shared.setCookies(cookies, for: response.url!, mainDocumentURL: nil)
                             
-                            //reloadPlayerData()
+                            //updatePlayerDatabase()
                             
                             // Perform the segue to homeView.
                             performSegue(withIdentifier: "loadingSegue", sender: nil)

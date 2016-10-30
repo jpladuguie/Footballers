@@ -327,12 +327,12 @@ func updatePlayerDatabase() {
         player.disciplineRating = generateDisciplineRating(fouls: player.foulsPerGame as! Float, yellowCards: player.yellowCard as! Int, redCards: player.redCard as! Int, apps: player.apps as! Int, rating: player.rating as! Float) as NSNumber?
         
         //print(player.name! + "  :  " + String(describing: player.attackingRating!))
-        total += Float(player.attackingRating!)
-        results.append(Int(player.passingRating!))
+        //total += Float(player.attackingRating!)
+        //results.append(Int(player.passingRating!))
     }
     
     //print("AVERAGE: " + String(total/Float((overall?.count)!)))
-    print(results)
+    //print(results)
     
     // Save changes to playerDataModel.
     do {
@@ -403,24 +403,17 @@ func generateDefendingRating(tackles: Float, interceptions: Float, clearances: F
 
 func generatePassingRating(assists: Int, keyPasses: Float, passesPerGame: Float, passSuccess: Float, crosses: Float, apps: Int,  rating: Float) -> Float {
     let assistsPerGame = Float(assists/apps)
-    return ((assistsPerGame*15 + keyPasses + crosses*1.5 + (passesPerGame + passSuccess)/25) * rating)
+    //return ((assistsPerGame*15 + keyPasses + crosses*1.5 + (passesPerGame + passSuccess)/25) * rating)
+    return ((assistsPerGame*20 + keyPasses + crosses + (passesPerGame + passSuccess)/40) * rating*2)
 }
 
 func generateDisciplineRating(fouls: Float, yellowCards: Int, redCards: Int, apps: Int, rating: Float) -> Float {
     let yellowCardsPerGame = Float(yellowCards/apps)
     let redCardsPerGame = Float(redCards/apps)
-    return (rating/(redCardsPerGame*5 + yellowCardsPerGame + fouls + 1))
+    return (rating/(redCardsPerGame*24 + yellowCardsPerGame*6 + fouls + 1))
 }
 
-func returnPlayerRatings(id: String) -> [Float] {
-    let topAttacking = getPlayerRankings(type: "attackingRating", numberToGet: 1)
-    let topDefending = getPlayerRankings(type: "defendingRating", numberToGet: 1)
-    let topPassing = getPlayerRankings(type: "passingRating", numberToGet: 1)
-    let topDiscipline = getPlayerRankings(type: "disciplineRating", numberToGet: 1)
-    
-    // Set up a variable to store the players in.
-    //var player: [String] = [String]()
-    
+func getPositionByRanking(id: String, type: String) -> Int {
     // Set up data container.
     let container = NSPersistentContainer(name: "playerDataModel")
     container.loadPersistentStores { storeDescription, error in
@@ -433,9 +426,8 @@ func returnPlayerRatings(id: String) -> [Float] {
     // Set up players array.
     var playerData = [PlayerData]()
     let request = PlayerData.createFetchRequest()
-    
-    // Set minimum amount of appearances.
-    request.predicate = NSPredicate(format: String("playerId == '" + id + "'"))
+    let sort = NSSortDescriptor(key: type, ascending: false)
+    request.sortDescriptors = [sort]
     
     do {
         playerData = try container.viewContext.fetch(request)
@@ -443,14 +435,26 @@ func returnPlayerRatings(id: String) -> [Float] {
         print("Unable to access playerFavouritesDataModel.")
     }
     
-    let player = playerData[0]
+    var counter = 1
     
-    let attackingRating = Float((Float(player.attackingRating!)/Float(topAttacking[0][3])!)*100)
-    let defendingRating = Float((Float(player.defendingRating!)/Float(topDefending[0][3])!)*100)
-    let passingRating = Float((Float(player.passingRating!)/Float(topPassing[0][3])!)*100)
-    let disciplineRating = Float((Float(player.disciplineRating!)/Float(topDiscipline[0][3])!)*100)
+    for player in playerData {
+        if player.playerId == id {
+            return counter
+        }
+        counter += 1
+    }
     
-    return([attackingRating, defendingRating, passingRating, disciplineRating])
+    return -1
+}
+
+func returnPlayerRatings(id: String) -> [[String]] {
+    
+    let attackingRating: Int = calcRating(value: Float(getPositionByRanking(id: id, type: "attackingRating")))
+    let defendingRating: Int = calcRating(value: Float(getPositionByRanking(id: id, type: "defendingRating")))
+    let passingRating: Int = calcRating(value: Float(getPositionByRanking(id: id, type: "passingRating")))
+    let disciplineRating: Int = calcRating(value: Float(getPositionByRanking(id: id, type: "disciplineRating")))
+    
+    return([["Attacking", String(attackingRating)], ["Defending", String(defendingRating)], ["Passing", String(passingRating)], ["Discipline", String(disciplineRating)]])
 }
 
 

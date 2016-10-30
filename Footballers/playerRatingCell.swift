@@ -1,18 +1,19 @@
 //
-//  playerStatCell.swift
+//  playerRatingCell.swift
 //  Footballers
 //
-//  Created by Jean-Pierre Laduguie on 07/09/2016.
+//  Created by Jean-Pierre Laduguie on 30/10/2016.
 //  Copyright © 2016 jp. All rights reserved.
 //
 
 import UIKit
 
-class playerStatCell: UITableViewCell {
+class playerRatingCell: UITableViewCell {
     
     var statNameLabel: UILabel!
     var statValueLabel: UILabel!
-
+    var statBar: UIView!
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = UIColor.clear
@@ -36,6 +37,13 @@ class playerStatCell: UITableViewCell {
         self.statValueLabel.backgroundColor = UIColor.clear
         self.addSubview(self.statValueLabel)
         
+        // Stat bar.
+        self.statBar = UIView()
+        self.statBar.frame = CGRect(x: 20, y: 40, width: 355, height: 10)
+        self.statBar.layer.cornerRadius = 5.0
+        self.statBar.backgroundColor = UIColor.white
+        self.addSubview(self.statBar)
+        
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -48,8 +56,8 @@ class playerStatCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
-
+    
 }

@@ -45,6 +45,9 @@
 		E8A0CF4B1DBAC1130047C036 /* PlayerFavouritesData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A0CF491DBAC1130047C036 /* PlayerFavouritesData+CoreDataProperties.swift */; };
 		E8C0FCB71DBBB0D800260964 /* DrawCharts.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C0FCB61DBBB0D800260964 /* DrawCharts.swift */; };
 		E8C713E81D7DF3BF00B717F2 /* playerTopCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C713E71D7DF3BF00B717F2 /* playerTopCell.swift */; };
+		E8CDFB351DC693E700EFE69B /* DataAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CDFB341DC693E700EFE69B /* DataAnalysis.swift */; };
+		E8CDFB371DC6A2C500EFE69B /* playerRatingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CDFB361DC6A2C500EFE69B /* playerRatingCell.swift */; };
+		E8CDFB391DC6B67D00EFE69B /* playerTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CDFB381DC6B67D00EFE69B /* playerTitleCell.swift */; };
 		E8DE7BB71DBA81960031D83D /* rankingTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DE7BB61DBA81960031D83D /* rankingTableCell.swift */; };
 		E8DE7BBA1DBAAA1D0031D83D /* playerDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E8DE7BB81DBAAA1D0031D83D /* playerDataModel.xcdatamodeld */; };
 		E8DE7BBD1DBAAAEB0031D83D /* PlayerData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DE7BBB1DBAAAEB0031D83D /* PlayerData+CoreDataClass.swift */; };
@@ -95,6 +98,9 @@
 		E8A0CF491DBAC1130047C036 /* PlayerFavouritesData+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerFavouritesData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		E8C0FCB61DBBB0D800260964 /* DrawCharts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawCharts.swift; sourceTree = "<group>"; };
 		E8C713E71D7DF3BF00B717F2 /* playerTopCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerTopCell.swift; sourceTree = "<group>"; };
+		E8CDFB341DC693E700EFE69B /* DataAnalysis.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataAnalysis.swift; sourceTree = "<group>"; };
+		E8CDFB361DC6A2C500EFE69B /* playerRatingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerRatingCell.swift; sourceTree = "<group>"; };
+		E8CDFB381DC6B67D00EFE69B /* playerTitleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerTitleCell.swift; sourceTree = "<group>"; };
 		E8DE7BB61DBA81960031D83D /* rankingTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = rankingTableCell.swift; sourceTree = "<group>"; };
 		E8DE7BB91DBAAA1D0031D83D /* playerDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = playerDataModel.xcdatamodel; sourceTree = "<group>"; };
 		E8DE7BBB1DBAAAEB0031D83D /* PlayerData+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerData+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -130,6 +136,7 @@
 				E8188FE31DBD0A0B0044CE74 /* ViewControllerFunctions.swift */,
 				E8C0FCB61DBBB0D800260964 /* DrawCharts.swift */,
 				E87F5B031D78B86400C10A38 /* Data.swift */,
+				E8CDFB341DC693E700EFE69B /* DataAnalysis.swift */,
 				E87F5B021D78B86400C10A38 /* Player.swift */,
 				E8EDCA661DC57353003C7F0A /* Favourites.swift */,
 				E82125921D78B9B80024D016 /* playerData.txt */,
@@ -169,6 +176,8 @@
 				E8C713E71D7DF3BF00B717F2 /* playerTopCell.swift */,
 				E81059CF1D80B19800EE205E /* playerSecondCell.swift */,
 				E81059C31D807A6800EE205E /* playerStatCell.swift */,
+				E8CDFB361DC6A2C500EFE69B /* playerRatingCell.swift */,
+				E8CDFB381DC6B67D00EFE69B /* playerTitleCell.swift */,
 				E8DE7BB61DBA81960031D83D /* rankingTableCell.swift */,
 				E87F5AF41D78B82500C10A38 /* Main.storyboard */,
 				E87F5AF91D78B82500C10A38 /* LaunchScreen.storyboard */,
@@ -353,13 +362,16 @@
 				E821258E1D78B99E0024D016 /* playerView.swift in Sources */,
 				E821258F1D78B99E0024D016 /* teamsView.swift in Sources */,
 				E87F5B041D78B86400C10A38 /* Player.swift in Sources */,
+				E8CDFB371DC6A2C500EFE69B /* playerRatingCell.swift in Sources */,
 				E81059D01D80B19800EE205E /* playerSecondCell.swift in Sources */,
+				E8CDFB391DC6B67D00EFE69B /* playerTitleCell.swift in Sources */,
 				E87F5AF11D78B82500C10A38 /* AppDelegate.swift in Sources */,
 				E821258D1D78B99E0024D016 /* loadingView.swift in Sources */,
 				E8DE7BBA1DBAAA1D0031D83D /* playerDataModel.xcdatamodeld in Sources */,
 				E8EDCA671DC57353003C7F0A /* Favourites.swift in Sources */,
 				E87F5B051D78B86400C10A38 /* Data.swift in Sources */,
 				E82125A91D78BF9A0024D016 /* rankingsView.swift in Sources */,
+				E8CDFB351DC693E700EFE69B /* DataAnalysis.swift in Sources */,
 				E82125AD1D78C24C0024D016 /* favouritesView.swift in Sources */,
 				E8188FE41DBD0A0B0044CE74 /* ViewControllerFunctions.swift in Sources */,
 			);

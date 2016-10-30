@@ -16,6 +16,10 @@ import NVActivityIndicatorView
 let lightGrey: UIColor = UIColor(red: 70.0/255.0, green: 70.0/255.0, blue: 70.0/255.0, alpha: 1.0)
 let darkGrey: UIColor = UIColor(red: 55.0/255.0, green: 55.0/255.0, blue: 55.0/255.0, alpha: 1.0)
 
+let green: UIColor = UIColor(red: 79.0/255.0, green: 216.0/255.0, blue: 196.0/255.0, alpha: 1.0)
+let yellow: UIColor = UIColor(red: 248.0/255.0, green: 200.0/255.0, blue: 95.0/255.0, alpha: 1.0)
+let red: UIColor = UIColor(red: 247.0/255.0, green: 126.0/255.0, blue: 131.0/255.0, alpha: 1.0)
+
 // Global View Controller variable to keep track of current View Controller.
 var currentPage: String = String()
 
@@ -77,4 +81,20 @@ func configureActivityIndicator(viewController: UIViewController) -> NVActivityI
     
     return activityIndicator
 }
+
+// Return the colour red, yellow or green depending on a variable.
+func getRatingColour(value: Int) -> UIColor {
+    if value < 35 {
+        return red
+    }
+    else if value >= 35 && value <= 65 {
+        return yellow
+    }
+    else {
+        return green
+    }
+}
+
+
+
 

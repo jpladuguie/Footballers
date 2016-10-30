@@ -33,6 +33,8 @@ class Player {
     // Parameters and key for data requests.
     var parameters = [String: String]()
     var modelLastMode: String
+    // Player ratings.
+    var ratings = [[String]]()
     
     init(id: String) {
         // Set ID and player profile image url.
@@ -76,6 +78,9 @@ class Player {
         // Set up summary statistic values. Like personal details, summary statistics never need to be loaded from url 
         // Again after the player has been initialised.
         self.summaryStats = getStatistics("all", titles: ["Appearances", "Minutes Played", "Goals", "Assists", "Yellow Cards", "Red Cards", "Shots per Game", "Pass Success %", "Ariels Won per Game", "Man of the Match"], valueNames: ["apps", "minsPlayed", "goal", "assistTotal", "yellowCard", "redCard", "shotsPerGame", "passSuccess", "aerialWonPerGame", "manOfTheMatch"], integerValues: [0, 1, 2, 3, 4, 5, 9], doubleValues: [6, 7, 8])
+        
+        // Set up player ratings.
+        self.ratings = returnPlayerRatings(id: self.id)
         
     }
     

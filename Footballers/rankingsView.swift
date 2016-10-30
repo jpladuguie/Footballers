@@ -22,9 +22,6 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
     // Selected playerId for segue to playerView.
     var selectedPlayerData = [String: String]()
     
-    // Activity indicator.
-    var activityIndicator: NVActivityIndicatorView!
-    
     // Called when menu button is pressed.
     @IBAction func menuOpened(_ sender: AnyObject) {
         performSegue(withIdentifier: "rankingsMenuSegue", sender: nil)
@@ -39,10 +36,6 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         // Set up the View Controller.
         setUpView(viewController: self)
-        
-        // Create loading activity indicator.
-        self.activityIndicator = configureActivityIndicator(viewController: self)
-        self.view.addSubview(self.activityIndicator)
         
         DispatchQueue.global(qos: .background).async {
             // Get the data needed for the tableView.
@@ -83,10 +76,6 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
                     self.statsTableView.alpha = 1.0
                     playerLabel.alpha = 1.0
                     statlabel.alpha = 1.0
-                    self.activityIndicator.alpha = 0.0
-                    }, completion: { (complete: Bool) in
-                        self.activityIndicator.removeFromSuperview()
-                        return
                 })
             }
         }

@@ -31,6 +31,8 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     var player: Player!
     var isPlayerFavourite: Bool!
     var personalDetails: [[String]]!
+    var summaryStats: [[String]]!
+    var ratings: [[String]]!
     
     // Activity indicator.
     var activityIndicator: NVActivityIndicatorView!
@@ -69,11 +71,13 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         // Declare player
         self.player = Player(id: self.playerData["playerId"]!)
         self.personalDetails = player.getPersonalDetails()
+        self.ratings = player.ratings
         
         // Stats table view.
         self.statsTableView = UITableView(frame: CGRect(x: 0, y: 160, width: self.view.frame.width, height: self.view.frame.height - 160))
         self.statsTableView.register(playerTopCell.self, forCellReuseIdentifier: NSStringFromClass(playerTopCell.self))
         self.statsTableView.register(playerSecondCell.self, forCellReuseIdentifier: NSStringFromClass(playerSecondCell.self))
+        self.statsTableView.register(playerRatingCell.self, forCellReuseIdentifier: NSStringFromClass(playerRatingCell.self))
         self.statsTableView.register(playerStatCell.self, forCellReuseIdentifier: NSStringFromClass(playerStatCell.self))
         self.statsTableView.delegate = self
         self.statsTableView.dataSource = self
@@ -132,7 +136,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         teamLabel.textColor = UIColor.white
         teamLabel.textAlignment = NSTextAlignment.center
         teamLabel.backgroundColor = UIColor.clear
-        teamLabel.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightUltraLight)
+        teamLabel.font = UIFont.systemFont(ofSize: 15, weight: -1.0)
         teamLabel.alpha = 0
         self.view.addSubview(teamLabel)
         
@@ -192,10 +196,8 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     
     // Number of rows in tableview.
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ((self.player?.getSummaryStats().count)! + 2)
+        return ((self.player?.getSummaryStats().count)! + 6)
     }
-    
-    
     
     // Set up tableview cells.
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -247,13 +249,35 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
             // Set cell.
             cell = secondCell
         }
+        // Rating Cells.
+        else if ((indexPath as NSIndexPath).row == 2 || (indexPath as NSIndexPath).row == 3 || (indexPath as NSIndexPath).row == 4 || (indexPath as NSIndexPath).row == 5) {
+            
+            // Create cell.
+            let ratingCell: playerRatingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerRatingCell.self), for: indexPath) as! playerRatingCell
+            
+            ratingCell.statNameLabel.text = self.ratings[(indexPath as NSIndexPath).row - 2][0]
+            ratingCell.statValueLabel.text = self.ratings[(indexPath as NSIndexPath).row - 2][1]
+            
+            let value = Float(self.ratings[(indexPath as NSIndexPath).row - 2][1])
+            let barWidth: Int = Int((Float(value! * Float(self.view.frame.width - 40)) / Float(100.0)))
+            ratingCell.statBar.frame = CGRect(x: 20, y: 40, width: 0, height: 10)
+            ratingCell.statBar.backgroundColor = getRatingColour(value: Int(self.ratings[(indexPath as NSIndexPath).row - 2][1])!)
+            
+            // Fade items in.
+            UIView.animate(withDuration: 1.0, animations: {
+                ratingCell.statBar.frame = CGRect(x: 20, y: 40, width: barWidth, height: 10)
+            })
+            
+            // Set cell.
+            cell = ratingCell
+        }
         else {
         
             // Create cell.
             let statCell: playerStatCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerStatCell.self), for: indexPath) as! playerStatCell
             
-            statCell.statNameLabel.text = self.player?.getSummaryStats()[(indexPath as NSIndexPath).row - 2][0]
-            statCell.statValueLabel.text = self.player?.getSummaryStats()[(indexPath as NSIndexPath).row - 2][1]
+            statCell.statNameLabel.text = self.player?.getSummaryStats()[(indexPath as NSIndexPath).row - 6][0]
+            statCell.statValueLabel.text = self.player?.getSummaryStats()[(indexPath as NSIndexPath).row - 6][1]
             
             // Set cell.
             cell = statCell
@@ -271,7 +295,12 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         if (indexPath as NSIndexPath).row == 0 || (indexPath as NSIndexPath).row == 1 {
             return 90.0
         }
-        return 40.0
+        else if ((indexPath as NSIndexPath).row == 2 || (indexPath as NSIndexPath).row == 3 || (indexPath as NSIndexPath).row == 4 || (indexPath as NSIndexPath).row == 5) {
+            return 60.0
+        }
+        else {
+            return 40.0
+        }
     }
     
     // Set favourite button.

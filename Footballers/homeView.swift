@@ -34,9 +34,6 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var selectedPlayerData = [String: String]()
     var selectedRanking: String?
     
-    // Activity indicator.
-    var activityIndicator: NVActivityIndicatorView!
-    
     // Charts.
     @IBOutlet weak var barChartView: BarChartView!
     @IBOutlet weak var pieChartView: PieChartView!
@@ -115,15 +112,11 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         UIView.animate(withDuration: 1.0, animations: {
             self.topScorersTable.alpha = 1.0
             self.topPassingPlayerTitle.alpha = 1.0
-            // Fade out activity indicator.
-            self.activityIndicator.alpha = 0.0
             }, completion: { (complete: Bool) in
                 // Once animations have finished.
                 UIView.animate(withDuration: 0.5, animations: {
                     // Fade in values for horizontal bar chart once it has finished animating.
                     self.topAssistsTable.alpha = 1.0
-                    // Remove activity indicator from view.
-                    self.activityIndicator.removeFromSuperview()
                     })
                 return
         })
@@ -155,21 +148,16 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         // Set up the View Controller.
         setUpView(viewController: self)
         
-        // Create loading activity indicator.
-        self.activityIndicator = configureActivityIndicator(viewController: self)
-        self.view.addSubview(self.activityIndicator)
-        
         // Get the data in the background, and once it has finished create all the subviews.
         DispatchQueue.global(qos: .background).async {
             
             //updatePlayerDatabase()
-            //let test = getPlayerRankings(type: "disciplineRating", numberToGet: 50)
+            //let test = getPlayerRankings(type: "passingRating", numberToGet: 50)
             //for i in 0..<50 {
             //    print(test[i][1])
             //}
             
-            //updatePlayerDatabase()
-            //print(returnPlayerRatings(id: "11119"))
+            //print(returnPlayerRatings(id: "13812"))
             
             
             // Get the data needed for the tableViews.

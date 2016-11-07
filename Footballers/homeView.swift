@@ -48,10 +48,10 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBAction func subTitlePressed(sender: UIButton) {
         switch sender.tag {
             case 0:
-                self.selectedRanking = "goal"
+                self.selectedRanking = "Goals"
                 performSegue(withIdentifier: "homeRankingSegue", sender: nil)
             case 1:
-                self.selectedRanking = "assistTotal"
+                self.selectedRanking = "Assists"
                 performSegue(withIdentifier: "homeRankingSegue", sender: nil)
             default:
                 print("Error: inocorrect subTitle identifier.")
@@ -161,9 +161,9 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             
             // Get the data needed for the tableViews.
-            self.topScorersData = getPlayerRankings(type: "goal", numberToGet: 5)
-            self.topAssistsData = getPlayerRankings(type: "assistTotal", numberToGet: 3)
-            self.topPasserData = getPlayerRankings(type: "passSuccess", numberToGet: 1)
+            self.topScorersData = getPlayerRankings(SortValue: "Goals", NumberToGet: "5")
+            self.topAssistsData = getPlayerRankings(SortValue: "Assists", NumberToGet: "3")
+            self.topPasserData = getPlayerRankings(SortValue: "PassSuccess", NumberToGet: "1")
             DispatchQueue.main.async {
                 // Create all the subViews with the data,
                 self.createSubViews()

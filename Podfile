@@ -6,6 +6,7 @@ target 'Footballers' do
   use_frameworks!
 
   # Pods for Footballers
+  pod 'Alamofire', '~> 4.0'
   pod 'SwiftyJSON', git: 'https://github.com/BaiduHiDeviOS/SwiftyJSON.git', branch: 'swift3'
   pod 'Kanna', git: 'https://github.com/tid-kijyun/Kanna.git', branch: 'swift3.0'
   pod 'SideMenu'

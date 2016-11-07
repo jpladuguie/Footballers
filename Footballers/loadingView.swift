@@ -9,6 +9,7 @@
 import UIKit
 import NVActivityIndicatorView
 import SideMenu
+import Alamofire
 
 // loadingView is the initial View Controller. Essentially all it does is set up the side
 // View menu, and create a UIWebView which is off-screen. This webview connects to Whoscored.com,
@@ -17,30 +18,6 @@ import SideMenu
 // The segue to homeView is initiated.
 class loadingView: UIViewController, UIWebViewDelegate {
     
-    // Function is called once the webView finishes loading. It stores the cookies from the request, and calls the segue to the home screen.
-    func webViewDidFinishLoad(_ webView: UIWebView) {
-        if (webView.isLoading == false) {
-            if let request = webView.request {
-                if let resp = URLCache.shared.cachedResponse(for: request) {
-                    if let response = resp.response as? HTTPURLResponse {
-                        if let httpResponse = response as? HTTPURLResponse, let fields = httpResponse.allHeaderFields as? [String : String] {
-                            
-                            // Get the cookies.
-                            cookies = HTTPCookie.cookies(withResponseHeaderFields: fields, for: response.url!)
-                            HTTPCookieStorage.shared.setCookies(cookies, for: response.url!, mainDocumentURL: nil)
-                            
-                            //updatePlayerDatabase()
-                            
-                            // Perform the segue to homeView.
-                            performSegue(withIdentifier: "loadingSegue", sender: nil)
-                            
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -76,12 +53,54 @@ class loadingView: UIViewController, UIWebViewDelegate {
         self.view.addSubview(activityIndicator)
         
         // Get webpage and cookies.
-        let request = NSURLRequest(url: URL(string: "https://www.whoscored.com/AboutUs")!)
-        let webView:UIWebView = UIWebView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        webView.loadRequest(request as URLRequest)
-        self.view.addSubview(webView)
-        webView.delegate = self
+        //let request = NSURLRequest(url: URL(string: "https://www.whoscored.com/AboutUs")!)
+        //let webView:UIWebView = UIWebView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        //webView.loadRequest(request as URLRequest)
+        //self.view.addSubview(webView)
+        //webView.delegate = self
         
+        
+        
+        
+        /*var parameters = globalParameters
+        parameters["playerId"] = "97752"
+        parameters["sortBy"] = "Rating"
+        parameters["isMinApp"] = "false"
+        parameters["includeZeroValues"] = "true"
+        
+        print(getPlayerDataFromUrl(Parameters: parameters))*/
+        
+        
+        
+        
+        //playerSeasonStatsAPI()
+        
+        
+        //if let name = (Locale.current as NSLocale).displayName(forKey: .countryName, value: "de") {
+        //    print(name)
+        //}
+        
+     
+        
+        //print(IsoCountryCodes.searchByName(name: "France"))
+        
+        //print(countryName(from: "eng"))
+        
+        
+        
+        
+        
+        
+    }
+    
+    func countryName(from countryCode: String) -> String {
+        if let name = (Locale.current as NSLocale).displayName(forKey: .countryCode, value: countryCode) {
+            // Country name was found
+            return name
+        } else {
+            // Country name cannot be found
+            return countryCode
+        }
     }
     
     override func didReceiveMemoryWarning() {

@@ -1,4 +1,5 @@
 PODS:
+  - Alamofire (4.0.1)
   - Charts (3.0.0):
     - Charts/Core (= 3.0.0)
   - Charts/Core (3.0.0)
@@ -8,6 +9,7 @@ PODS:
   - SwiftyJSON (2.3.2)
 
 DEPENDENCIES:
+  - Alamofire (~> 4.0)
   - Charts (from `https://github.com/danielgindi/Charts.git`, branch `master`)
   - Kanna (from `https://github.com/tid-kijyun/Kanna.git`, branch `swift3.0`)
   - NVActivityIndicatorView
@@ -37,12 +39,13 @@ CHECKOUT OPTIONS:
     :git: https://github.com/BaiduHiDeviOS/SwiftyJSON.git
 
 SPEC CHECKSUMS:
+  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
   Charts: 3f0da988b104c8e5f069fcef55da699f597dac67
   Kanna: 8d60d86a3580f7dee732811e5163a5e3e41a32a7
   NVActivityIndicatorView: 81953b5e65093ba79edf4fe7268e002039ca5268
   SideMenu: f179260f85c68ed9b283b4a505600f2e6cbdfb10
   SwiftyJSON: 6118fb49d7519c4d31a0c1f3d5af936e9047b556
 
-PODFILE CHECKSUM: a00865e4c320b2bf9a533cb2bc9f294a7aed8515
+PODFILE CHECKSUM: 6eb543e8a13b5393358eb86b211e97fc449de860
 
 COCOAPODS: 1.0.1

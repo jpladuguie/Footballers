@@ -12,7 +12,7 @@ import NVActivityIndicatorView
 class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // Default values for page title and ranking type.
-    var rankingType: String! = "goal"
+    var rankingType: String! = "Goals"
     var rankingTitle: String! = "Top Scorers"
     
     // Player data array and tableView.
@@ -39,7 +39,7 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         DispatchQueue.global(qos: .background).async {
             // Get the data needed for the tableView.
-            self.players = getPlayerRankings(type: self.rankingType, numberToGet: 100)
+            self.players = getPlayerRankings(SortValue: self.rankingType, NumberToGet: "100")
             DispatchQueue.main.async {
                 
                 // Create player label.

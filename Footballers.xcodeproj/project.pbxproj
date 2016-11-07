@@ -31,6 +31,8 @@
 		E82125A91D78BF9A0024D016 /* rankingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125A81D78BF9A0024D016 /* rankingsView.swift */; };
 		E82125AB1D78C0EC0024D016 /* compareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125AA1D78C0EC0024D016 /* compareView.swift */; };
 		E82125AD1D78C24C0024D016 /* favouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125AC1D78C24C0024D016 /* favouritesView.swift */; };
+		E822A46F1DCBF1C9008F9AA5 /* IsoCountries.swift in Sources */ = {isa = PBXBuildFile; fileRef = E822A46D1DCBF1C9008F9AA5 /* IsoCountries.swift */; };
+		E822A4701DCBF1C9008F9AA5 /* IsoCountryCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E822A46E1DCBF1C9008F9AA5 /* IsoCountryCodes.swift */; };
 		E84E1ADD1D7B367A00A0BC48 /* favouriteButtonFull.png in Resources */ = {isa = PBXBuildFile; fileRef = E84E1ADC1D7B367A00A0BC48 /* favouriteButtonFull.png */; };
 		E84E1AE21D7B6B5F00A0BC48 /* greyLine.png in Resources */ = {isa = PBXBuildFile; fileRef = E84E1AE01D7B6B5F00A0BC48 /* greyLine.png */; };
 		E84E1AE31D7B6B5F00A0BC48 /* whiteLine.png in Resources */ = {isa = PBXBuildFile; fileRef = E84E1AE11D7B6B5F00A0BC48 /* whiteLine.png */; };
@@ -82,6 +84,8 @@
 		E82125A81D78BF9A0024D016 /* rankingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = rankingsView.swift; sourceTree = "<group>"; };
 		E82125AA1D78C0EC0024D016 /* compareView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = compareView.swift; sourceTree = "<group>"; };
 		E82125AC1D78C24C0024D016 /* favouritesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = favouritesView.swift; sourceTree = "<group>"; };
+		E822A46D1DCBF1C9008F9AA5 /* IsoCountries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IsoCountries.swift; sourceTree = "<group>"; };
+		E822A46E1DCBF1C9008F9AA5 /* IsoCountryCodes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IsoCountryCodes.swift; sourceTree = "<group>"; };
 		E84E1ADC1D7B367A00A0BC48 /* favouriteButtonFull.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favouriteButtonFull.png; sourceTree = "<group>"; };
 		E84E1AE01D7B6B5F00A0BC48 /* greyLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greyLine.png; sourceTree = "<group>"; };
 		E84E1AE11D7B6B5F00A0BC48 /* whiteLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteLine.png; sourceTree = "<group>"; };
@@ -140,6 +144,8 @@
 				E87F5B021D78B86400C10A38 /* Player.swift */,
 				E8EDCA661DC57353003C7F0A /* Favourites.swift */,
 				E82125921D78B9B80024D016 /* playerData.txt */,
+				E822A46D1DCBF1C9008F9AA5 /* IsoCountries.swift */,
+				E822A46E1DCBF1C9008F9AA5 /* IsoCountryCodes.swift */,
 				E87F5AEF1D78B82500C10A38 /* Footballers */,
 				E87F5AEE1D78B82500C10A38 /* Products */,
 				91B8F189B9FCF175F4CA6E8F /* Pods */,
@@ -348,6 +354,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8DE7BBE1DBAAAEB0031D83D /* PlayerData+CoreDataProperties.swift in Sources */,
+				E822A4701DCBF1C9008F9AA5 /* IsoCountryCodes.swift in Sources */,
 				E8DE7BBD1DBAAAEB0031D83D /* PlayerData+CoreDataClass.swift in Sources */,
 				E8A0CF4A1DBAC1130047C036 /* PlayerFavouritesData+CoreDataClass.swift in Sources */,
 				E82125AB1D78C0EC0024D016 /* compareView.swift in Sources */,
@@ -359,6 +366,7 @@
 				E8A0CF471DBAC0CE0047C036 /* playerFavouritesDataModel.xcdatamodeld in Sources */,
 				E8A0CF4B1DBAC1130047C036 /* PlayerFavouritesData+CoreDataProperties.swift in Sources */,
 				E81059C41D807A6800EE205E /* playerStatCell.swift in Sources */,
+				E822A46F1DCBF1C9008F9AA5 /* IsoCountries.swift in Sources */,
 				E821258E1D78B99E0024D016 /* playerView.swift in Sources */,
 				E821258F1D78B99E0024D016 /* teamsView.swift in Sources */,
 				E87F5B041D78B86400C10A38 /* Player.swift in Sources */,

@@ -30,7 +30,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     // Player.
     var player: Player!
     var isPlayerFavourite: Bool!
-    var personalDetails: [[String]]!
+    var personalDetails: [String: String]!
     var summaryStats: [[String]]!
     var ratings: [[String]]!
     
@@ -73,6 +73,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         self.personalDetails = player.getPersonalDetails()
         self.ratings = player.ratings
         
+        
         // Stats table view.
         self.statsTableView = UITableView(frame: CGRect(x: 0, y: 160, width: self.view.frame.width, height: self.view.frame.height - 160))
         self.statsTableView.register(playerTopCell.self, forCellReuseIdentifier: NSStringFromClass(playerTopCell.self))
@@ -92,9 +93,10 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         // Get the image from the player's url, and create an imageView for it. Try except needed in case player has no image.
         var profileImage = UIImage(named: "defaultPlayerImage.png")
         
+        print(self.player.imageUrl)
         // Check whether image is available.
         do {
-            let imageData = try Data(contentsOf: URL(string: player!.imageUrl)!, options: NSData.ReadingOptions())
+            let imageData = try Data(contentsOf: URL(string: "http://static.fantasydata.com/headshots/soc/low-res/90028655.png")!, options: NSData.ReadingOptions())
             profileImage = UIImage(data: imageData)
         } catch {
             print("No player image found.")
@@ -122,7 +124,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         // Name label.
         let nameLabel: UILabel = UILabel()
         nameLabel.frame = CGRect(x: 0, y: 100, width: self.view.frame.size.width, height: 40)
-        nameLabel.text = self.personalDetails[0][1]
+        nameLabel.text = self.personalDetails["Name"]
         nameLabel.textColor = UIColor.white
         nameLabel.textAlignment = NSTextAlignment.center
         nameLabel.backgroundColor = UIColor.clear
@@ -133,7 +135,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         // Team label.
         let teamLabel: UILabel = UILabel()
         teamLabel.frame = CGRect(x: 0, y: 120, width: self.view.frame.size.width, height: 40)
-        teamLabel.text = self.personalDetails[1][1]
+        teamLabel.text = self.personalDetails["Team"]
         teamLabel.textColor = UIColor.white
         teamLabel.textAlignment = NSTextAlignment.center
         teamLabel.backgroundColor = UIColor.clear
@@ -213,14 +215,14 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
             let topCell: playerTopCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerTopCell.self), for: indexPath) as! playerTopCell
             
             // Set values.
-            let image = UIImage(named: self.personalDetails[5][1].uppercased())
+            let image = UIImage(named: (self.personalDetails["RegionCode"])!)
             
             topCell.flagImage.image = image
-            topCell.countryLabel.text = self.personalDetails[6][1]
-            topCell.ageLabel.text = self.personalDetails[2][1]
+            topCell.countryLabel.text = self.personalDetails["Nationality"]
+            topCell.ageLabel.text = self.personalDetails["Age"]
             
             // Get team image.
-            var teamImage = UIImage(named: "team.png")
+            /*var teamImage = UIImage(named: "team.png")
             
             // Check whether image is available.
             do {
@@ -230,8 +232,8 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
                 print("No team image found.")
             }
             
-            topCell.teamImage.image = teamImage
-            topCell.teamLabel.text = self.personalDetails[1][1]
+            topCell.teamImage.image = teamImage*/
+            topCell.teamLabel.text = self.personalDetails["Team"]
             
             // Set cell.
             cell = topCell
@@ -243,9 +245,9 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
             let secondCell: playerSecondCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerSecondCell.self), for: indexPath) as! playerSecondCell
             
             // Set values.
-            secondCell.heightValueLabel.text = self.personalDetails[3][1]
-            secondCell.numberValueLabel.text = self.personalDetails[7][1]
-            secondCell.weightValueLabel.text = self.personalDetails[4][1]
+            secondCell.heightValueLabel.text = self.personalDetails["Height"]
+            secondCell.numberValueLabel.text = self.personalDetails["Jersey"]
+            secondCell.weightValueLabel.text = self.personalDetails["Weight"]
             
             // Set cell.
             cell = secondCell

@@ -9,6 +9,17 @@
 import Foundation
 import CoreData
 
+// 
+func setUpDataContainer(name: String) {
+    let container = NSPersistentContainer(name: name)
+    container.loadPersistentStores { storeDescription, error in
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        if let error = error {
+            print("Unable to load " + name + ". Error: \(error)")
+        }
+    }
+}
+
 // Checks whether player with given id is saved in favourites.
 func isPlayerInFavourites(_ playerId: String) -> Bool {
     // Set up data container.

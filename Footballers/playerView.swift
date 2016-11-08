@@ -65,15 +65,8 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     }
     
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        // Declare player
-        self.player = Player(id: self.playerData["playerId"]!)
-        self.personalDetails = player.getPersonalDetails()
-        self.ratings = player.ratings
-        
-        
+    func createSubViews() {
+
         // Stats table view.
         self.statsTableView = UITableView(frame: CGRect(x: 0, y: 160, width: self.view.frame.width, height: self.view.frame.height - 160))
         self.statsTableView.register(playerTopCell.self, forCellReuseIdentifier: NSStringFromClass(playerTopCell.self))
@@ -93,10 +86,9 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         // Get the image from the player's url, and create an imageView for it. Try except needed in case player has no image.
         var profileImage = UIImage(named: "defaultPlayerImage.png")
         
-        print(self.player.imageUrl)
         // Check whether image is available.
         do {
-            let imageData = try Data(contentsOf: URL(string: "http://static.fantasydata.com/headshots/soc/low-res/90028655.png")!, options: NSData.ReadingOptions())
+            let imageData = try Data(contentsOf: URL(string: self.player.imageUrl)!, options: NSData.ReadingOptions())
             profileImage = UIImage(data: imageData)
         } catch {
             print("No player image found.")
@@ -104,22 +96,9 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         
         // Create circle shape from image.
         let profileImageView = UIImageView(image: profileImage)
-        profileImageView.frame = CGRect(x: self.view.frame.size.width/2 - 37.5, y: 15, width: 75, height: 112.5)
+        profileImageView.frame = CGRect(x: self.view.frame.size.width/2 - 32.5, y: 15, width: 65, height: 90)
         profileImageView.alpha = 0
         self.view.addSubview(profileImageView)
-        
-        // Create a view on top of the imageView and cut a circle out of it.
-        let topView = UIView(frame: CGRect(x: self.view.frame.size.width/2 - 37.5, y: 15, width: 75, height: 112.5))
-        let maskLayer = CAShapeLayer()
-        let radius : CGFloat = profileImageView.bounds.width/2
-        let path = UIBezierPath(rect: profileImageView.bounds)
-        path.addArc(withCenter: CGPoint(x: profileImageView.bounds.width/2, y: 50.0), radius: radius, startAngle: 0.0, endAngle: CGFloat(2*M_PI), clockwise: true)
-        maskLayer.path = path.cgPath
-        maskLayer.fillRule = kCAFillRuleEvenOdd
-        topView.layer.mask = maskLayer
-        topView.clipsToBounds = true
-        topView.backgroundColor = darkGrey
-        self.view.addSubview(topView)
         
         // Name label.
         let nameLabel: UILabel = UILabel()
@@ -194,6 +173,20 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         
         // Favourite bar button.
         setFavouriteButton()
+        
+        // Get the data in the background, and once it has finished create all the subviews.
+        DispatchQueue.global(qos: .background).async {
+            
+            // Get the data needed for the tableViews.
+            self.player = Player(id: self.playerData["playerId"]!)
+            self.personalDetails = self.player.getPersonalDetails()
+            self.ratings = self.player.ratings
+            
+            DispatchQueue.main.async {
+                // Create all the subViews with the data,
+                self.createSubViews()
+            }
+        }
     
     }
     
@@ -220,20 +213,20 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
             topCell.flagImage.image = image
             topCell.countryLabel.text = self.personalDetails["Nationality"]
             topCell.ageLabel.text = self.personalDetails["Age"]
+            topCell.teamLabel.text = self.personalDetails["Team"]
             
             // Get team image.
-            /*var teamImage = UIImage(named: "team.png")
-            
-            // Check whether image is available.
-            do {
-                let imageData = try Data(contentsOf: URL(string: self.player.teamImageUrl)!, options: NSData.ReadingOptions())
-                teamImage = UIImage(data: imageData)
-            } catch {
-                print("No team image found.")
-            }
-            
-            topCell.teamImage.image = teamImage*/
-            topCell.teamLabel.text = self.personalDetails["Team"]
+            var teamImage = UIImage(named: "team.png")
+             
+             // Check whether image is available.
+             do {
+             let imageData = try Data(contentsOf: URL(string: self.player.teamImageUrl)!, options: NSData.ReadingOptions())
+             teamImage = UIImage(data: imageData)
+             } catch {
+             print("No team image found.")
+             }
+             
+             topCell.teamImage.image = teamImage
             
             // Set cell.
             cell = topCell
@@ -256,14 +249,6 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         else if ((indexPath as NSIndexPath).row == 2 || (indexPath as NSIndexPath).row == 7) {
             // Create cell.
             let titleCell: playerTitleCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerTitleCell.self), for: indexPath) as! playerTitleCell
-            
-            // Set values.
-            if (indexPath as NSIndexPath).row == 2 {
-                titleCell.title.text = "Ratings"
-            }
-            else {
-                titleCell.title.text = "Details"
-            }
             
             // Set cell.
             cell = titleCell
@@ -314,8 +299,11 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         if (indexPath as NSIndexPath).row == 0 || (indexPath as NSIndexPath).row == 1 {
             return 90.0
         }
-        else if ((indexPath as NSIndexPath).row == 2 || (indexPath as NSIndexPath).row == 3 || (indexPath as NSIndexPath).row == 4 || (indexPath as NSIndexPath).row == 5 || (indexPath as NSIndexPath).row == 6 || (indexPath as NSIndexPath).row == 7) {
+        else if ((indexPath as NSIndexPath).row == 3 || (indexPath as NSIndexPath).row == 4 || (indexPath as NSIndexPath).row == 5 || (indexPath as NSIndexPath).row == 6) {
             return 60.0
+        }
+        else if ((indexPath as NSIndexPath).row == 2 || (indexPath as NSIndexPath).row == 7) {
+            return 21.0
         }
         else {
             return 40.0

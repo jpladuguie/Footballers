@@ -18,18 +18,19 @@ class playerTitleCell: UITableViewCell {
         selectionStyle = .none
         
         // Stat name label.
-        self.title = UILabel()
+        /*self.title = UILabel()
         self.title.frame = CGRect(x: 20, y: 0, width: self.contentView.frame.width, height: 40)
         self.title.textAlignment = .left
         self.title.font = UIFont.systemFont(ofSize: 32.0)
         self.title.textColor = UIColor.white
         self.title.backgroundColor = UIColor.clear
-        self.addSubview(self.title)
+        self.addSubview(self.title)*/
         
         // Create the divider.
         let divider = UIImageView(image: UIImage(named: "whiteLine.png"))
         // Set its size and add it to view.
-        divider.frame = CGRect(x: 20.0, y: 45.0, width: 335, height: 1.0)
+        //divider.frame = CGRect(x: 20.0, y: 45.0, width: 335, height: 1.0)
+        divider.frame = CGRect(x: 20.0, y: 10.0, width: 335, height: 1.0)
         self.addSubview(divider)
         
     }

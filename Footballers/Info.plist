@@ -25,14 +25,7 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
-		<false/>
-		<key>NSAllowsArbitraryLoadsInWebContent</key>
-		<string>YES</string>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>fantasydata.com</key>
-			<string></string>
-		</dict>
+		<true/>
 	</dict>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

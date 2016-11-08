@@ -10,6 +10,7 @@ import UIKit
 import SwiftyJSON
 import Charts
 import NVActivityIndicatorView
+import SideMenu
 
 // The main home View Controller.
 class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -147,19 +148,12 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         // Set up the View Controller.
         setUpView(viewController: self)
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
         
         // Get the data in the background, and once it has finished create all the subviews.
         DispatchQueue.global(qos: .background).async {
-            
-            //updatePlayerDatabase()
-            //let test = getPlayerRankings(type: "passingRating", numberToGet: 50)
-            //for i in 0..<50 {
-            //    print(test[i][1])
-            //}
-            
-            //print(returnPlayerRatings(id: "13812"))
-            
-            
+    
             // Get the data needed for the tableViews.
             self.topScorersData = getPlayerRankings(SortValue: "Goals", NumberToGet: "5")
             self.topAssistsData = getPlayerRankings(SortValue: "Assists", NumberToGet: "3")

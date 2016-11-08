@@ -34,6 +34,7 @@ import CoreData
 import Alamofire
 
 let hostUrl = "http://192.168.1.3:5000"
+//let hostUrl = "http://2.98.100.175"
 
 func getDataFromAPI(PlayerId: String? = nil, SortValue: String? = nil, NumberToGet: String? = nil) -> JSON {
     var url = ""

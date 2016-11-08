@@ -23,45 +23,50 @@ class Player {
     let teamImageUrl: String
     // Player personal details, e.g. age, nationality and height.
     var personalDetails = [String: String]()
-    // Statistics dictionaries.
-    var statistics = [[String]]()
     // Player ratings.
     var ratings = [[String]]()
+    // Statistics dictionaries.
+    var statistics = [[String]]()
     
     init(id: String) {
-        // Set ID and player profile image url.
+        // Set ID.
         self.id = id
         
+        // Get the player data from the API.
         let data = getDataFromAPI(PlayerId: self.id)
         
+        // Set the profile image and team image urls.
         self.imageUrl = data["PhotoUrl"].rawString()!
-        self.teamImageUrl = ""
-        
-        
+        self.teamImageUrl = hostUrl + "/TeamImages/" + data["TeamId"].rawString()! + ".png"
         
         // Parse the data to get the personal details. Personal details never need to be loaded
         // From url again after the player has been initialised.
-        let personalDetailValues = ["Name", "Team", "Height", "Weight", "Nationality", "RegionCode", "Jersey"]
+        let personalDetailValues = ["Name", "Team", "Height", "Weight", "Nationality", "RegionCode", "Jersey", "Age"]
         for value in personalDetailValues {
             self.personalDetails[value] = data[value].rawString()!
         }
         
-        print(data["BirthDate"].rawString()!)
-        self.personalDetails["Age"] = data["BirthDate"].rawString()!
-        
-        
+        // Set the values for the ratings.
         self.ratings.append(["Attacking", data["AttackingRating"].rawString()!])
         self.ratings.append(["Defending", data["DefendingRating"].rawString()!])
         self.ratings.append(["Passing", data["PassingRating"].rawString()!])
         self.ratings.append(["Discipline", data["DisciplineRating"].rawString()!])
         
-        
-        let statisticValues = ["Games", "Minutes", "Goals", "Assists", "YellowCards", "RedCards", "ShotSuccess", "PassSuccess", "TacklesWon"]
+        // Add statistics from json.
+        let statisticValues = ["Games", "Minutes", "Goals", "Assists"]
         for value in statisticValues {
             self.statistics.append([value, data[value].rawString()!])
         }
         
+        // Add statistics which have a different name to their json value.
+        self.statistics.append(["Yellow Cards", data["YellowCards"].rawString()!])
+        self.statistics.append(["Red Cards", data["RedCards"].rawString()!])
         
+        // Get the float statistics to 1 decimal place. Add percentage symbols to statistics which need one.
+        self.statistics.append(["Shots on Target Percentage", String(format: "%.1f%%", Float(data["ShotSuccess"].rawString()!)!)])
+        self.statistics.append(["Pass Success Percentage", String(format: "%.1f%%", Float(data["PassSuccess"].rawString()!)!)])
+        self.statistics.append(["Tackles Won per Game", String(format: "%.1f", Float(data["TacklesWon"].rawString()!)!)])
+
     }
     
     func getPersonalDetails() -> [String: String] {

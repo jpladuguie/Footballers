@@ -68,9 +68,9 @@ func savePlayerToFavourites(_ playerData: [String: String]) {
     
     // Creates a player model with the correct data.
     let player = PlayerFavouritesData(context: container.viewContext)
-    player.playerId = playerData["playerId"]
-    player.name = playerData["name"]
-    player.regionCode = playerData["regionCode"]
+    player.playerId = playerData["PlayerId"]
+    player.name = playerData["Name"]
+    player.regionCode = playerData["RegionCode"]
     
     // Saves the player to playerFavouritesDataModel.
     do {

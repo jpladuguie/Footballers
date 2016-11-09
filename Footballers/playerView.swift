@@ -34,6 +34,9 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     var summaryStats: [[String]]!
     var ratings: [[String]]!
     
+    // Team Image.
+    var teamImage: UIImage!
+    
     // Activity indicator.
     var activityIndicator: NVActivityIndicatorView!
     
@@ -46,7 +49,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     @IBAction func favouriteButtonTouched(_ sender: UIButton) {
         
         if isPlayerFavourite == true {
-            removePlayerFromFavourites(self.playerData["playerId"]!)
+            removePlayerFromFavourites(self.playerData["PlayerId"]!)
         }
         else {
             savePlayerToFavourites(self.playerData)
@@ -138,7 +141,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         super.viewDidLoad()
         
         // Check whether player is in favourites, to know which button to use for navigation bar.
-        isPlayerFavourite = isPlayerInFavourites(self.playerData["playerId"]!)
+        isPlayerFavourite = isPlayerInFavourites(self.playerData["PlayerId"]!)
         
         // Set background.
         self.view.backgroundColor = lightGrey
@@ -178,9 +181,20 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         DispatchQueue.global(qos: .background).async {
             
             // Get the data needed for the tableViews.
-            self.player = Player(id: self.playerData["playerId"]!)
+            self.player = Player(id: self.playerData["PlayerId"]!)
             self.personalDetails = self.player.getPersonalDetails()
             self.ratings = self.player.ratings
+            
+            // Get team image.
+            self.teamImage = UIImage(named: "team.png")
+            
+            // Check whether image is available.
+            do {
+                let imageData = try Data(contentsOf: URL(string: self.player.teamImageUrl)!, options: NSData.ReadingOptions())
+                self.teamImage = UIImage(data: imageData)
+            } catch {
+                print("No team image found.")
+            }
             
             DispatchQueue.main.async {
                 // Create all the subViews with the data,
@@ -214,19 +228,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
             topCell.countryLabel.text = self.personalDetails["Nationality"]
             topCell.ageLabel.text = self.personalDetails["Age"]
             topCell.teamLabel.text = self.personalDetails["Team"]
-            
-            // Get team image.
-            var teamImage = UIImage(named: "team.png")
-             
-             // Check whether image is available.
-             do {
-             let imageData = try Data(contentsOf: URL(string: self.player.teamImageUrl)!, options: NSData.ReadingOptions())
-             teamImage = UIImage(data: imageData)
-             } catch {
-             print("No team image found.")
-             }
-             
-             topCell.teamImage.image = teamImage
+            topCell.teamImage.image = self.teamImage
             
             // Set cell.
             cell = topCell

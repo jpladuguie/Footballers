@@ -30,8 +30,6 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     // Players list.
     var searchedPlayers: [[String: String]] = [[String: String]]()
-    var playerId: String = String()
-    var playerName: String = String()
     var playerData: [String: String] = [String: String]()
     
     // Json data from text file.
@@ -102,13 +100,7 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.searchTableView.rowHeight = 40.0
         self.searchTableView.separatorStyle = UITableViewCellSeparatorStyle.none
         self.view.addSubview(self.searchTableView)
-        
-        // Get player data from file.
-        let path = Bundle.main.path(forResource: "playerData", ofType: "txt")
-        let text = try? NSString(contentsOfFile: path! as String, encoding: String.Encoding.utf8.rawValue)
-        if let dataFromString = text!.data(using: String.Encoding.utf8.rawValue, allowLossyConversion: false) {
-            self.json = JSON(data: dataFromString)
-        }
+    
     }
     
     // Number of rows in tableview.
@@ -159,11 +151,11 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
             cell!.backgroundColor = UIColor.clear
             
             // Player name.
-            cell?.textLabel?.text = self.searchedPlayers[(indexPath as NSIndexPath).row]["name"]
+            cell?.textLabel?.text = self.searchedPlayers[(indexPath as NSIndexPath).row]["Name"]
             cell?.textLabel?.textColor = UIColor.white
             cell?.textLabel?.font = UIFont(name: (cell?.textLabel?.font?.fontName)!, size:14)
             // Flage image.
-            cell!.imageView?.image = UIImage(named: String(searchedPlayers[(indexPath as NSIndexPath).row]["regionCode"]!).uppercased())
+            cell!.imageView?.image = UIImage(named: String(searchedPlayers[(indexPath as NSIndexPath).row]["RegionCode"]!).uppercased())
 
         }
         
@@ -208,40 +200,7 @@ class sideMenuView: UIViewController, UITableViewDelegate, UITableViewDataSource
             
             DispatchQueue.global(qos: .background).async {
                 
-                self.searchedPlayers = []
-                
-                // Set up data container.
-                let container = NSPersistentContainer(name: "playerDataModel")
-                container.loadPersistentStores { storeDescription, error in
-                    container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-                    if let error = error {
-                        print("Unable to load playerDataModel. Error: \(error)")
-                    }
-                }
-                
-                // Create a fetch request.
-                var players = [PlayerData]()
-                let request = PlayerData.createFetchRequest()
-                let sort = NSSortDescriptor(key: "rating", ascending: false)
-                request.sortDescriptors = [sort]
-                // Set the predicate to look for players with a matching playerId.
-                let predicate = "name BEGINSWITH[cd] '" + string! + "' OR name CONTAINS[cd] ' " + string! + "'"
-                request.predicate = NSPredicate(format: predicate)
-                
-                // Get all players with matching id.g
-                do {
-                    players = try container.viewContext.fetch(request)
-                    // If there are no matches, return false, else return true.
-                } catch {
-                    print("Unable to access playerFavouritesDataModel.")
-                }
-                
-                for i in 0..<players.count {
-                    self.searchedPlayers.append(["playerId" :  players[i].playerId!, "name" : players[i].name!, "regionCode" : players[i].regionCode!])
-                    if i == 4 {
-                        break
-                    }
-                }
+                self.searchedPlayers = searchForPlayer(SearchString: string!)
                 
                 DispatchQueue.main.async {
                     let range = NSMakeRange(0, self.searchTableView.numberOfSections)

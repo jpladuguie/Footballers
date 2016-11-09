@@ -7,68 +7,80 @@
 //
 
 // Everything to do with managing data. Functions are:
-//
-// getDataFromUrl - gets the data from the API depending on the type (i.e. player, player
-//                  ranking, team) and returns it as a string with JSON encoding.
-// getPlayerRankings - gets a 2d array of ranked players, depending on what statistic wanted
-//                     (such as goals, assists etc) and the number needed. Returns the data
-//                     as a 2d array, giving the player name, id, regionCode, statistic and team
-//                     name.
-// isPlayerInFavourites - returns a boolean value depending on whether the player with the given
-//                        id is stored in favourites in CoreData memory.
-// savePlayerToFavourites - given a player id, regionCode and name, saves it to favourites in
-//                          CoreData memory.
-// removePlayerFromFavourites - given a plauyer id, removes the player from favourites in 
-//                              CoreData memory.
-// getPlayersFromFavourites - returns all the players saved in favourites in CoreData memoory as
-//                            a 2d array, with each player having an id, name and regionCode.
-// reloadPlayerData - gets the entire list of player from the API sorted by current rating,
-//                    and stores each one in CoreData memory.
-// getPlayerData - returns a 2d array of every player stored in CoreData memory. 
-//
 
 import Foundation
-import Kanna
 import SwiftyJSON
-import CoreData
-import Alamofire
 
+// Set the host url depending on whether the device is on the same network as the server.
 let hostUrl = "http://192.168.1.3:5000"
 //let hostUrl = "http://2.98.100.175"
 
-func getDataFromAPI(PlayerId: String? = nil, SortValue: String? = nil, NumberToGet: String? = nil) -> JSON {
+// Gets the data from the API. There are three possible calls to be made: getPlayer, which returns data on a single player;
+// getPlayers, which returns a list of players sorted by the variable SortValue; and searchForPlayer, which searches for 
+// Players based on a string.
+func getDataFromAPI(PlayerId: String? = nil, SortValue: String? = nil, NumberToGet: String? = nil, SearchString: String? = nil) -> JSON {
+    // Initialise url to empty string and create data variable.
     var url = ""
+    var data: JSON = [:]
+    
+    // If PlayerId passed to function, call getPlayer.
     if PlayerId != nil {
         url = hostUrl + "/getPlayer?PlayerId=" + PlayerId!
     }
-    else {
+    // If SortValue passed to function, call getPlayers.
+    else if SortValue != nil {
         url = hostUrl + "/getPlayers?SortValue=" + SortValue! + "&NumberToGet=" + NumberToGet!
     }
+    // If SearchString passed to function, call searchForPlayers.
+    else if SearchString != nil {
+        url = hostUrl + "/searchForPlayers?SearchString=" + SearchString!
+    }
+    // Otherwise, invalid combination of parameters given to function. Return an empty json object.
+    else {
+        print("Invalid arguments passed to getDataFromAPI.")
+        return data
+    }
     
+    // Try to get the data.
     do {
         let response = try NSData(contentsOf: NSURL(string: url) as! URL, options: NSData.ReadingOptions())
-        let data = JSON(data: response as Data)
+        // Parse it as json.
+        data = JSON(data: response as Data)
+        // Return the data.
         return data
+    // If the data cannot be received, print the error and return an empty json object.
     } catch {
         print(error)
-        let data: JSON = [:]
         return data
     }
 }
 
+// Get an array of arrays
 func getPlayerRankings(SortValue: String, NumberToGet: String) -> [[String]] {
     var returnData: [[String]] = [[String]]()
     
     let players = getDataFromAPI(SortValue: SortValue, NumberToGet: NumberToGet)
     
-    for (key,player):(String, JSON) in players {
+    for (_,player):(String, JSON) in players {
         returnData.append([player["PlayerId"].rawString()!, player["Name"].rawString()!, player["RegionCode"].rawString()!, player[SortValue].rawString()!, player["Team"].rawString()!])
     }
     
     return returnData
 }
 
-
+func searchForPlayer(SearchString: String) -> [[String: String]] {
+    var returnData: [[String: String]] = [[String: String]]()
+    
+    // Replace spaces with %20.
+    let string = SearchString.replacingOccurrences(of: " ", with: "%20", options: .literal, range: nil)
+    let players = getDataFromAPI(SearchString: string)
+    
+    for (_,player):(String, JSON) in players {
+        returnData.append(["PlayerId": player["PlayerId"].rawString()!,"Name": player["Name"].rawString()!, "RegionCode": player["RegionCode"].rawString()!])
+    }
+    
+    return returnData
+}
 
 
 

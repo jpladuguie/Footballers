@@ -31,6 +31,9 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var scrollView: UIScrollView!
     var mainView: UIView!
     
+    // Activity indicator.
+    var activityIndicator: NVActivityIndicatorView!
+    
     // The player id or ranking type needed for a segue when a player or ranking table is selected.
     var selectedPlayerData = [String: String]()
     var selectedRanking: String?
@@ -113,7 +116,9 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         UIView.animate(withDuration: 1.0, animations: {
             self.topScorersTable.alpha = 1.0
             self.topPassingPlayerTitle.alpha = 1.0
+            self.activityIndicator.alpha = 0.0
             }, completion: { (complete: Bool) in
+                self.activityIndicator.removeFromSuperview()
                 // Once animations have finished.
                 UIView.animate(withDuration: 0.5, animations: {
                     // Fade in values for horizontal bar chart once it has finished animating.
@@ -150,6 +155,10 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         setUpView(viewController: self)
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
+        
+        // Create loading activity indicator.
+        self.activityIndicator = configureActivityIndicator(viewController: self)
+        self.view.addSubview(self.activityIndicator)
         
         // Get the data in the background, and once it has finished create all the subviews.
         DispatchQueue.global(qos: .background).async {
@@ -230,7 +239,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // Called when a tableViewCell is selected, i.e. a player has been clicked on.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Select the correct playerId depending on which tableView the selected cell is in.
+        // Select the correct PlayerId depending on which tableView the selected cell is in.
         let playerData: [String]
         if tableView == self.topScorersTable {
             self.topScorersTable.deselectRow(at: indexPath, animated: true)
@@ -242,9 +251,9 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         // Assign value to selectedPlayerData.
-        self.selectedPlayerData["playerId"] = playerData[0]
-        self.selectedPlayerData["name"] = playerData[1]
-        self.selectedPlayerData["regionCode"] = playerData[2]
+        self.selectedPlayerData["PlayerId"] = playerData[0]
+        self.selectedPlayerData["Name"] = playerData[1]
+        self.selectedPlayerData["RegionCode"] = playerData[2]
         
         // Perform the segue to the player view.
         performSegue(withIdentifier: "homePlayerSegue", sender: self)
@@ -252,7 +261,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // Called when a segue is about to be performed.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // If a player has been selected, send the correct playerId to the playerView.
+        // If a player has been selected, send the correct PlayerId to the playerView.
         if(segue.identifier == "homePlayerSegue") {
             let playerClass = (segue.destination as! playerView)
             playerClass.playerData = self.selectedPlayerData

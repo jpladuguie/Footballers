@@ -93,9 +93,9 @@ class favouritesView: UIViewController, UITableViewDelegate, UITableViewDataSour
     // Player selected
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.playersTableView.deselectRow(at: indexPath, animated: true)
-        self.selectedPlayerData["playerId"] = self.players[(indexPath as NSIndexPath).row][0]
-        self.selectedPlayerData["name"] = self.players[(indexPath as NSIndexPath).row][1]
-        self.selectedPlayerData["regionCode"] = self.players[(indexPath as NSIndexPath).row][2]
+        self.selectedPlayerData["PlayerId"] = self.players[(indexPath as NSIndexPath).row][0]
+        self.selectedPlayerData["Name"] = self.players[(indexPath as NSIndexPath).row][1]
+        self.selectedPlayerData["RegionCode"] = self.players[(indexPath as NSIndexPath).row][2]
         performSegue(withIdentifier: "favouritesPlayerSegue", sender: self)
     }
     

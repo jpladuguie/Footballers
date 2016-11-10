@@ -18,7 +18,7 @@ let hostUrl = "http://192.168.1.3:5000"
 // Gets the data from the API. There are three possible calls to be made: getPlayer, which returns data on a single player;
 // getPlayers, which returns a list of players sorted by the variable SortValue; and searchForPlayer, which searches for 
 // Players based on a string.
-func getDataFromAPI(PlayerId: String? = nil, SortValue: String? = nil, NumberToGet: String? = nil, SearchString: String? = nil) -> JSON {
+func getDataFromAPI(PlayerId: String? = nil, SortValue: String? = nil, StartPosition: String? = nil, EndPosition: String? = nil, SearchString: String? = nil) -> JSON {
     // Initialise url to empty string and create data variable.
     var url = ""
     var data: JSON = [:]
@@ -29,7 +29,7 @@ func getDataFromAPI(PlayerId: String? = nil, SortValue: String? = nil, NumberToG
     }
     // If SortValue passed to function, call getPlayers.
     else if SortValue != nil {
-        url = hostUrl + "/getPlayers?SortValue=" + SortValue! + "&NumberToGet=" + NumberToGet!
+        url = hostUrl + "/getPlayers?SortValue=" + SortValue! + "&StartPosition=" + StartPosition! + "&EndPosition=" + EndPosition!
     }
     // If SearchString passed to function, call searchForPlayers.
     else if SearchString != nil {
@@ -56,10 +56,10 @@ func getDataFromAPI(PlayerId: String? = nil, SortValue: String? = nil, NumberToG
 }
 
 // Get an array of arrays
-func getPlayerRankings(SortValue: String, NumberToGet: String) -> [[String]] {
+func getPlayerRankings(SortValue: String, StartPosition: Int, EndPosition: Int) -> [[String]] {
     var returnData: [[String]] = [[String]]()
     
-    let players = getDataFromAPI(SortValue: SortValue, NumberToGet: NumberToGet)
+    let players = getDataFromAPI(SortValue: SortValue, StartPosition: String(StartPosition), EndPosition: String(EndPosition))
     
     for (_,player):(String, JSON) in players {
         returnData.append([player["PlayerId"].rawString()!, player["Name"].rawString()!, player["RegionCode"].rawString()!, player[SortValue].rawString()!, player["Team"].rawString()!])

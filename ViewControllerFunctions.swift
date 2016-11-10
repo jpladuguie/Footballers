@@ -82,6 +82,24 @@ func configureActivityIndicator(viewController: UIViewController) -> NVActivityI
     return activityIndicator
 }
 
+// Display an error message in the view, such as if connection to the server failed or there are no players to show.
+func createErrorMessage(viewController: UIViewController, message: String) {
+    
+    // Create the error label.
+    let errorLabel = UILabel(frame: CGRect(x: (viewController.view.frame.width / 2) - 150, y: (viewController.view.frame.height / 2) - 15, width: 300, height: 30))
+    // Set the colour to white, add the text and add to view.
+    errorLabel.font = UIFont.systemFont(ofSize: 22.0)
+    errorLabel.text = message
+    errorLabel.textColor = UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1.0)
+    errorLabel.textAlignment = .center
+    errorLabel.alpha = 0.0
+    viewController.view.addSubview(errorLabel)
+    
+    UIView.animate(withDuration: 1.0, animations: {
+        errorLabel.alpha = 1.0
+    })
+}
+
 // Return the colour red, yellow or green depending on a variable.
 func getRatingColour(value: Int) -> UIColor {
     if value < 35 {

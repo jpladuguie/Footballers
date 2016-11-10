@@ -43,6 +43,66 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var pieChartView: PieChartView!
     @IBOutlet weak var AssistsChartView: HorizontalBarChartView!
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Set the current page and title.
+        currentPage = "Home"
+        self.title = "Home"
+        
+        // Set up the views. The screen is taken up by the scrollView, and inside the scrollView
+        // Is the mainView. Everytime a subView is added to the screen, it must be added to the
+        // mainView.
+        self.mainView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 2000))
+        
+        // Set up the scrollView. This is needed to fit everything on the screen and allow the
+        // View to be scrolled vertically.
+        self.scrollView = UIScrollView(frame: self.view.bounds)
+        self.scrollView.backgroundColor = lightGrey
+        self.scrollView.contentSize = self.mainView.bounds.size
+        self.scrollView.addSubview(self.mainView)
+        view.addSubview(self.scrollView)
+        
+        // Keep scrollView in position.
+        self.automaticallyAdjustsScrollViewInsets = false
+        
+        // Set up the View Controller.
+        setUpView(viewController: self)
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        
+        // Create loading activity indicator.
+        self.activityIndicator = configureActivityIndicator(viewController: self)
+        self.view.addSubview(self.activityIndicator)
+        
+        // Get the data in the background, and once it has finished create all the subviews.
+        DispatchQueue.global(qos: .background).async {
+            
+            // Get the data needed for the tableViews.
+            self.topScorersData = getPlayerRankings(SortValue: "Goals", StartPosition: 0, EndPosition: 5)
+            self.topAssistsData = getPlayerRankings(SortValue: "Assists", StartPosition: 0, EndPosition: 3)
+            self.topPasserData = getPlayerRankings(SortValue: "PassSuccess", StartPosition: 0, EndPosition: 1)
+            DispatchQueue.main.async {
+                
+                // If the data has been received, create all the subViews with the data.
+                if self.topScorersData.isEmpty == false {
+                    self.createSubViews()
+                }
+                // Otherwise, display the error message.
+                else {
+                    createErrorMessage(viewController: self, message: "Unable to connect to server.")
+                    
+                    // Fade out activity indicator.
+                    UIView.animate(withDuration: 1.0, animations: {
+                    self.activityIndicator.alpha = 0.0
+                        }, completion: { (complete: Bool) in
+                            self.activityIndicator.removeFromSuperview()
+                    })
+                }
+            }
+        }
+    }
+    
     // Called when menu button is pressed.
     @IBAction func menuOpened(_ sender: AnyObject) {
         performSegue(withIdentifier: "homeMenuSegue", sender: nil)
@@ -128,52 +188,6 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         })
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Set the current page and title.
-        currentPage = "Home"
-        self.title = "Home"
-        
-        // Set up the views. The screen is taken up by the scrollView, and inside the scrollView
-        // Is the mainView. Everytime a subView is added to the screen, it must be added to the
-        // mainView.
-        self.mainView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 2000))
-        
-        // Set up the scrollView. This is needed to fit everything on the screen and allow the 
-        // View to be scrolled vertically.
-        self.scrollView = UIScrollView(frame: self.view.bounds)
-        self.scrollView.backgroundColor = lightGrey
-        self.scrollView.contentSize = self.mainView.bounds.size
-        self.scrollView.addSubview(self.mainView)
-        view.addSubview(self.scrollView)
-        
-        // Keep scrollView in position.
-        self.automaticallyAdjustsScrollViewInsets = false
-        
-        // Set up the View Controller.
-        setUpView(viewController: self)
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        
-        // Create loading activity indicator.
-        self.activityIndicator = configureActivityIndicator(viewController: self)
-        self.view.addSubview(self.activityIndicator)
-        
-        // Get the data in the background, and once it has finished create all the subviews.
-        DispatchQueue.global(qos: .background).async {
-    
-            // Get the data needed for the tableViews.
-            self.topScorersData = getPlayerRankings(SortValue: "Goals", NumberToGet: "5")
-            self.topAssistsData = getPlayerRankings(SortValue: "Assists", NumberToGet: "3")
-            self.topPasserData = getPlayerRankings(SortValue: "PassSuccess", NumberToGet: "1")
-            DispatchQueue.main.async {
-                // Create all the subViews with the data,
-                self.createSubViews()
-            }
-        }
-    }
-    
     // Set the number of rows in the tableView.
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Top Scorers table.
@@ -201,13 +215,13 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
             // Move the everything slightly to the left, as the ranking numbers will only
             // Be between 1 and 5, so space for only one digit is needed and not 3 which
             // Is the default.
-            rankingCell.rankingLabel.frame = CGRect(x: 20, y: 0, width: 10, height: 40)
+            rankingCell.positionLabel.frame = CGRect(x: 20, y: 0, width: 10, height: 40)
             rankingCell.flagImage.frame = CGRect(x: 40, y: 11.5, width: 23, height: 17)
-            rankingCell.statNameLabel.frame = CGRect(x: 75, y: 0, width: 320, height: 40)
+            rankingCell.nameLabel.frame = CGRect(x: 75, y: 0, width: 320, height: 40)
             
             // Assign the correct values to the tableView cell.
-            rankingCell.rankingLabel.text = String(indexPath.row + 1)
-            rankingCell.statNameLabel.text = self.topScorersData[(indexPath as NSIndexPath).row][1]
+            rankingCell.positionLabel.text = String(indexPath.row + 1)
+            rankingCell.nameLabel.text = self.topScorersData[(indexPath as NSIndexPath).row][1]
             rankingCell.statValueLabel.text = self.topScorersData[(indexPath as NSIndexPath).row][3]
             rankingCell.flagImage.image = UIImage(named: String(self.topScorersData[(indexPath as NSIndexPath).row][2].uppercased() + ""))!
         

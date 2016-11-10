@@ -10,9 +10,9 @@ import UIKit
 
 class playerRatingCell: UITableViewCell {
     
-    var statNameLabel: UILabel!
-    var statValueLabel: UILabel!
-    var statBar: UIView!
+    var ratingNameLabel: UILabel!
+    var ratingValueLabel: UILabel!
+    var ratingBar: UIView!
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -20,29 +20,29 @@ class playerRatingCell: UITableViewCell {
         selectionStyle = .none
         
         // Stat name label.
-        self.statNameLabel = UILabel()
-        self.statNameLabel.frame = CGRect(x: 20, y: 0, width: self.contentView.frame.width, height: 40)
-        self.statNameLabel.textAlignment = .left
-        self.statNameLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightUltraLight)
-        self.statNameLabel.textColor = UIColor.white
-        self.statNameLabel.backgroundColor = UIColor.clear
-        self.addSubview(self.statNameLabel)
+        self.ratingNameLabel = UILabel()
+        self.ratingNameLabel.frame = CGRect(x: 20, y: 0, width: self.contentView.frame.width, height: 40)
+        self.ratingNameLabel.textAlignment = .left
+        self.ratingNameLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightUltraLight)
+        self.ratingNameLabel.textColor = UIColor.white
+        self.ratingNameLabel.backgroundColor = UIColor.clear
+        self.addSubview(self.ratingNameLabel)
         
         // Stat value label.
-        self.statValueLabel = UILabel()
-        self.statValueLabel.frame = CGRect(x: ((self.contentView.frame.width / 3) * 2), y: 0, width: (self.contentView.frame.width / 3) + 35, height: 40)
-        self.statValueLabel.textAlignment = .right
-        self.statValueLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightHeavy)
-        self.statValueLabel.textColor = UIColor.white
-        self.statValueLabel.backgroundColor = UIColor.clear
-        self.addSubview(self.statValueLabel)
+        self.ratingValueLabel = UILabel()
+        self.ratingValueLabel.frame = CGRect(x: ((self.contentView.frame.width / 3) * 2), y: 0, width: (self.contentView.frame.width / 3) + 35, height: 40)
+        self.ratingValueLabel.textAlignment = .right
+        self.ratingValueLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightHeavy)
+        self.ratingValueLabel.textColor = UIColor.white
+        self.ratingValueLabel.backgroundColor = UIColor.clear
+        self.addSubview(self.ratingValueLabel)
         
         // Stat bar.
-        self.statBar = UIView()
-        self.statBar.frame = CGRect(x: 20, y: 40, width: 355, height: 10)
-        self.statBar.layer.cornerRadius = 5.0
-        self.statBar.backgroundColor = UIColor.white
-        self.addSubview(self.statBar)
+        self.ratingBar = UIView()
+        self.ratingBar.frame = CGRect(x: 20, y: 40, width: 355, height: 10)
+        self.ratingBar.layer.cornerRadius = 5.0
+        self.ratingBar.backgroundColor = UIColor.white
+        self.addSubview(self.ratingBar)
         
     }
     

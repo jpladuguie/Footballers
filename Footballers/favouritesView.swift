@@ -35,7 +35,7 @@ class favouritesView: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
         else {
-            setUpErrorMessage()
+            createErrorMessage(viewController: self, message: "No players in favourites")
         }
     }
     
@@ -54,7 +54,7 @@ class favouritesView: UIViewController, UITableViewDelegate, UITableViewDataSour
             isTableViewSetUp = true
         }
         else {
-            setUpErrorMessage()
+            createErrorMessage(viewController: self, message: "No players in favourites")
         }
     }
     
@@ -72,9 +72,8 @@ class favouritesView: UIViewController, UITableViewDelegate, UITableViewDataSour
         // Create cell.
         let rankingCell: rankingTableCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(rankingTableCell.self), for: indexPath) as! rankingTableCell
         
-        rankingCell.rankingLabel.text = String(indexPath.row + 1)
-        rankingCell.statNameLabel.text = self.players[(indexPath as NSIndexPath).row][1]
-        //rankingCell.statValueLabel.text = self.players[(indexPath as NSIndexPath).row][3]
+        rankingCell.positionLabel.text = String(indexPath.row + 1)
+        rankingCell.nameLabel.text = self.players[(indexPath as NSIndexPath).row][1]
         
         let image = UIImage(named: String(self.players[(indexPath as NSIndexPath).row][2].uppercased() + ""))
         
@@ -132,23 +131,6 @@ class favouritesView: UIViewController, UITableViewDelegate, UITableViewDataSour
         UIView.animate(withDuration: 1.0, animations: {
             self.playersTableView.alpha = 1.0
             playerLabel.alpha = 1.0
-        })
-    }
-    
-    func setUpErrorMessage() {
-        
-        // Create error label.
-        let errorLabel = UILabel(frame: CGRect(x: (self.view.frame.width / 2) - 150, y: (self.view.frame.height / 2) - 15, width: 300, height: 30))
-        // Set the colour to white, add the text and add to view.
-        errorLabel.font = UIFont.systemFont(ofSize: 25.0)
-        errorLabel.text = "No players in favourites."
-        errorLabel.textColor = UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1.0)
-        errorLabel.textAlignment = .center
-        errorLabel.alpha = 0.0
-        self.view.addSubview(errorLabel)
-        
-        UIView.animate(withDuration: 1.0, animations: {
-            errorLabel.alpha = 1.0
         })
     }
 

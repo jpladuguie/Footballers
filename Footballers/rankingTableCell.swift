@@ -8,40 +8,46 @@
 
 import UIKit
 
+// Cell used in any table view which displays data about multiple players, with each row representing a player.
 class rankingTableCell: UITableViewCell {
-
-    var rankingLabel: UILabel!
+    
+    // Position in the table.
+    var positionLabel: UILabel!
+    // Flag image of the player's country.
     var flagImage: UIImageView!
-    var statNameLabel: UILabel!
+    // Player's name.
+    var nameLabel: UILabel!
+    // The statistic value, such as goals scored.
     var statValueLabel: UILabel!
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        // Set up the cell.
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = UIColor.clear
         selectionStyle = .gray
         
-        // Ranking label.
-        self.rankingLabel = UILabel()
-        self.rankingLabel.frame = CGRect(x: 20, y: 0, width: 30, height: 40)
-        self.rankingLabel.textAlignment = .right
-        self.rankingLabel.font = UIFont.systemFont(ofSize: 16.0)
-        self.rankingLabel.textColor = UIColor.white
-        self.rankingLabel.backgroundColor = UIColor.clear
-        self.addSubview(self.rankingLabel)
+        // Position label.
+        self.positionLabel = UILabel()
+        self.positionLabel.frame = CGRect(x: 20, y: 0, width: 30, height: 40)
+        self.positionLabel.textAlignment = .right
+        self.positionLabel.font = UIFont.systemFont(ofSize: 16.0)
+        self.positionLabel.textColor = UIColor.white
+        self.positionLabel.backgroundColor = UIColor.clear
+        self.addSubview(self.positionLabel)
         
         // Flag image.
         self.flagImage = UIImageView()
         self.flagImage.frame = CGRect(x: 60, y: 11.5, width: 23, height: 17)
         self.contentView.addSubview(flagImage)
         
-        // Stat name label.
-        self.statNameLabel = UILabel()
-        self.statNameLabel.frame = CGRect(x: 95, y: 0, width: self.contentView.frame.width, height: 40)
-        self.statNameLabel.textAlignment = .left
-        self.statNameLabel.font = UIFont.systemFont(ofSize: 16.0)
-        self.statNameLabel.textColor = UIColor.white
-        self.statNameLabel.backgroundColor = UIColor.clear
-        self.addSubview(self.statNameLabel)
+        // Name label.
+        self.nameLabel = UILabel()
+        self.nameLabel.frame = CGRect(x: 95, y: 0, width: self.contentView.frame.width, height: 40)
+        self.nameLabel.textAlignment = .left
+        self.nameLabel.font = UIFont.systemFont(ofSize: 16.0)
+        self.nameLabel.textColor = UIColor.white
+        self.nameLabel.backgroundColor = UIColor.clear
+        self.addSubview(self.nameLabel)
         
         // Stat value label.
         self.statValueLabel = UILabel()

@@ -17,14 +17,14 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // The data and Table View for the top scorers list.
     var topScorersTable: UITableView!
-    var topScorersData = [[String]]()
+    var topScorersData = [[String: String]]()
     
     // The data and Table View for the most assists horizontal bar chart.
     var topAssistsTable: UITableView!
-    var topAssistsData = [[String]]()
+    var topAssistsData = [[String: String]]()
     
     // The data and player stats for the top passer statistics.
-    var topPasserData = [[String]]()
+    var topPasserData = [[String: String]]()
     var topPassingPlayerTitle: UIButton!
     
     // The scrollView and mainView views.
@@ -43,8 +43,28 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var pieChartView: PieChartView!
     @IBOutlet weak var AssistsChartView: HorizontalBarChartView!
     
+    func handleSwipes(sender:UISwipeGestureRecognizer) {
+        if (sender.direction == .left) {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "rankingsView") as! rankingsView
+            self.present(vc, animated: false, completion: nil)
+        }
+        
+        if (sender.direction == .right) {
+            
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        var leftSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
+        
+        
+        leftSwipe.direction = .left
+        
+        
+        view.addGestureRecognizer(leftSwipe)
         
         // Set the current page and title.
         currentPage = "Home"
@@ -144,7 +164,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         // Assists bar chart
         AssistsChartView.frame = CGRect(x: 12, y: 450, width: self.view.frame.width + 30, height: 140)
-        AssistsChartView = configureHorizontalBarChart(barChart: AssistsChartView, values: [self.topAssistsData[0][3], self.topAssistsData[1][3], self.topAssistsData[2][3]] )
+        AssistsChartView = configureHorizontalBarChart(barChart: AssistsChartView, values: [self.topAssistsData[0]["Assists"]!, self.topAssistsData[1]["Assists"]!, self.topAssistsData[2]["Assists"]!] )
         self.mainView.addSubview(AssistsChartView)
         
         // Assists table view.
@@ -160,13 +180,13 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         // Passing pie chart
         pieChartView.frame = CGRect(x: self.view.frame.width - 160, y: 650, width: 140 , height: 140)
-        pieChartView = configurePieChart(pieChart: pieChartView, chartValue: Double(self.topPasserData[0][3])!)
+        pieChartView = configurePieChart(pieChart: pieChartView, chartValue: Double(self.topPasserData[0]["PassSuccess"]!)!)
         self.mainView.addSubview(pieChartView)
         
         self.topPassingPlayerTitle = UIButton(frame: CGRect(x: 20, y: 650, width: self.view.frame.width - 160, height: 30))
         self.topPassingPlayerTitle.tintColor = UIColor.white
         self.topPassingPlayerTitle.titleLabel?.font = UIFont.systemFont(ofSize: 20.0)
-        self.topPassingPlayerTitle.setTitle(self.topPasserData[0][1], for: .normal)
+        self.topPassingPlayerTitle.setTitle(self.topPasserData[0]["Name"], for: .normal)
         self.topPassingPlayerTitle.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
         self.topPassingPlayerTitle.addTarget(self, action: #selector(subTitlePressed), for: .touchUpInside)
         self.topPassingPlayerTitle.alpha = 0.0
@@ -221,9 +241,9 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             // Assign the correct values to the tableView cell.
             rankingCell.positionLabel.text = String(indexPath.row + 1)
-            rankingCell.nameLabel.text = self.topScorersData[(indexPath as NSIndexPath).row][1]
-            rankingCell.statValueLabel.text = self.topScorersData[(indexPath as NSIndexPath).row][3]
-            rankingCell.flagImage.image = UIImage(named: String(self.topScorersData[(indexPath as NSIndexPath).row][2].uppercased() + ""))!
+            rankingCell.nameLabel.text = self.topScorersData[(indexPath as NSIndexPath).row]["Name"]
+            rankingCell.statValueLabel.text = self.topScorersData[(indexPath as NSIndexPath).row]["Goals"]
+            rankingCell.flagImage.image = UIImage(named: String((self.topScorersData[(indexPath as NSIndexPath).row]["RegionCode"]?.uppercased())! + "")!)!
         
             // Set the cell.
             cell = rankingCell
@@ -236,7 +256,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             // Prevent the cell being selected and assign the correct data.
             cell.selectionStyle = .none
-            cell.textLabel?.text = self.topAssistsData[indexPath.row][1]
+            cell.textLabel?.text = self.topAssistsData[indexPath.row]["Name"]
             cell.textLabel?.textColor = lightGrey
             cell.backgroundColor = UIColor.clear
         }
@@ -254,7 +274,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     // Called when a tableViewCell is selected, i.e. a player has been clicked on.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Select the correct PlayerId depending on which tableView the selected cell is in.
-        let playerData: [String]
+        let playerData: [String: String]
         if tableView == self.topScorersTable {
             self.topScorersTable.deselectRow(at: indexPath, animated: true)
             playerData = self.topScorersData[(indexPath as NSIndexPath).row]
@@ -265,9 +285,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         // Assign value to selectedPlayerData.
-        self.selectedPlayerData["PlayerId"] = playerData[0]
-        self.selectedPlayerData["Name"] = playerData[1]
-        self.selectedPlayerData["RegionCode"] = playerData[2]
+        self.selectedPlayerData = playerData
         
         // Perform the segue to the player view.
         performSegue(withIdentifier: "homePlayerSegue", sender: self)

@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="82z-yG-kcg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="zW4-JY-uUm">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Navigation Controller-->
+        <!--Tab Bar Controller-->
+        <scene sceneID="f9U-Da-Ekj">
+            <objects>
+                <tabBarController id="zW4-JY-uUm" customClass="tabBarController" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="7FT-ka-39g">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="82z-yG-kcg" kind="relationship" relationship="viewControllers" id="ig4-7F-F7l"/>
+                        <segue destination="bAt-4l-NFl" kind="relationship" relationship="viewControllers" id="O8O-Mn-mnf"/>
+                        <segue destination="c2f-J8-ZvM" kind="relationship" relationship="viewControllers" id="BCK-dn-CuE"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bSX-46-f2m" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1378" y="462"/>
+        </scene>
+        <!--Home-->
         <scene sceneID="QcU-zX-uPu">
             <objects>
                 <navigationController id="82z-yG-kcg" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Home" image="home" id="MJf-bD-3mT"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="h7L-ut-2fr">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -20,28 +40,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dcG-Uz-Cyr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2288" y="462"/>
-        </scene>
-        <!--Teams View-->
-        <scene sceneID="aCd-ff-aK8">
-            <objects>
-                <viewController id="BKb-9h-rFN" customClass="teamsView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="NJh-dD-VKf"/>
-                        <viewControllerLayoutGuide type="bottom" id="q2u-sy-gL4"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="xsH-Pk-CkF">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    </view>
-                    <connections>
-                        <segue destination="GTs-3N-ne6" kind="presentation" identifier="teamsMenuSegue" id="W9V-Vb-Hb0"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="x41-DX-fHB" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4381" y="-313"/>
+            <point key="canvasLocation" x="2150" y="462"/>
         </scene>
         <!--Player View-->
         <scene sceneID="Tom-wE-Ecs">
@@ -59,7 +58,24 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7ie-Pf-OH3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5193" y="462"/>
+            <point key="canvasLocation" x="3742" y="462"/>
+        </scene>
+        <!--Rankings-->
+        <scene sceneID="aix-cS-qWI">
+            <objects>
+                <navigationController id="bAt-4l-NFl" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Rankings" image="rankings" id="wDi-UN-bBc"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sL2-Ey-F1D">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="1LQ-si-es3" kind="relationship" relationship="rootViewController" id="uh0-Mu-0wt"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pTP-qZ-2xk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2150" y="1143"/>
         </scene>
         <!--Rankings View-->
         <scene sceneID="h9c-ie-aEi">
@@ -74,14 +90,31 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
+                    <navigationItem key="navigationItem" id="gA6-DZ-ha2"/>
                     <connections>
-                        <segue destination="GTs-3N-ne6" kind="presentation" identifier="rankingsMenuSegue" id="8nZ-Ql-avh"/>
                         <segue destination="1wd-lr-6Br" kind="show" identifier="rankingsPlayerSegue" id="lVa-MB-Zow"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oju-eq-KGY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3647" y="1259"/>
+            <point key="canvasLocation" x="2985" y="1143"/>
+        </scene>
+        <!--Favourites-->
+        <scene sceneID="2bZ-8b-13e">
+            <objects>
+                <navigationController id="c2f-J8-ZvM" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Favourites" image="favourites" id="cc3-ZE-41p"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="M5X-be-XPU">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="dAh-cd-Voc" kind="relationship" relationship="rootViewController" id="pCs-BA-qGN"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5xe-vp-uhA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2150" y="-263"/>
         </scene>
         <!--Favourites View-->
         <scene sceneID="rav-f2-GFD">
@@ -96,81 +129,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
+                    <navigationItem key="navigationItem" id="t4z-HO-i8f"/>
                     <connections>
-                        <segue destination="GTs-3N-ne6" kind="presentation" identifier="favouritesMenuSegue" id="1iO-ol-2i4"/>
                         <segue destination="1wd-lr-6Br" kind="show" identifier="favouritesPlayerSegue" id="R0a-Hf-pja"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vc9-zE-iEx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4381" y="1259"/>
-        </scene>
-        <!--Compare View-->
-        <scene sceneID="Xr8-va-Mdh">
-            <objects>
-                <viewController id="wxw-SV-r2u" customClass="compareView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="qH2-ai-MV3"/>
-                        <viewControllerLayoutGuide type="bottom" id="NXA-94-BAt"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Jf3-CU-lch">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    </view>
-                    <connections>
-                        <segue destination="GTs-3N-ne6" kind="presentation" identifier="compareMenuSegue" id="arQ-ed-r8Q"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="5g5-7S-cRc" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3647" y="-313"/>
-        </scene>
-        <!--Side Menu View-->
-        <scene sceneID="A32-l8-Uam">
-            <objects>
-                <viewController id="4V4-TQ-2QO" customClass="sideMenuView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="jQ5-Uu-pQu"/>
-                        <viewControllerLayoutGuide type="bottom" id="Dcu-VG-ACZ"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="BZS-yR-BLZ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="GC6-69-7ti"/>
-                    <connections>
-                        <segue destination="1wd-lr-6Br" kind="show" identifier="playerSegue" id="ZbC-vQ-kf7"/>
-                        <segue destination="BKb-9h-rFN" kind="show" identifier="teamsSegue" id="pSX-X3-tdj"/>
-                        <segue destination="1LQ-si-es3" kind="show" identifier="rankingsSegue" id="4nS-ee-EzC"/>
-                        <segue destination="JoL-Ye-QZk" kind="show" identifier="homeSegue" id="5jI-Xj-CU4"/>
-                        <segue destination="wxw-SV-r2u" kind="show" identifier="compareSegue" id="7AF-bx-4lO"/>
-                        <segue destination="dAh-cd-Voc" kind="show" identifier="favouritesSegue" id="8Ra-ie-nBV"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dlp-Dd-kf6" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4459" y="462"/>
-        </scene>
-        <!--Side Menu Navigation Controller-->
-        <scene sceneID="8ad-tV-6vN">
-            <objects>
-                <navigationController storyboardIdentifier="SideMenuNavigationController" navigationBarHidden="YES" id="GTs-3N-ne6" customClass="UISideMenuNavigationController" customModule="SideMenu" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="o92-eu-gqc">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="leftSide" value="YES"/>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <segue destination="4V4-TQ-2QO" kind="relationship" relationship="rootViewController" id="HGL-Kx-3T2"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cxS-29-kpE" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3737" y="462"/>
+            <point key="canvasLocation" x="2985" y="-263"/>
         </scene>
         <!--Home View-->
         <scene sceneID="OK8-ol-6qL">
@@ -201,7 +167,6 @@
                     <connections>
                         <outlet property="AssistsChartView" destination="2ed-JX-k9L" id="hoi-Ee-56a"/>
                         <outlet property="pieChartView" destination="2fJ-Ar-clv" id="B34-ff-Ugo"/>
-                        <segue destination="GTs-3N-ne6" kind="presentation" identifier="homeMenuSegue" id="m5p-Kd-Af4"/>
                         <segue destination="1wd-lr-6Br" kind="show" identifier="homePlayerSegue" id="b1K-CR-g7j"/>
                         <segue destination="1LQ-si-es3" kind="show" identifier="homeRankingSegue" id="iKM-2c-yhs"/>
                     </connections>
@@ -210,51 +175,14 @@
             </objects>
             <point key="canvasLocation" x="2986" y="462"/>
         </scene>
-        <!--Loading View-->
-        <scene sceneID="f8l-FM-FGC">
-            <objects>
-                <viewController storyboardIdentifier="loadingViewId" id="uVB-Nv-X4V" customClass="loadingView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="lny-Cb-pQc"/>
-                        <viewControllerLayoutGuide type="bottom" id="J7H-MR-M6e"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="7zN-tm-eQN">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="ylQ-1w-9Tf"/>
-                    <connections>
-                        <segue destination="82z-yG-kcg" kind="presentation" identifier="loadingSegue" modalTransitionStyle="crossDissolve" id="3jE-rk-OPy"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="SkZ-iX-Xpp" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1552" y="462"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="vy3-HR-8IK">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="pA4-ec-Ksq" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nvY-iL-erz">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="uVB-Nv-X4V" kind="relationship" relationship="rootViewController" id="VCW-60-tI8"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="L2h-bH-Cba" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="740" y="462"/>
-        </scene>
     </scenes>
+    <resources>
+        <image name="favourites" width="32" height="32"/>
+        <image name="home" width="32" height="32"/>
+        <image name="rankings" width="31" height="32"/>
+    </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="b1K-CR-g7j"/>
-        <segue reference="om8-JI-iPD"/>
-        <segue reference="iKM-2c-yhs"/>
-        <segue reference="m5p-Kd-Af4"/>
+        <segue reference="uh0-Mu-0wt"/>
+        <segue reference="R0a-Hf-pja"/>
     </inferredMetricsTieBreakers>
 </document>

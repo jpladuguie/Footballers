@@ -12,6 +12,7 @@ target 'Footballers' do
   pod 'SideMenu'
   pod 'NVActivityIndicatorView'
   pod 'Charts', :git => 'https://github.com/danielgindi/Charts.git', :branch => 'master'
+  pod ‘SlidingTabBar’
 
 end
 

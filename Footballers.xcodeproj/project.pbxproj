@@ -14,12 +14,10 @@
 		E8180C431D7CBB2400043884 /* defaultPlayerImage.png in Resources */ = {isa = PBXBuildFile; fileRef = E8180C421D7CBB2400043884 /* defaultPlayerImage.png */; };
 		E8188FE41DBD0A0B0044CE74 /* ViewControllerFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8188FE31DBD0A0B0044CE74 /* ViewControllerFunctions.swift */; };
 		E821258E1D78B99E0024D016 /* playerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125891D78B99E0024D016 /* playerView.swift */; };
-		E821258F1D78B99E0024D016 /* teamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E821258A1D78B99E0024D016 /* teamsView.swift */; };
 		E82125901D78B99E0024D016 /* homeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E821258B1D78B99E0024D016 /* homeView.swift */; };
 		E82125911D78B99E0024D016 /* sideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E821258C1D78B99E0024D016 /* sideMenuView.swift */; };
 		E821259C1D78B9B80024D016 /* backButton.png in Resources */ = {isa = PBXBuildFile; fileRef = E82125931D78B9B80024D016 /* backButton.png */; };
 		E821259D1D78B9B80024D016 /* menuButton.png in Resources */ = {isa = PBXBuildFile; fileRef = E82125941D78B9B80024D016 /* menuButton.png */; };
-		E821259E1D78B9B80024D016 /* home.png in Resources */ = {isa = PBXBuildFile; fileRef = E82125951D78B9B80024D016 /* home.png */; };
 		E821259F1D78B9B80024D016 /* team.png in Resources */ = {isa = PBXBuildFile; fileRef = E82125961D78B9B80024D016 /* team.png */; };
 		E82125A01D78B9B80024D016 /* rankings.png in Resources */ = {isa = PBXBuildFile; fileRef = E82125971D78B9B80024D016 /* rankings.png */; };
 		E82125A11D78B9B80024D016 /* compare.png in Resources */ = {isa = PBXBuildFile; fileRef = E82125981D78B9B80024D016 /* compare.png */; };
@@ -27,8 +25,12 @@
 		E82125A31D78B9B80024D016 /* searchIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = E821259A1D78B9B80024D016 /* searchIcon.png */; };
 		E82125A71D78BDBC0024D016 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E82125A61D78BDBC0024D016 /* Images.xcassets */; };
 		E82125A91D78BF9A0024D016 /* rankingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125A81D78BF9A0024D016 /* rankingsView.swift */; };
-		E82125AB1D78C0EC0024D016 /* compareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125AA1D78C0EC0024D016 /* compareView.swift */; };
 		E82125AD1D78C24C0024D016 /* favouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125AC1D78C24C0024D016 /* favouritesView.swift */; };
+		E84A6CA41DE8BEAA00127625 /* tabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84A6CA31DE8BEAA00127625 /* tabBarController.swift */; };
+		E84A6CAA1DE8C33800127625 /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = E84A6CA91DE8C33800127625 /* star.png */; };
+		E84A6CAC1DE8C35400127625 /* bar-chart.png in Resources */ = {isa = PBXBuildFile; fileRef = E84A6CAB1DE8C35400127625 /* bar-chart.png */; };
+		E84A6CAE1DE8C36400127625 /* home.png in Resources */ = {isa = PBXBuildFile; fileRef = E84A6CAD1DE8C36400127625 /* home.png */; };
+		E84A6CB01DE8D13000127625 /* star2.png in Resources */ = {isa = PBXBuildFile; fileRef = E84A6CAF1DE8D13000127625 /* star2.png */; };
 		E84E1ADD1D7B367A00A0BC48 /* favouriteButtonFull.png in Resources */ = {isa = PBXBuildFile; fileRef = E84E1ADC1D7B367A00A0BC48 /* favouriteButtonFull.png */; };
 		E84E1AE21D7B6B5F00A0BC48 /* greyLine.png in Resources */ = {isa = PBXBuildFile; fileRef = E84E1AE01D7B6B5F00A0BC48 /* greyLine.png */; };
 		E84E1AE31D7B6B5F00A0BC48 /* whiteLine.png in Resources */ = {isa = PBXBuildFile; fileRef = E84E1AE11D7B6B5F00A0BC48 /* whiteLine.png */; };
@@ -60,12 +62,10 @@
 		E8180C421D7CBB2400043884 /* defaultPlayerImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = defaultPlayerImage.png; sourceTree = "<group>"; };
 		E8188FE31DBD0A0B0044CE74 /* ViewControllerFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerFunctions.swift; sourceTree = "<group>"; };
 		E82125891D78B99E0024D016 /* playerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerView.swift; sourceTree = "<group>"; };
-		E821258A1D78B99E0024D016 /* teamsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = teamsView.swift; sourceTree = "<group>"; };
 		E821258B1D78B99E0024D016 /* homeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = homeView.swift; sourceTree = "<group>"; };
 		E821258C1D78B99E0024D016 /* sideMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sideMenuView.swift; sourceTree = "<group>"; };
 		E82125931D78B9B80024D016 /* backButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backButton.png; sourceTree = "<group>"; };
 		E82125941D78B9B80024D016 /* menuButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menuButton.png; sourceTree = "<group>"; };
-		E82125951D78B9B80024D016 /* home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home.png; sourceTree = "<group>"; };
 		E82125961D78B9B80024D016 /* team.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = team.png; sourceTree = "<group>"; };
 		E82125971D78B9B80024D016 /* rankings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rankings.png; sourceTree = "<group>"; };
 		E82125981D78B9B80024D016 /* compare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compare.png; sourceTree = "<group>"; };
@@ -73,8 +73,12 @@
 		E821259A1D78B9B80024D016 /* searchIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = searchIcon.png; sourceTree = "<group>"; };
 		E82125A61D78BDBC0024D016 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E82125A81D78BF9A0024D016 /* rankingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = rankingsView.swift; sourceTree = "<group>"; };
-		E82125AA1D78C0EC0024D016 /* compareView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = compareView.swift; sourceTree = "<group>"; };
 		E82125AC1D78C24C0024D016 /* favouritesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = favouritesView.swift; sourceTree = "<group>"; };
+		E84A6CA31DE8BEAA00127625 /* tabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tabBarController.swift; sourceTree = "<group>"; };
+		E84A6CA91DE8C33800127625 /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star.png; sourceTree = "<group>"; };
+		E84A6CAB1DE8C35400127625 /* bar-chart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bar-chart.png"; sourceTree = "<group>"; };
+		E84A6CAD1DE8C36400127625 /* home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home.png; sourceTree = "<group>"; };
+		E84A6CAF1DE8D13000127625 /* star2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star2.png; sourceTree = "<group>"; };
 		E84E1ADC1D7B367A00A0BC48 /* favouriteButtonFull.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favouriteButtonFull.png; sourceTree = "<group>"; };
 		E84E1AE01D7B6B5F00A0BC48 /* greyLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greyLine.png; sourceTree = "<group>"; };
 		E84E1AE11D7B6B5F00A0BC48 /* whiteLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteLine.png; sourceTree = "<group>"; };
@@ -151,13 +155,12 @@
 				E8A0CF491DBAC1130047C036 /* PlayerFavouritesData+CoreDataProperties.swift */,
 				E8A0CF451DBAC0CE0047C036 /* playerFavouritesDataModel.xcdatamodeld */,
 				E87F5AF01D78B82500C10A38 /* AppDelegate.swift */,
-				E821258C1D78B99E0024D016 /* sideMenuView.swift */,
 				E821258B1D78B99E0024D016 /* homeView.swift */,
-				E821258A1D78B99E0024D016 /* teamsView.swift */,
 				E82125A81D78BF9A0024D016 /* rankingsView.swift */,
-				E82125AA1D78C0EC0024D016 /* compareView.swift */,
 				E82125AC1D78C24C0024D016 /* favouritesView.swift */,
 				E82125891D78B99E0024D016 /* playerView.swift */,
+				E84A6CA31DE8BEAA00127625 /* tabBarController.swift */,
+				E821258C1D78B99E0024D016 /* sideMenuView.swift */,
 				E8C713E71D7DF3BF00B717F2 /* playerTopCell.swift */,
 				E81059CF1D80B19800EE205E /* playerSecondCell.swift */,
 				E81059C31D807A6800EE205E /* playerStatCell.swift */,
@@ -169,9 +172,12 @@
 				E87F5AFC1D78B82500C10A38 /* Info.plist */,
 				E82125931D78B9B80024D016 /* backButton.png */,
 				E82125941D78B9B80024D016 /* menuButton.png */,
-				E82125951D78B9B80024D016 /* home.png */,
+				E84A6CAD1DE8C36400127625 /* home.png */,
 				E82125961D78B9B80024D016 /* team.png */,
+				E84A6CAB1DE8C35400127625 /* bar-chart.png */,
 				E82125971D78B9B80024D016 /* rankings.png */,
+				E84A6CA91DE8C33800127625 /* star.png */,
+				E84A6CAF1DE8D13000127625 /* star2.png */,
 				E82125981D78B9B80024D016 /* compare.png */,
 				E82125991D78B9B80024D016 /* favouriteButtonEmpty.png */,
 				E84E1ADC1D7B367A00A0BC48 /* favouriteButtonFull.png */,
@@ -259,15 +265,18 @@
 			files = (
 				E821259D1D78B9B80024D016 /* menuButton.png in Resources */,
 				E87F5AFB1D78B82500C10A38 /* LaunchScreen.storyboard in Resources */,
+				E84A6CAE1DE8C36400127625 /* home.png in Resources */,
 				E821259F1D78B9B80024D016 /* team.png in Resources */,
 				E8180C431D7CBB2400043884 /* defaultPlayerImage.png in Resources */,
 				E82125A71D78BDBC0024D016 /* Images.xcassets in Resources */,
-				E821259E1D78B9B80024D016 /* home.png in Resources */,
+				E84A6CB01DE8D13000127625 /* star2.png in Resources */,
 				E87F5AF81D78B82500C10A38 /* Assets.xcassets in Resources */,
 				E82125A11D78B9B80024D016 /* compare.png in Resources */,
 				E82125A21D78B9B80024D016 /* favouriteButtonEmpty.png in Resources */,
+				E84A6CAA1DE8C33800127625 /* star.png in Resources */,
 				E82125A01D78B9B80024D016 /* rankings.png in Resources */,
 				E82125A31D78B9B80024D016 /* searchIcon.png in Resources */,
+				E84A6CAC1DE8C35400127625 /* bar-chart.png in Resources */,
 				E84E1ADD1D7B367A00A0BC48 /* favouriteButtonFull.png in Resources */,
 				E821259C1D78B9B80024D016 /* backButton.png in Resources */,
 				E84E1AE31D7B6B5F00A0BC48 /* whiteLine.png in Resources */,
@@ -332,9 +341,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8A0CF4A1DBAC1130047C036 /* PlayerFavouritesData+CoreDataClass.swift in Sources */,
-				E82125AB1D78C0EC0024D016 /* compareView.swift in Sources */,
 				E82125911D78B99E0024D016 /* sideMenuView.swift in Sources */,
 				E8C713E81D7DF3BF00B717F2 /* playerTopCell.swift in Sources */,
+				E84A6CA41DE8BEAA00127625 /* tabBarController.swift in Sources */,
 				E8DE7BB71DBA81960031D83D /* rankingTableCell.swift in Sources */,
 				E82125901D78B99E0024D016 /* homeView.swift in Sources */,
 				E8C0FCB71DBBB0D800260964 /* DrawCharts.swift in Sources */,
@@ -342,7 +351,6 @@
 				E8A0CF4B1DBAC1130047C036 /* PlayerFavouritesData+CoreDataProperties.swift in Sources */,
 				E81059C41D807A6800EE205E /* playerStatCell.swift in Sources */,
 				E821258E1D78B99E0024D016 /* playerView.swift in Sources */,
-				E821258F1D78B99E0024D016 /* teamsView.swift in Sources */,
 				E87F5B041D78B86400C10A38 /* Player.swift in Sources */,
 				E8CDFB371DC6A2C500EFE69B /* playerRatingCell.swift in Sources */,
 				E81059D01D80B19800EE205E /* playerSecondCell.swift in Sources */,

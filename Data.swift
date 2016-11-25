@@ -12,7 +12,7 @@ import Foundation
 import SwiftyJSON
 
 // Set the host url depending on whether the device is on the same network as the server.
-let hostUrl = "http://192.168.1.3:5000"
+let hostUrl = "http://localhost:5000"
 //let hostUrl = "http://2.98.100.175"
 
 // Gets the data from the API. There are three possible calls to be made: getPlayer, which returns data on a single player;
@@ -55,19 +55,28 @@ func getDataFromAPI(PlayerId: String? = nil, SortValue: String? = nil, StartPosi
     }
 }
 
-// Get an array of arrays
-func getPlayerRankings(SortValue: String, StartPosition: Int, EndPosition: Int) -> [[String]] {
-    var returnData: [[String]] = [[String]]()
+// Returns player rankings as an array of dictionaries.
+// Each player is represented as a dictionary containing their PlayerId, Name, RegionCode, Team and statistic value.
+// A SortValue is needed, which is what the players are being sorted by, as well as a StartPosition and an EndPosition, which are
+// The positions in the rankings between which the players will be returned.
+func getPlayerRankings(SortValue: String, StartPosition: Int, EndPosition: Int) -> [[String: String]] {
     
+    // Create an empty array to return the data.
+    var returnData: [[String: String]] = [[String: String]]()
+    
+    // Get the data from the API.
     let players = getDataFromAPI(SortValue: SortValue, StartPosition: String(StartPosition), EndPosition: String(EndPosition))
     
+    // Loop through each player in the data, and append it as a dictionary to the returnData.
     for (_,player):(String, JSON) in players {
-        returnData.append([player["PlayerId"].rawString()!, player["Name"].rawString()!, player["RegionCode"].rawString()!, player[SortValue].rawString()!, player["Team"].rawString()!])
+        returnData.append(["PlayerId": player["PlayerId"].rawString()!, "Name": player["Name"].rawString()!, "RegionCode": player["RegionCode"].rawString()!, SortValue: player[SortValue].rawString()!, "Team": player["Team"].rawString()!])
     }
     
+    // Return the data.
     return returnData
 }
 
+// Search for player.
 func searchForPlayer(SearchString: String) -> [[String: String]] {
     var returnData: [[String: String]] = [[String: String]]()
     

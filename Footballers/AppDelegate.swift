@@ -27,11 +27,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.statusBarStyle = .lightContent
         
         // Set up side menu.
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        /*let storyboard = UIStoryboard(name: "Main", bundle: nil)
         SideMenuManager.menuLeftNavigationController = storyboard.instantiateViewController(withIdentifier: "SideMenuNavigationController") as? UISideMenuNavigationController
         SideMenuManager.menuFadeStatusBar = false
         SideMenuManager.menuShadowOpacity = 0.0
-        SideMenuManager.menuPresentMode = .viewSlideInOut
+        SideMenuManager.menuPresentMode = .viewSlideInOut*/
         
         return true
     }

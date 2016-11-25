@@ -150,7 +150,6 @@ func getPlayersFromFavourites() -> [[String]] {
     
     // Add each player to the array and return it.
     for player in players {
-        print(player.name!)
         playerData.append([player.playerId!, player.name!, player.regionCode!])
     }
     

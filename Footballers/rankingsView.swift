@@ -24,7 +24,7 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
     var bottomReached = false
     
     // Player data array and table view.
-    var players = [[String]]()
+    var players = [[String: String]]()
     var tableView: UITableView!
     
     // Selected player data for the segue to playerView.
@@ -91,9 +91,9 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         // Set the values for the ranking position, flag image, player name and statistic value.
         cell.positionLabel.text = String(indexPath.row + 1)
-        cell.flagImage.image = UIImage(named: String(self.players[(indexPath as NSIndexPath).row][2].uppercased() + ""))
-        cell.nameLabel.text = self.players[(indexPath as NSIndexPath).row][1]
-        cell.statValueLabel.text = self.players[(indexPath as NSIndexPath).row][3]
+        cell.flagImage.image = UIImage(named: String((self.players[(indexPath as NSIndexPath).row]["RegionCode"]?.uppercased())! + ""))
+        cell.nameLabel.text = self.players[(indexPath as NSIndexPath).row]["Name"]
+        cell.statValueLabel.text = self.players[(indexPath as NSIndexPath).row][rankingType]
         
         // Load more data as the table view is scrolled down.
         // If the current row is within 20 rows from the bottom, add more rows to the bottom.
@@ -141,9 +141,7 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.tableView.deselectRow(at: indexPath, animated: true)
         
         // Get the data of the selected player, and save it in the variable selectedPlayerData.
-        self.selectedPlayerData["PlayerId"] = self.players[(indexPath as NSIndexPath).row][0]
-        self.selectedPlayerData["Name"] = self.players[(indexPath as NSIndexPath).row][1]
-        self.selectedPlayerData["RegionCode"] = self.players[(indexPath as NSIndexPath).row][2]
+        self.selectedPlayerData = self.players[(indexPath as NSIndexPath).row]
         
         // Perform the segue to playerView, passing the data from the selected player.
         performSegue(withIdentifier: "rankingsPlayerSegue", sender: self)
@@ -165,7 +163,7 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
     // Includes the main table view, as well as the column titles.
     func createSubViews() {
         
-        // Create player label.
+        // Create player column.
         let playerLabel = UILabel(frame: CGRect(x: 95.0, y: Double((self.navigationController?.navigationBar.frame.height)! + 25.0), width: 100.0, height: 30.0))
         // Set the colour to white, add the text and add to view.
         playerLabel.font = UIFont.boldSystemFont(ofSize: 20.0)

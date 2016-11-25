@@ -6,6 +6,7 @@ PODS:
   - Kanna (2.0.0)
   - NVActivityIndicatorView (3.0)
   - SideMenu (2.0.3)
+  - SlidingTabBar (0.2.1)
   - SwiftyJSON (2.3.2)
 
 DEPENDENCIES:
@@ -14,6 +15,7 @@ DEPENDENCIES:
   - Kanna (from `https://github.com/tid-kijyun/Kanna.git`, branch `swift3.0`)
   - NVActivityIndicatorView
   - SideMenu
+  - SlidingTabBar
   - SwiftyJSON (from `https://github.com/BaiduHiDeviOS/SwiftyJSON.git`, branch `swift3`)
 
 EXTERNAL SOURCES:
@@ -44,8 +46,9 @@ SPEC CHECKSUMS:
   Kanna: 8d60d86a3580f7dee732811e5163a5e3e41a32a7
   NVActivityIndicatorView: 81953b5e65093ba79edf4fe7268e002039ca5268
   SideMenu: f179260f85c68ed9b283b4a505600f2e6cbdfb10
+  SlidingTabBar: 027224f312efeb1a76de93e1d9a108b8318d6494
   SwiftyJSON: 6118fb49d7519c4d31a0c1f3d5af936e9047b556
 
-PODFILE CHECKSUM: 6eb543e8a13b5393358eb86b211e97fc449de860
+PODFILE CHECKSUM: 3967a60c1e4b2d4d536c68bd84fdacdb44cc671e
 
 COCOAPODS: 1.0.1

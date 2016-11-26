@@ -12,7 +12,7 @@ import Foundation
 import SwiftyJSON
 
 // Set the host url depending on whether the device is on the same network as the server.
-let hostUrl = "http://localhost:5000"
+let hostUrl = "http://192.168.1.13:5000"
 //let hostUrl = "http://2.98.100.175"
 
 // Gets the data from the API. There are three possible calls to be made: getPlayer, which returns data on a single player;

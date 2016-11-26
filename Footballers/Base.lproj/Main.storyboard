@@ -6,6 +6,24 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Side Menu View-->
+        <scene sceneID="OmD-3k-m0I">
+            <objects>
+                <viewController id="bSb-xv-T3i" customClass="sideMenuView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="lfE-OA-E5c"/>
+                        <viewControllerLayoutGuide type="bottom" id="gpT-gv-GKx"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="t5c-z1-ZLX" customClass="SideMe">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OOc-GJ-r9N" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="393" y="-475"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="f9U-Da-Ekj">
             <objects>
@@ -149,24 +167,10 @@
                     <view key="view" contentMode="scaleToFill" id="Gqh-Sc-Vac">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2fJ-Ar-clv" customClass="PieChartView" customModule="Charts">
-                                <frame key="frameInset" minX="67" minY="205" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2ed-JX-k9L" customClass="HorizontalBarChartView" customModule="Charts">
-                                <frame key="frameInset" minX="67" minY="40" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="A0d-Ue-odP"/>
                     <connections>
-                        <outlet property="AssistsChartView" destination="2ed-JX-k9L" id="hoi-Ee-56a"/>
-                        <outlet property="pieChartView" destination="2fJ-Ar-clv" id="B34-ff-Ugo"/>
                         <segue destination="1wd-lr-6Br" kind="show" identifier="homePlayerSegue" id="b1K-CR-g7j"/>
                         <segue destination="1LQ-si-es3" kind="show" identifier="homeRankingSegue" id="iKM-2c-yhs"/>
                     </connections>
@@ -182,7 +186,7 @@
         <image name="rankings" width="31" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="uh0-Mu-0wt"/>
-        <segue reference="R0a-Hf-pja"/>
+        <segue reference="iKM-2c-yhs"/>
+        <segue reference="b1K-CR-g7j"/>
     </inferredMetricsTieBreakers>
 </document>

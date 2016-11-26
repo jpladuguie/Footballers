@@ -24,8 +24,8 @@ class tabBarController: UITabBarController, SlidingTabBarDataSource, SlidingTabB
         
         // Increase tab bar height.
         var frame: CGRect = self.tabBar.frame
-        frame.origin.y -= 10
-        frame.size.height += 10
+        frame.origin.y -= 11
+        frame.size.height += 11
         
         tabBarView = SlidingTabBar(frame: frame, initialTabBarItemIndex: self.selectedIndex)
         tabBarView.tabBarBackgroundColor = darkGrey

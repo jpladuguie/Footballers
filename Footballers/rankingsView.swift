@@ -13,7 +13,6 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     // Set default values for page title and ranking type.
     var rankingType: String! = "Goals"
-    var rankingTitle: String! = "Top Scorers"
     
     // currentStartPosition holds the value used in the next call to the API. As the table is scrolled through, it is increased,
     // As players further down in the rankings need to be fetched.
@@ -33,14 +32,53 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
     // Loading activity indicator.
     var activityIndicator: NVActivityIndicatorView!
     
+    
+    var blurEffectView: UIVisualEffectView!
+    
+    var optionValues: [String: String]!
+    
+    
+    // Called when the back button is pressed.
+    @IBAction func optionButtonTouched(_ sender: UIButton) {
+        self.view.addSubview(self.blurEffectView)
+        
+        // Fade the items in.
+        UIView.animate(withDuration: 0.5, animations: {
+            self.blurEffectView.alpha = 1.0
+        })
+    }
+    
+    
+    
     /* Called as soon as the view loads. */
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.optionValues = [
+            "Goals": "Goals",
+            "Assists": "Assists",
+            "Appearances": "Games",
+            "Minutes Played": "Minutes",
+            "Yellow Cards": "YellowCards",
+            "Red Cards": "RedCards",
+            "Shots on Target": "ShotSuccess",
+            "Passes Completed": "PassSuccess",
+            "Tackles Won per Game": "TacklesWon",
+            "Age": "BirthDate",
+            "Height": "Height",
+            "Weight": "Weight"
+        ]
+        
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
+        self.blurEffectView = UIVisualEffectView(effect: blurEffect)
+        self.blurEffectView.frame = CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 124)
+        self.blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.blurEffectView.alpha = 0.0
+        
         // Set the current page and title.
         currentPage = "Rankings"
-        self.title = self.rankingTitle
+        self.title = "Rankings"
         
         // Set up the View Controller.
         setUpView(viewController: self)
@@ -48,6 +86,21 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
         // Create the loading activity indicator.
         self.activityIndicator = configureActivityIndicator(viewController: self)
         self.view.addSubview(self.activityIndicator)
+        
+        
+        
+        let options = UIButton(type: UIButtonType.custom) as UIButton
+        options.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
+        options.setImage(UIImage(named: "backButton.png"), for: UIControlState())
+        options.addTarget(self, action: #selector(rankingsView.optionButtonTouched(_:)), for:.touchUpInside)
+        
+        // Add the back bar button to the navigation bar.
+        let leftBarButton = UIBarButtonItem()
+        leftBarButton.customView = options
+        self.navigationItem.leftBarButtonItem = leftBarButton
+        
+        
+        
         
         // Get the data for the players in the background.
         DispatchQueue.global(qos: .background).async {

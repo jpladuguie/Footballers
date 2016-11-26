@@ -21,7 +21,7 @@ class playerRatingCell: UITableViewCell {
         
         // Stat name label.
         self.ratingNameLabel = UILabel()
-        self.ratingNameLabel.frame = CGRect(x: 20, y: 0, width: self.contentView.frame.width, height: 40)
+        self.ratingNameLabel.frame = CGRect(x: 20, y: 0, width: self.contentView.frame.width, height: 35)
         self.ratingNameLabel.textAlignment = .left
         self.ratingNameLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightUltraLight)
         self.ratingNameLabel.textColor = UIColor.white
@@ -30,7 +30,7 @@ class playerRatingCell: UITableViewCell {
         
         // Stat value label.
         self.ratingValueLabel = UILabel()
-        self.ratingValueLabel.frame = CGRect(x: ((self.contentView.frame.width / 3) * 2), y: 0, width: (self.contentView.frame.width / 3) + 35, height: 40)
+        self.ratingValueLabel.frame = CGRect(x: ((self.contentView.frame.width / 3) * 2), y: 0, width: (self.contentView.frame.width / 3) + 35, height: 35)
         self.ratingValueLabel.textAlignment = .right
         self.ratingValueLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightHeavy)
         self.ratingValueLabel.textColor = UIColor.white
@@ -39,7 +39,7 @@ class playerRatingCell: UITableViewCell {
         
         // Stat bar.
         self.ratingBar = UIView()
-        self.ratingBar.frame = CGRect(x: 20, y: 40, width: 355, height: 10)
+        self.ratingBar.frame = CGRect(x: 20, y: 35, width: 355, height: 10)
         self.ratingBar.layer.cornerRadius = 5.0
         self.ratingBar.backgroundColor = UIColor.white
         self.addSubview(self.ratingBar)

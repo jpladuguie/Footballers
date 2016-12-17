@@ -29,47 +29,13 @@ func setUpView(viewController: UIViewController) {
     
     // Set background.
     viewController.view.backgroundColor = lightGrey
-    
-    /*// Set the menu bar button image.
-    let menuButton = UIButton(type: UIButtonType.custom) as UIButton
-    menuButton.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
-    menuButton.setImage(UIImage(named: "menuButton.png"), for: UIControlState())
-    
-    // Set the function to be called depending on what the current View Controller is.
-    let viewName = NSStringFromClass(viewController.classForCoder)
-    switch viewName {
-        case "Footballers.homeView":
-            menuButton.addTarget(viewController, action: #selector(homeView.menuOpened(_:)), for:.touchUpInside)
-        case "Footballers.rankingsView":
-            menuButton.addTarget(viewController, action: #selector(rankingsView.menuOpened(_:)), for:.touchUpInside)
-        case "Footballers.favouritesView":
-            menuButton.addTarget(viewController, action: #selector(favouritesView.menuOpened(_:)), for:.touchUpInside)
-        default:
-            print("Error: incorrect View Controller class.")
-    }
-    
-    // Add the menu button to the Navigation Controller.
-    let leftBarButton = UIBarButtonItem()
-    leftBarButton.customView = menuButton
-    viewController.navigationItem.leftBarButtonItem = leftBarButton
-    
-    */
  
     // Set the navigation bar colour
     viewController.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
     viewController.navigationController?.navigationBar.shadowImage = UIImage()
-    let navBar = UIView()
-    navBar.frame = CGRect(x: -1, y: 0, width: viewController.view.frame.width + 1, height: 64)
-    navBar.backgroundColor = darkGrey
-    viewController.view.addSubview(navBar)
     
-    // Add a shadow effect to the bottom of the navigation bar.
-    navBar.layer.shadowRadius = 1
-    navBar.layer.shadowOpacity = 1
-    navBar.layer.shadowColor = UIColor.black.cgColor
-    navBar.layer.shadowOffset = CGSize.zero
-    navBar.layer.shouldRasterize = true
-    navBar.layer.shadowPath = UIBezierPath(rect: navBar.bounds).cgPath
+    let navBar = navigationBar(frame: CGRect(x: -1, y: 0, width: viewController.view.frame.width + 1, height: 64))
+    viewController.view.addSubview(navBar)
 }
 
 // Create ActivityIndicator centred in the middle of the view and return it.

@@ -32,7 +32,7 @@ class tabBarController: UITabBarController, SlidingTabBarDataSource, SlidingTabB
         tabBarView.tabBarItemTintColor = UIColor.gray
         tabBarView.selectedTabBarItemTintColor = UIColor.white
         tabBarView.selectedTabBarItemColors = [lightGrey, lightGrey, lightGrey]
-        tabBarView.slideAnimationDuration = 0.4
+        tabBarView.slideAnimationDuration = 0.3
         tabBarView.datasource = self
         tabBarView.delegate = self
         tabBarView.setup()

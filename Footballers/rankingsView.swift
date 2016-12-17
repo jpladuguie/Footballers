@@ -11,6 +11,9 @@ import NVActivityIndicatorView
 
 class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    // Navigation bar.
+    var navBar: navigationBar!
+    
     // Set default values for page title and ranking type.
     var rankingType: String! = "Goals"
     
@@ -31,23 +34,20 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     // Loading activity indicator.
     var activityIndicator: NVActivityIndicatorView!
-    
-    
-    var blurEffectView: UIVisualEffectView!
+
     
     var optionValues: [String: String]!
     
     
     // Called when the back button is pressed.
     @IBAction func optionButtonTouched(_ sender: UIButton) {
-        self.view.addSubview(self.blurEffectView)
         
-        // Fade the items in.
-        UIView.animate(withDuration: 0.5, animations: {
-            self.blurEffectView.alpha = 1.0
-        })
     }
     
+    // Called when the back button is pressed.
+    @IBAction func searchButtonTouched(_ sender: UIButton) {
+        self.navBar.searchPressed()
+    }
     
     
     /* Called as soon as the view loads. */
@@ -70,34 +70,60 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
             "Weight": "Weight"
         ]
         
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
-        self.blurEffectView = UIVisualEffectView(effect: blurEffect)
-        self.blurEffectView.frame = CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 124)
-        self.blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.blurEffectView.alpha = 0.0
-        
         // Set the current page and title.
         currentPage = "Rankings"
         self.title = "Rankings"
         
-        // Set up the View Controller.
-        setUpView(viewController: self)
+        // Set background.
+        self.view.backgroundColor = lightGrey
         
-        // Create the loading activity indicator.
-        self.activityIndicator = configureActivityIndicator(viewController: self)
-        self.view.addSubview(self.activityIndicator)
+        // Set the navigation bar colour to transparent.
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        
+        // Create the navigation bar.
+        self.navBar = navigationBar(frame: self.view.frame)
+        //self.navBar.viewController = self
+        self.view.addSubview(self.navBar)
         
         
         
-        let options = UIButton(type: UIButtonType.custom) as UIButton
-        options.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
-        options.setImage(UIImage(named: "backButton.png"), for: UIControlState())
-        options.addTarget(self, action: #selector(rankingsView.optionButtonTouched(_:)), for:.touchUpInside)
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        
+        // Add the search button to the navigation bar.
+        let optionsButton = UIButton(type: UIButtonType.custom) as UIButton
+        optionsButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+        optionsButton.setImage(UIImage(named: "config.png"), for: UIControlState())
+        optionsButton.tintColor = UIColor.white
+        optionsButton.addTarget(self, action: #selector(rankingsView.searchButtonTouched(_:)), for:.touchUpInside)
         
         // Add the back bar button to the navigation bar.
         let leftBarButton = UIBarButtonItem()
-        leftBarButton.customView = options
+        leftBarButton.customView = optionsButton
+        leftBarButton.tintColor = UIColor.white
         self.navigationItem.leftBarButtonItem = leftBarButton
+        
+        
+        
+        
+        // Add the search button to the navigation bar.
+        let searchButton = UIButton(type: UIButtonType.custom) as UIButton
+        searchButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+        searchButton.setImage(UIImage(named: "searchIcon.png"), for: UIControlState())
+        searchButton.addTarget(self, action: #selector(rankingsView.searchButtonTouched(_:)), for:.touchUpInside)
+        
+        // Add the back bar button to the navigation bar.
+        let rightBarButton = UIBarButtonItem()
+        rightBarButton.customView = searchButton
+        self.navigationItem.rightBarButtonItem = rightBarButton
+        
+        // Keep the table view in position.
+        self.automaticallyAdjustsScrollViewInsets = false
+        
+        // Create loading activity indicator.
+        self.activityIndicator = configureActivityIndicator(viewController: self)
+        self.view.addSubview(self.activityIndicator)
+
         
         
         
@@ -223,7 +249,6 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
         playerLabel.text = "Player"
         playerLabel.textColor = UIColor.white
         playerLabel.alpha = 0.0
-        self.view.addSubview(playerLabel)
         
         // Create statistic label.
         let statlabel = UILabel(frame: CGRect(x: 200.0, y: Double((self.navigationController?.navigationBar.frame.height)! + 25.0), width: Double(self.view.frame.width - 220.0), height: 30.0))
@@ -233,7 +258,6 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
         statlabel.textAlignment = .right
         statlabel.textColor = UIColor.white
         statlabel.alpha = 0.0
-        self.view.addSubview(statlabel)
         
         // Create the tableView with the data,
         self.tableView = UITableView(frame: CGRect(x: 0, y: 100, width: self.view.frame.width, height: self.view.frame.height - 100))
@@ -243,7 +267,11 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         self.tableView.backgroundColor = lightGrey
         self.tableView.alpha = 0.0
+        
+        self.view.addSubview(playerLabel)
+        self.view.addSubview(statlabel)
         self.view.addSubview(self.tableView)
+        self.view.bringSubview(toFront: self.navBar)
         
         // Fade the items in.
         UIView.animate(withDuration: 1.0, animations: {

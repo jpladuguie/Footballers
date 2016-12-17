@@ -15,18 +15,13 @@ import SideMenu
 // The main home View Controller.
 class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
-    var blurEffectView: UIVisualEffectView!
+    // Navigation bar.
+    var navBar: navigationBar!
     
-    // Search field and cancel button.
-    var searchField: UITextField = UITextField()
-    var cancelButton: UIButton = UIButton()
-    
-    // Table views.
-    var searchTableView: UITableView = UITableView()
+    // Table view.
     var mainTableView: UITableView = UITableView()
     
     // Data.
-    var searchedPlayers: [[String: String]] = [[String: String]]()
     var topScorersData = [[String: String]]()
     var topAssistsData = [[String: String]]()
     var topPasserData = [[String: String]]()
@@ -41,23 +36,45 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     var selectedPlayerData = [String: String]()
     var selectedRanking: String?
     
+    
+    // Called when the back button is pressed.
+    @IBAction func searchButtonTouched(_ sender: UIButton) {
+        self.navBar.searchPressed()
+    }
+    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
-        self.blurEffectView = UIVisualEffectView(effect: blurEffect)
-        self.blurEffectView.frame = CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 174)
-        self.blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.blurEffectView.alpha = 0.0
         
         // Set the current page and title.
         currentPage = "Home"
         self.title = "Home"
         
-        // Set up the View Controller.
-        setUpView(viewController: self)
+        // Set background.
+        self.view.backgroundColor = lightGrey
+        
+        // Set the navigation bar colour to transparent.
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
+        
+        // Create the navigation bar.
+        self.navBar = navigationBar(frame: self.view.frame)
+        self.navBar.viewController = self
+        self.view.addSubview(self.navBar)
+        
+        // Add the search button to the navigation bar.
+        let searchButton = UIButton(type: UIButtonType.custom) as UIButton
+        searchButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+        searchButton.setImage(UIImage(named: "searchIcon.png"), for: UIControlState())
+        searchButton.addTarget(self, action: #selector(homeView.searchButtonTouched(_:)), for:.touchUpInside)
+        
+        // Add the back bar button to the navigation bar.
+        let rightBarButton = UIBarButtonItem()
+        rightBarButton.customView = searchButton
+        self.navigationItem.rightBarButtonItem = rightBarButton
+        
+        // Keep the table view in position.
+        self.automaticallyAdjustsScrollViewInsets = false
         
         // Create loading activity indicator.
         self.activityIndicator = configureActivityIndicator(viewController: self)
@@ -94,39 +111,8 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     // Initiate all the subViews, and fade them in.
     func createSubViews() {
         
-        // Create search bar.
-        self.searchField.frame = CGRect(x: 10, y: 64, width: self.view.frame.width - 20, height: 50)
-        self.searchField.autocorrectionType = UITextAutocorrectionType.no
-        self.searchField.attributedPlaceholder = NSAttributedString(string:"Search for players...",
-                                                                    attributes:[NSForegroundColorAttributeName: UIColor.lightGray])
-        self.searchField.clearButtonMode = UITextFieldViewMode.whileEditing;
-        self.searchField.keyboardType = UIKeyboardType.default
-        self.searchField.contentVerticalAlignment = UIControlContentVerticalAlignment.center
-        self.searchField.font = UIFont.systemFont(ofSize: 15)
-        self.searchField.textColor = UIColor.white
-        self.searchField.returnKeyType = UIReturnKeyType.done
-        self.searchField.addTarget(self, action: #selector(sideMenuView.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
-        self.searchField.delegate = self
-        self.searchField.tintColor = UIColor.white
-        
-        // Add search icon to search bar.
-        let searchIcon = UIImageView(image: UIImage(named: "searchIcon"))
-        searchIcon.frame = CGRect(x: 7.5, y: 12.5, width: 15, height: 15)
-        self.searchField.addSubview(searchIcon)
-        let searchBox = UIView.init(frame: CGRect(x: 10, y: 0, width: 30, height: 40))
-        self.searchField.leftView = searchBox;
-        self.searchField.leftViewMode = UITextFieldViewMode.always
-        self.searchField.alpha = 0.0
-        
-        // Create cancel button for search bar.
-        self.cancelButton = UIButton(frame: CGRect(x: self.view.frame.width - 70, y: 64, width: 60, height: 50))
-        self.cancelButton.titleLabel!.font = UIFont.systemFont(ofSize: 15)
-        self.cancelButton.setTitle("Cancel", for: UIControlState())
-        self.cancelButton.addTarget(self, action: #selector(searchCanceled), for: .touchUpInside)
-        self.cancelButton.alpha = 0.0
-        
         // Create the main table view.
-        self.mainTableView = UITableView(frame: CGRect(x: 0, y: 114, width: self.view.frame.width, height: self.view.frame.height - 174))
+        self.mainTableView = UITableView(frame: CGRect(x: 0, y: 70, width: self.view.frame.width, height: self.view.frame.height - 116))
         // Register the seperate cell classes.
         self.mainTableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
         self.mainTableView.register(playerRatingCell.self, forCellReuseIdentifier: NSStringFromClass(playerRatingCell.self))
@@ -140,30 +126,13 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         // Set the alpha to zero so it can be faded in.
         self.mainTableView.alpha = 0
         
-        
-        // Create search tableview.
-        self.searchTableView.frame = CGRect(x: 0, y: 114, width: self.view.frame.width, height: self.view.frame.height - 174)
-        self.searchTableView.register(UITableViewCell.self, forCellReuseIdentifier: "searchCell")
-        self.searchTableView.delegate = self
-        self.searchTableView.dataSource = self
-        self.searchTableView.alwaysBounceVertical = false
-        self.searchTableView.backgroundColor = UIColor.clear
-        self.searchTableView.alpha = 0.0
-        self.searchTableView.rowHeight = 40.0
-        self.searchTableView.separatorStyle = UITableViewCellSeparatorStyle.none
-        
         // Add views in correct order.
         self.view.addSubview(self.mainTableView)
-        self.view.addSubview(self.blurEffectView)
-        self.view.addSubview(self.searchTableView)
-        self.view.addSubview(self.searchField)
-        self.view.addSubview(self.cancelButton)
-        
+        self.view.bringSubview(toFront: self.navBar)
         
         // Fade items in.
         UIView.animate(withDuration: 1.0, animations: {
             self.mainTableView.alpha = 1.0
-            self.searchField.alpha = 1.0
             self.activityIndicator.alpha = 0.0
             }, completion: { (complete: Bool) in
                 self.activityIndicator.removeFromSuperview()
@@ -172,12 +141,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     // Set the number of rows in the tableView.
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView == self.searchTableView {
-            return self.searchedPlayers.count
-        }
-        else {
-            return 10
-        }
+        return 10
     }
     
     // Set up tableView cells.
@@ -185,90 +149,74 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         // Create cell.
         var cell:UITableViewCell?
-        
-        if tableView == self.searchTableView {
             
-            cell = self.searchTableView.dequeueReusableCell(withIdentifier: "searchCell")! as UITableViewCell
-            cell!.backgroundColor = UIColor.clear
-            
-            // Player name.
-            cell?.textLabel?.text = self.searchedPlayers[(indexPath as NSIndexPath).row]["Name"]
-            cell?.textLabel?.textColor = UIColor.white
-            cell?.textLabel?.font = UIFont(name: (cell?.textLabel?.font?.fontName)!, size:14)
-            // Flage image.
-            cell!.imageView?.image = UIImage(named: String(searchedPlayers[(indexPath as NSIndexPath).row]["RegionCode"]!).uppercased())
+        if (indexPath as NSIndexPath).row == 0 {
+            // Create a cell from the playerDividerCell class.
+            let title: titleCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(titleCell.self), for: indexPath) as! titleCell
+                
+            title.titleLabel.text = "Top Scorers"
+                
+            // Set the main cell to the new one.
+            cell = title
         }
-        
+            
+        else if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
+            
+            // Create the custom cell using the rankingTableCell class..
+            let rankingCell: rankingTableCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(rankingTableCell.self), for: indexPath) as! rankingTableCell
+            
+            // Move the everything slightly to the left, as the ranking numbers will only
+            // Be between 1 and 5, so space for only one digit is needed and not 3 which
+            // Is the default.
+            rankingCell.positionLabel.frame = CGRect(x: 20, y: 0, width: 10, height: 40)
+            rankingCell.flagImage.frame = CGRect(x: 40, y: 11.5, width: 23, height: 17)
+            rankingCell.nameLabel.frame = CGRect(x: 75, y: 0, width: 320, height: 40)
+            
+            // Assign the correct values to the tableView cell.
+            rankingCell.positionLabel.text = String(indexPath.row)
+            rankingCell.nameLabel.text = self.topScorersData[(indexPath as NSIndexPath).row - 1]["Name"]
+            rankingCell.statValueLabel.text = self.topScorersData[(indexPath as NSIndexPath).row - 1]["Goals"]
+            rankingCell.flagImage.image = UIImage(named: String((self.topScorersData[(indexPath as NSIndexPath).row - 1]["RegionCode"]?.uppercased())! + "")!)!
+            
+            // Set the cell.
+            cell = rankingCell
+        }
+            
+        else if (indexPath as NSIndexPath).row == 6 {
+            // Create a cell from the playerDividerCell class.
+            let title: titleCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(titleCell.self), for: indexPath) as! titleCell
+                
+            title.titleLabel.text = "Most Assists"
+                
+            // Set the main cell to the new one.
+            cell = title
+        }
+                
         else {
-            
-            if (indexPath as NSIndexPath).row == 0 {
-                // Create a cell from the playerDividerCell class.
-                let title: titleCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(titleCell.self), for: indexPath) as! titleCell
+            // Create a cell from the playerRatingCell class.
+            let ratingCell: playerRatingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerRatingCell.self), for: indexPath) as! playerRatingCell
                 
-                title.titleLabel.text = "Top Scorers"
+            ratingCell.selectionStyle = .gray
                 
-                // Set the main cell to the new one.
-                cell = title
-            }
-            
-            else if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
-            
-                // Create the custom cell using the rankingTableCell class..
-                let rankingCell: rankingTableCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(rankingTableCell.self), for: indexPath) as! rankingTableCell
-            
-                // Move the everything slightly to the left, as the ranking numbers will only
-                // Be between 1 and 5, so space for only one digit is needed and not 3 which
-                // Is the default.
-                rankingCell.positionLabel.frame = CGRect(x: 20, y: 0, width: 10, height: 40)
-                rankingCell.flagImage.frame = CGRect(x: 40, y: 11.5, width: 23, height: 17)
-                rankingCell.nameLabel.frame = CGRect(x: 75, y: 0, width: 320, height: 40)
-            
-                // Assign the correct values to the tableView cell.
-                rankingCell.positionLabel.text = String(indexPath.row)
-                rankingCell.nameLabel.text = self.topScorersData[(indexPath as NSIndexPath).row - 1]["Name"]
-                rankingCell.statValueLabel.text = self.topScorersData[(indexPath as NSIndexPath).row - 1]["Goals"]
-                rankingCell.flagImage.image = UIImage(named: String((self.topScorersData[(indexPath as NSIndexPath).row - 1]["RegionCode"]?.uppercased())! + "")!)!
-            
-                // Set the cell.
-                cell = rankingCell
-            }
-            
-            else if (indexPath as NSIndexPath).row == 6 {
-                // Create a cell from the playerDividerCell class.
-                let title: titleCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(titleCell.self), for: indexPath) as! titleCell
+            // Set the values of the rating name and its value.
+            ratingCell.ratingNameLabel.text = self.topAssistsData[(indexPath as NSIndexPath).row - 7]["Name"]
+            ratingCell.ratingValueLabel.text = self.topAssistsData[(indexPath as NSIndexPath).row - 7]["Assists"]
                 
-                title.titleLabel.text = "Most Assists"
+            // Get the rating value as a float.
+            let ratingValue: Float = Float(self.topAssistsData[(indexPath as NSIndexPath).row - 7]["Assists"]!)! / Float(self.topAssistsData[0]["Assists"]!)! * 100.0
+            // Get the bar width depending on the value and the screen width.
+            let barWidth: Int = Int(Float(ratingValue * Float(self.view.frame.width - 40)) / 100.0)
+            // Create the bar as a UIView and set its colour depending on the strength of the rating.
+            ratingCell.ratingBar.frame = CGRect(x: 20, y: 40, width: 0, height: 10)
+            ratingCell.ratingBar.backgroundColor = getRatingColour(value: Int(ratingValue))
                 
-                // Set the main cell to the new one.
-                cell = title
-            }
+            // Animate the rating bar so that it slides in.
+            UIView.animate(withDuration: 1.0, animations: {
+                ratingCell.ratingBar.frame = CGRect(x: 20, y: 40, width: barWidth, height: 10)
+            })
                 
-            else {
-                // Create a cell from the playerRatingCell class.
-                let ratingCell: playerRatingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerRatingCell.self), for: indexPath) as! playerRatingCell
-                
-                ratingCell.selectionStyle = .gray
-                
-                // Set the values of the rating name and its value.
-                ratingCell.ratingNameLabel.text = self.topAssistsData[(indexPath as NSIndexPath).row - 7]["Name"]
-                ratingCell.ratingValueLabel.text = self.topAssistsData[(indexPath as NSIndexPath).row - 7]["Assists"]
-                
-                // Get the rating value as a float.
-                let ratingValue: Float = Float(self.topAssistsData[(indexPath as NSIndexPath).row - 7]["Assists"]!)! / Float(self.topAssistsData[0]["Assists"]!)! * 100.0
-                // Get the bar width depending on the value and the screen width.
-                let barWidth: Int = Int(Float(ratingValue * Float(self.view.frame.width - 40)) / 100.0)
-                // Create the bar as a UIView and set its colour depending on the strength of the rating.
-                ratingCell.ratingBar.frame = CGRect(x: 20, y: 40, width: 0, height: 10)
-                ratingCell.ratingBar.backgroundColor = getRatingColour(value: Int(ratingValue))
-                
-                // Animate the rating bar so that it slides in.
-                UIView.animate(withDuration: 1.0, animations: {
-                    ratingCell.ratingBar.frame = CGRect(x: 20, y: 40, width: barWidth, height: 10)
-                })
-                
-                // Set the main cell to the new one.
-                cell = ratingCell
-            }
+            // Set the main cell to the new one.
+            cell = ratingCell
         }
         
         
@@ -279,19 +227,17 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     // Set the row height for all tableViews to 40.0.
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if tableView == self.searchTableView {
+        // Titles
+        if (indexPath as NSIndexPath).row == 0 || (indexPath as NSIndexPath).row == 6{
             return 40.0
         }
+        // Top Scorers
+        else if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
+            return 40.0
+        }
+        // Most Assists
         else {
-            if (indexPath as NSIndexPath).row == 0 || (indexPath as NSIndexPath).row == 6{
-                return 40.0
-            }
-            else if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
-                return 40.0
-            }
-            else {
-                return 50.0
-            }
+            return 50.0
         }
     }
     
@@ -300,20 +246,13 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         // Select the correct PlayerId depending on which tableView the selected cell is in.
         let playerData: [String: String]
         
-        if tableView == self.searchTableView {
-            // Dissmiss keyboard and open player view controller.
-            self.searchField.resignFirstResponder()
-            playerData = searchedPlayers[(indexPath as IndexPath).row]
+        if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
+            self.mainTableView.deselectRow(at: indexPath, animated: true)
+            playerData = self.topScorersData[(indexPath as NSIndexPath).row - 1]
         }
         else {
-            if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
-                self.mainTableView.deselectRow(at: indexPath, animated: true)
-                playerData = self.topScorersData[(indexPath as NSIndexPath).row - 1]
-            }
-            else {
-                self.mainTableView.deselectRow(at: indexPath, animated: true)
-                playerData = self.topAssistsData[(indexPath as NSIndexPath).row - 6]
-            }
+            self.mainTableView.deselectRow(at: indexPath, animated: true)
+            playerData = self.topAssistsData[(indexPath as NSIndexPath).row - 7]
         }
         
         // Assign value to selectedPlayerData.
@@ -336,76 +275,6 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             rankingClass.rankingType = self.selectedRanking
         }
     }
-    
-    /* Search bar functions */
-    
-    // Search Text Field Edited
-    func textFieldDidChange(_ textField: UITextField) {
-        
-        // Get text from text field, convert it to lower case and remove any special characters.
-        let string = textField.text?.lowercased().folding(options: .diacriticInsensitive, locale: nil)
-        
-        // If the text hasn't been cleared check if it matches any players.
-        if string != "" {
-            
-            DispatchQueue.global(qos: .background).async {
-                
-                self.searchedPlayers = searchForPlayer(SearchString: string!)
-                
-                DispatchQueue.main.async {
-                    let range = NSMakeRange(0, self.searchTableView.numberOfSections)
-                    let sections = IndexSet(integersIn: range.toRange() ?? 0..<0)
-                    self.searchTableView.reloadSections(sections, with: .automatic)
-                }
-            }
-        }
-            // If the text is empty or been cleared give an empty array.
-        else {
-            self.searchedPlayers = []
-            let range = NSMakeRange(0, self.searchTableView.numberOfSections)
-            let sections = IndexSet(integersIn: range.toRange() ?? 0..<0)
-            self.searchTableView.reloadSections(sections, with: .automatic)
-        }
-    }
-    
-    // Search bar selected.
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        // Show cancel button and search tableview, and remove menu tableview.
-        UIView.animate(withDuration: 0.25, animations: {
-            self.cancelButton.alpha = 1.0
-            self.searchTableView.alpha = 1.0
-            //self.mainTableView.alpha = 0.0
-            self.blurEffectView.alpha = 1.0
-            }, completion: { (complete: Bool) in
-                //self.mainTableView.removeFromSuperview()
-        })
-    }
-    
-    // Cancel button pressed next to search bar.
-    func searchCanceled(_ sender: UIButton!) {
-        // Remove keyboard.
-        self.searchField.resignFirstResponder()
-        
-        // Reset search bar text.
-        self.searchField.text = ""
-        
-        // Refresh search tableview data.
-        self.searchedPlayers = []
-        let range = NSMakeRange(0, self.searchTableView.numberOfSections)
-        let sections = IndexSet(integersIn: range.toRange() ?? 0..<0)
-        self.searchTableView.reloadSections(sections, with: .automatic)
-        
-        // Remove cancel button and search tableview, and show menu tableview.
-        UIView.animate(withDuration: 0.25, animations: {
-            self.cancelButton.alpha = 0.0
-            self.searchTableView.alpha = 0.0
-            //self.mainTableView.alpha = 1.0
-            self.blurEffectView.alpha = 0.0
-            }, completion: { (complete: Bool) in
-                //self.searchTableView.removeFromSuperview()
-            })
-    }
-
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

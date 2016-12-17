@@ -26,13 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Set the status bar colour to white.
         application.statusBarStyle = .lightContent
         
-        // Set up side menu.
-        /*let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        SideMenuManager.menuLeftNavigationController = storyboard.instantiateViewController(withIdentifier: "SideMenuNavigationController") as? UISideMenuNavigationController
-        SideMenuManager.menuFadeStatusBar = false
-        SideMenuManager.menuShadowOpacity = 0.0
-        SideMenuManager.menuPresentMode = .viewSlideInOut*/
-        
         return true
     }
 

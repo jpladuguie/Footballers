@@ -3,25 +3,17 @@
 //  Footballers
 //
 //  Created by Jean-Pierre Laduguie on 01/09/2016.
-//  Copyright © 2016 jp. All rights reserved.
+//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
 //
 
 import UIKit
 
-class favouritesView: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
+class favouritesView: templateViewController, UITableViewDelegate, UITableViewDataSource {
+
     // Player data array and tableView.
     var players = [[String]]()
     var playersTableView: UITableView!
     var isTableViewSetUp: Bool = false
-    
-    // Selected playerId for segue to playerView.
-    var selectedPlayerData = [String: String]()
-    
-    // Called when menu button is pressed.
-    @IBAction func menuOpened(_ sender: AnyObject) {
-        performSegue(withIdentifier: "favouritesMenuSegue", sender: nil)
-    }
     
     override func viewDidAppear(_ animated: Bool) {
         self.players = getPlayersFromFavourites()
@@ -42,10 +34,10 @@ class favouritesView: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        currentPage = "Favourites"
+        currentView = .Favourites
         self.title = "Favourites"
         
-        setUpView(viewController: self)
+        self.navBar.type = .Favourites
         
         self.players = getPlayersFromFavourites()
         
@@ -116,7 +108,6 @@ class favouritesView: UIViewController, UITableViewDelegate, UITableViewDataSour
         playerLabel.text = "Player"
         playerLabel.textColor = UIColor.white
         playerLabel.alpha = 0.0
-        self.view.addSubview(playerLabel)
         
         // Create table view.
         self.playersTableView = UITableView(frame: CGRect(x: 0, y: 100, width: self.view.frame.width, height: self.view.frame.height - 100))
@@ -126,7 +117,10 @@ class favouritesView: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.playersTableView.separatorStyle = UITableViewCellSeparatorStyle.none
         self.playersTableView.backgroundColor = lightGrey
         self.playersTableView.alpha = 0.0
+        
+        self.view.addSubview(playerLabel)
         self.view.addSubview(self.playersTableView)
+        self.view.bringSubview(toFront: self.navBar)
         
         UIView.animate(withDuration: 1.0, animations: {
             self.playersTableView.alpha = 1.0

@@ -3,78 +3,38 @@
 //  Footballers
 //
 //  Created by Jean-Pierre Laduguie on 23/08/2016.
-//  Copyright © 2016 jp. All rights reserved.
+//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
 //
 
 import UIKit
-import SwiftyJSON
-import Charts
-import NVActivityIndicatorView
-import SideMenu
 
 // The main home View Controller.
-class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
-    
-    // Navigation bar.
-    var navBar: navigationBar!
+class homeView: templateViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
     // Table view.
-    var mainTableView: UITableView = UITableView()
+    var tableView: UITableView = UITableView()
     
     // Data.
     var topScorersData = [[String: String]]()
     var topAssistsData = [[String: String]]()
     var topPasserData = [[String: String]]()
     
-    // Section titles.
+    // Section titles, such as "Top Scorers" and "Most Assists".
     var sectionTitles: [String]!
     
-    // Activity indicator.
-    var activityIndicator: NVActivityIndicatorView!
     
-    // The player id or ranking type needed for a segue when a player or ranking table is selected.
-    var selectedPlayerData = [String: String]()
-    var selectedRanking: String?
+    /* viewDidLoad() */
     
-    
-    // Called when the back button is pressed.
-    @IBAction func searchButtonTouched(_ sender: UIButton) {
-        self.navBar.searchPressed()
-    }
-    
-
+    // Called when the view loads.
     override func viewDidLoad() {
+        
+        // Call viewDidLoad() in parent view controller.
         super.viewDidLoad()
         
         // Set the current page and title.
-        currentPage = "Home"
+        currentView = .Home
         self.title = "Home"
-        
-        // Set background.
-        self.view.backgroundColor = lightGrey
-        
-        // Set the navigation bar colour to transparent.
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        
-        // Create the navigation bar.
-        self.navBar = navigationBar(frame: self.view.frame)
-        self.navBar.viewController = self
-        self.view.addSubview(self.navBar)
-        
-        // Add the search button to the navigation bar.
-        let searchButton = UIButton(type: UIButtonType.custom) as UIButton
-        searchButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        searchButton.setImage(UIImage(named: "searchIcon.png"), for: UIControlState())
-        searchButton.addTarget(self, action: #selector(homeView.searchButtonTouched(_:)), for:.touchUpInside)
-        
-        // Add the back bar button to the navigation bar.
-        let rightBarButton = UIBarButtonItem()
-        rightBarButton.customView = searchButton
-        self.navigationItem.rightBarButtonItem = rightBarButton
-        
-        // Keep the table view in position.
-        self.automaticallyAdjustsScrollViewInsets = false
+        self.navBar.type = .Home
         
         // Create loading activity indicator.
         self.activityIndicator = configureActivityIndicator(viewController: self)
@@ -97,7 +57,7 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                 else {
                     createErrorMessage(viewController: self, message: "Unable to connect to server.")
                     
-                    // Fade out activity indicator.
+                    // Fade out activity indicator and remove it from the view.
                     UIView.animate(withDuration: 1.0, animations: {
                     self.activityIndicator.alpha = 0.0
                         }, completion: { (complete: Bool) in
@@ -108,36 +68,40 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         }
     }
     
+    /* createSubViews() */
+    
     // Initiate all the subViews, and fade them in.
     func createSubViews() {
         
         // Create the main table view.
-        self.mainTableView = UITableView(frame: CGRect(x: 0, y: 70, width: self.view.frame.width, height: self.view.frame.height - 116))
+        self.tableView = UITableView(frame: CGRect(x: 0, y: 70, width: self.view.frame.width, height: self.view.frame.height - 116))
         // Register the seperate cell classes.
-        self.mainTableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
-        self.mainTableView.register(playerRatingCell.self, forCellReuseIdentifier: NSStringFromClass(playerRatingCell.self))
-        self.mainTableView.register(titleCell.self, forCellReuseIdentifier: NSStringFromClass(titleCell.self))
-        self.mainTableView.register(playerDividerCell.self, forCellReuseIdentifier: NSStringFromClass(playerDividerCell.self))
+        self.tableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
+        self.tableView.register(playerRatingCell.self, forCellReuseIdentifier: NSStringFromClass(playerRatingCell.self))
+        self.tableView.register(titleCell.self, forCellReuseIdentifier: NSStringFromClass(titleCell.self))
+        self.tableView.register(playerDividerCell.self, forCellReuseIdentifier: NSStringFromClass(playerDividerCell.self))
         // Set the delegate and data source.
-        self.mainTableView.delegate = self
-        self.mainTableView.dataSource = self
-        self.mainTableView.separatorStyle = UITableViewCellSeparatorStyle.none
-        self.mainTableView.backgroundColor = lightGrey
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+        self.tableView.backgroundColor = lightGrey
         // Set the alpha to zero so it can be faded in.
-        self.mainTableView.alpha = 0
+        self.tableView.alpha = 0
         
         // Add views in correct order.
-        self.view.addSubview(self.mainTableView)
+        self.view.addSubview(self.tableView)
         self.view.bringSubview(toFront: self.navBar)
         
         // Fade items in.
         UIView.animate(withDuration: 1.0, animations: {
-            self.mainTableView.alpha = 1.0
+            self.tableView.alpha = 1.0
             self.activityIndicator.alpha = 0.0
             }, completion: { (complete: Bool) in
                 self.activityIndicator.removeFromSuperview()
         })
     }
+    
+    /* Table view functions */
     
     // Set the number of rows in the tableView.
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -247,11 +211,11 @@ class homeView: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         let playerData: [String: String]
         
         if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
-            self.mainTableView.deselectRow(at: indexPath, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
             playerData = self.topScorersData[(indexPath as NSIndexPath).row - 1]
         }
         else {
-            self.mainTableView.deselectRow(at: indexPath, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
             playerData = self.topAssistsData[(indexPath as NSIndexPath).row - 7]
         }
         

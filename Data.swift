@@ -3,17 +3,13 @@
 //  Footballers
 //
 //  Created by Jean-Pierre Laduguie on 18/08/2016.
-//  Copyright © 2016 jp. All rights reserved.
+//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
 //
 
 // Everything to do with managing data. Functions are:
 
 import Foundation
 import SwiftyJSON
-
-// Set the host url depending on whether the device is on the same network as the server.
-let hostUrl = "http://192.168.1.13:5000"
-//let hostUrl = "http://2.98.100.175"
 
 // Gets the data from the API. There are three possible calls to be made: getPlayer, which returns data on a single player;
 // getPlayers, which returns a list of players sorted by the variable SortValue; and searchForPlayer, which searches for 

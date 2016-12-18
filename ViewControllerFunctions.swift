@@ -3,14 +3,13 @@
 //  Footballers
 //
 //  Created by Jean-Pierre Laduguie on 23/10/2016.
-//  Copyright © 2016 jp. All rights reserved.
+//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
 //
 
 import Foundation
-import Kanna
-import SwiftyJSON
-import CoreData
 import NVActivityIndicatorView
+
+/* Global variable declarations */
 
 // Global colour variables.
 let lightGrey: UIColor = UIColor(red: 70.0/255.0, green: 70.0/255.0, blue: 70.0/255.0, alpha: 1.0)
@@ -21,22 +20,21 @@ let yellow: UIColor = UIColor(red: 248.0/255.0, green: 200.0/255.0, blue: 95.0/2
 let red: UIColor = UIColor(red: 247.0/255.0, green: 126.0/255.0, blue: 131.0/255.0, alpha: 1.0)
 
 // Global View Controller variable to keep track of current View Controller.
-var currentPage: String = String()
-
-// Sets up the View Controller by setting the background colour, adding a menu button and
-// Setting the navigation bar colour.
-func setUpView(viewController: UIViewController) {
-    
-    // Set background.
-    viewController.view.backgroundColor = lightGrey
- 
-    // Set the navigation bar colour
-    viewController.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-    viewController.navigationController?.navigationBar.shadowImage = UIImage()
-    
-    let navBar = navigationBar(frame: CGRect(x: -1, y: 0, width: viewController.view.frame.width + 1, height: 64))
-    viewController.view.addSubview(navBar)
+enum viewType {
+    case Home
+    case Rankings
+    case Favourites
 }
+
+var currentView = viewType.Home
+
+// Set the host url depending on whether the device is on the same network as the server.
+let hostUrl = "http://192.168.1.13:5000"
+
+// Keeps track of the text inputed into the search bar to pass between seperate view controllers.
+var currentSearchText: String = ""
+
+/* Other helper global functions */
 
 // Create ActivityIndicator centred in the middle of the view and return it.
 func configureActivityIndicator(viewController: UIViewController) -> NVActivityIndicatorView {

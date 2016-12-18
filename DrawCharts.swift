@@ -3,7 +3,7 @@
 //  Footballers
 //
 //  Created by Jean-Pierre Laduguie on 22/10/2016.
-//  Copyright © 2016 jp. All rights reserved.
+//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
 //
 
 // Functions for drawing charts.

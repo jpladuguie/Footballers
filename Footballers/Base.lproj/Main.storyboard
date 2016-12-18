@@ -6,24 +6,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Side Menu View-->
-        <scene sceneID="OmD-3k-m0I">
-            <objects>
-                <viewController id="bSb-xv-T3i" customClass="sideMenuView" customModule="Footballers" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="lfE-OA-E5c"/>
-                        <viewControllerLayoutGuide type="bottom" id="gpT-gv-GKx"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="t5c-z1-ZLX" customClass="SideMe">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="OOc-GJ-r9N" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="393" y="-475"/>
-        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="f9U-Da-Ekj">
             <objects>

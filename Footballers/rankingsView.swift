@@ -3,19 +3,18 @@
 //  Footballers
 //
 //  Created by Jean-Pierre Laduguie on 01/09/2016.
-//  Copyright © 2016 jp. All rights reserved.
+//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
 //
 
 import UIKit
-import NVActivityIndicatorView
 
-class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class rankingsView: templateViewController, UITableViewDelegate, UITableViewDataSource {
     
     // Navigation bar.
-    var navBar: navigationBar!
+    var optionsButton: UIButton!
     
     // Set default values for page title and ranking type.
-    var rankingType: String! = "Goals"
+    var rankingTitle: String! = "Tackles Won per Game"
     
     // currentStartPosition holds the value used in the next call to the API. As the table is scrolled through, it is increased,
     // As players further down in the rankings need to be fetched.
@@ -29,25 +28,27 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
     var players = [[String: String]]()
     var tableView: UITableView!
     
-    // Selected player data for the segue to playerView.
-    var selectedPlayerData = [String: String]()
-    
-    // Loading activity indicator.
-    var activityIndicator: NVActivityIndicatorView!
-
-    
-    var optionValues: [String: String]!
-    
     
     // Called when the back button is pressed.
     @IBAction func optionButtonTouched(_ sender: UIButton) {
+        // Open/close the search bar.
+        self.navBar.toggleOptions()
         
+        // Change the button to the search icon or the close icon depending on whether the search is already open.
+        let leftBarButton = UIBarButtonItem()
+        
+        if self.navBar.viewExtended == true {
+            leftBarButton.customView = self.closeButton
+        }
+        else {
+            leftBarButton.customView = self.optionsButton
+        }
+        
+        // Set the button to the navigation bar.
+        self.navigationItem.leftBarButtonItem = leftBarButton
     }
     
-    // Called when the back button is pressed.
-    @IBAction func searchButtonTouched(_ sender: UIButton) {
-        self.navBar.searchPressed()
-    }
+
     
     
     /* Called as soon as the view loads. */
@@ -55,79 +56,27 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.optionValues = [
-            "Goals": "Goals",
-            "Assists": "Assists",
-            "Appearances": "Games",
-            "Minutes Played": "Minutes",
-            "Yellow Cards": "YellowCards",
-            "Red Cards": "RedCards",
-            "Shots on Target": "ShotSuccess",
-            "Passes Completed": "PassSuccess",
-            "Tackles Won per Game": "TacklesWon",
-            "Age": "BirthDate",
-            "Height": "Height",
-            "Weight": "Weight"
-        ]
-        
         // Set the current page and title.
-        currentPage = "Rankings"
+        currentView = .Rankings
         self.title = "Rankings"
         
-        // Set background.
-        self.view.backgroundColor = lightGrey
-        
-        // Set the navigation bar colour to transparent.
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        
-        // Create the navigation bar.
-        self.navBar = navigationBar(frame: self.view.frame)
-        //self.navBar.viewController = self
-        self.view.addSubview(self.navBar)
-        
-        
-        
-        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navBar.type = .Rankings
         
         // Add the search button to the navigation bar.
-        let optionsButton = UIButton(type: UIButtonType.custom) as UIButton
-        optionsButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        optionsButton.setImage(UIImage(named: "config.png"), for: UIControlState())
-        optionsButton.tintColor = UIColor.white
-        optionsButton.addTarget(self, action: #selector(rankingsView.searchButtonTouched(_:)), for:.touchUpInside)
+        self.optionsButton = UIButton(type: UIButtonType.custom) as UIButton
+        self.optionsButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+        self.optionsButton.setImage(UIImage(named: "config.png"), for: UIControlState())
+        self.optionsButton.addTarget(self, action: #selector(rankingsView.optionButtonTouched(_:)), for:.touchUpInside)
         
         // Add the back bar button to the navigation bar.
         let leftBarButton = UIBarButtonItem()
-        leftBarButton.customView = optionsButton
-        leftBarButton.tintColor = UIColor.white
+        leftBarButton.customView = self.optionsButton
         self.navigationItem.leftBarButtonItem = leftBarButton
-        
-        
-        
-        
-        // Add the search button to the navigation bar.
-        let searchButton = UIButton(type: UIButtonType.custom) as UIButton
-        searchButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        searchButton.setImage(UIImage(named: "searchIcon.png"), for: UIControlState())
-        searchButton.addTarget(self, action: #selector(rankingsView.searchButtonTouched(_:)), for:.touchUpInside)
-        
-        // Add the back bar button to the navigation bar.
-        let rightBarButton = UIBarButtonItem()
-        rightBarButton.customView = searchButton
-        self.navigationItem.rightBarButtonItem = rightBarButton
-        
-        // Keep the table view in position.
-        self.automaticallyAdjustsScrollViewInsets = false
         
         // Create loading activity indicator.
         self.activityIndicator = configureActivityIndicator(viewController: self)
         self.view.addSubview(self.activityIndicator)
 
-        
-        
-        
-        
         // Get the data for the players in the background.
         DispatchQueue.global(qos: .background).async {
             // Get the data needed for the tableView.
@@ -254,7 +203,7 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
         let statlabel = UILabel(frame: CGRect(x: 200.0, y: Double((self.navigationController?.navigationBar.frame.height)! + 25.0), width: Double(self.view.frame.width - 220.0), height: 30.0))
         // Set the colour to white, add the text and add to view.
         statlabel.font = UIFont.boldSystemFont(ofSize: 20.0)
-        statlabel.text = "Goals"
+        statlabel.text = self.rankingTitle
         statlabel.textAlignment = .right
         statlabel.textColor = UIColor.white
         statlabel.alpha = 0.0
@@ -282,11 +231,6 @@ class rankingsView: UIViewController, UITableViewDelegate, UITableViewDataSource
             }, completion: { (complete: Bool) in
                 self.activityIndicator.removeFromSuperview()
         })
-    }
-    
-    // Opens the menu; called when menu button is pressed.
-    @IBAction func menuOpened(_ sender: AnyObject) {
-        performSegue(withIdentifier: "rankingsMenuSegue", sender: nil)
     }
 
     override func didReceiveMemoryWarning() {

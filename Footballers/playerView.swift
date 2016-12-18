@@ -3,7 +3,7 @@
 //  Footballers
 //
 //  Created by Jean-Pierre Laduguie on 24/07/2016.
-//  Copyright © 2016 jp. All rights reserved.
+//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
 //
 
 import UIKit
@@ -236,7 +236,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         // Set a custom back button image for the button, and call backButtonTouched() once it has been pressed.
         let backButton = UIButton(type: UIButtonType.custom) as UIButton
         backButton.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
-        backButton.setImage(UIImage(named: "backButton.png"), for: UIControlState())
+        backButton.setImage(UIImage(named: "back.png"), for: UIControlState())
         backButton.addTarget(self, action: #selector(playerView.backButtonTouched(_:)), for:.touchUpInside)
         
         // Add the back bar button to the navigation bar.

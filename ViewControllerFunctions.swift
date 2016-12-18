@@ -33,6 +33,7 @@ let hostUrl = "http://192.168.1.13:5000"
 
 // Keeps track of the text inputed into the search bar to pass between seperate view controllers.
 var currentSearchText: String = ""
+var currentSearchedPlayers: [[String: String]] = [[String: String]]()
 
 /* Other helper global functions */
 

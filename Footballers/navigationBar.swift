@@ -13,7 +13,7 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
     // Set the type of the navigation which varies depending on whether it is for home, rankings or favourites view.
     var type: viewType
     
-    //
+    // Create a view controller object to allow for segues after players have been selected from search.
     var viewController: templateViewController!
     
     // Boolean which is true when the view is extended down, and false otherwise.
@@ -43,22 +43,9 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
     
     // Divider line.
     var divider: UIImageView = UIImageView()
-    
 
-    
-    var optionValues: [[String]]!
-    
-    
-    // Called when the view initiates.
-    override init (frame : CGRect) {
-        
-        // Default value for type.
-        self.type = .Home
-        
-        // Initiate the class.
-        super.init(frame : CGRect(x: -1, y: 0, width: frame.width + 1, height: 64))
-        
-        self.optionValues = [
+    // Option values for rankings view.
+    var optionValues: [[String]] = [
             ["Goals", "Goals"],
             ["Assists", "Assists"],
             ["Appearances", "Games"],
@@ -71,8 +58,17 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
             ["Age", "BirthDate"],
             ["Height", "Height"],
             ["Weight", "Weight"]
-        ]
+    ]
+
+    
+    // Called when the view initiates.
+    init (frame : CGRect, type: viewType) {
         
+        // Default value for type.
+        self.type = type
+        
+        // Initiate the class.
+        super.init(frame : CGRect(x: -1, y: 0, width: frame.width + 1, height: 64))
         
         // Set the screen height.
         self.frameHeight = frame.height
@@ -83,6 +79,12 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         // Create the search bar, cancel button and search table view.
         createSearchBar()
         
+        // If the view is being created
+        if currentSearchText != "" {
+            updateSearchBar()
+        }
+        
+        // Create the options table view only if the nav bar is for rankings view.
         if self.type == .Rankings {
             createOptionsTable()
         }
@@ -108,10 +110,7 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         UIView.animate(withDuration: 0.3, animations: {
             // Change view size.
             self.frame = CGRect(x: -1, y: 0, width: self.frame.width, height: height)
-            
-            // Fade search bar and table view in/out.
-            
-            
+           
             self.searchField.alpha = alpha
             self.divider.alpha = alpha
             
@@ -130,8 +129,6 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
                 self.searchTableView.alpha = 0.0
                 self.noResultsLabel.alpha = 0.0
             }
-            
-            
             }, completion: { (complete: Bool) in
                 // Remove or bring up the keyboard.
                 if self.viewExtended == false {
@@ -341,11 +338,26 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
     
     /* Search bar functions */
     
+    // Update the search bar with the current text being inputted, and bring up search results in the search table view.
+    func updateSearchBar() {
+        
+        // Update the data and reload the table view.
+        self.searchField.text = currentSearchText
+        self.searchedPlayers = currentSearchedPlayers
+        self.searchTableView.reloadData()
+        
+        // If there are no results, show the no results label.
+        if self.searchedPlayers.count == 0 && self.searchField.text != "" {
+            self.noResults = true
+        }
+    }
+    
     // Called whenever something changes in the text field, i.e. a character has been typed in/deleted.
     func textFieldDidChange(_ textField: UITextField) {
         
         // Get text from text field, convert it to lower case and remove any special characters.
         let string = textField.text?.lowercased().folding(options: .diacriticInsensitive, locale: nil)
+        currentSearchText = textField.text!
         
         // If the text hasn't been cleared, check if it matches any players.
         if string != "" {
@@ -355,6 +367,7 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
                 
                 // Get the data.
                 self.searchedPlayers = searchForPlayer(SearchString: string!)
+                currentSearchedPlayers = self.searchedPlayers
                 
                 // Execute in the background to allow for the data to be received.
                 DispatchQueue.main.async {
@@ -365,7 +378,7 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
                         self.noResults = true
                         
                         // Fade out the table view, and fade in the no results label.
-                        UIView.animate(withDuration: 0.2, animations: {
+                        UIView.animate(withDuration: 0.25, animations: {
                             self.searchTableView.alpha = 0.0
                             self.noResultsLabel.alpha = 1.0
                             }, completion: { (complete: Bool) in
@@ -378,13 +391,13 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
                         
                         // Bring back the table view and remove the no results label if needed.
                         if self.searchTableView.alpha == 0 {
-                            UIView.animate(withDuration: 0.2, animations: {
+                            UIView.animate(withDuration: 0.25, animations: {
                                 self.searchTableView.alpha = 1.0
                                 self.noResultsLabel.alpha = 0.0
                             })
                         }
                         // Reload the table view data.
-                        UIView.transition(with: self.searchTableView, duration: 0.3, options: .transitionCrossDissolve, animations: {self.searchTableView.reloadData()}, completion: nil)
+                        UIView.transition(with: self.searchTableView, duration: 0.25, options: .transitionCrossDissolve, animations: {self.searchTableView.reloadData()}, completion: nil)
                     }
                 }
             }
@@ -394,10 +407,11 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
             self.noResults = false
             
             self.searchedPlayers = []
+            currentSearchedPlayers = self.searchedPlayers
             
             // Reload the table view with an animation.
             DispatchQueue.main.async {
-                UIView.animate(withDuration: 0.3, animations: {
+                UIView.animate(withDuration: 0.25, animations: {
                     self.searchTableView.alpha = 0.0
                     self.noResultsLabel.alpha = 0.0
                     }, completion: { (complete: Bool) in
@@ -407,7 +421,7 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         }
     }
     
-    // Search bar selected.
+    // Called when the search bar selected.
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // Show cancel button and search tableview, and remove menu tableview.
         UIView.animate(withDuration: 0.25, animations: {

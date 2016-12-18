@@ -39,6 +39,7 @@
 		E8A0CF4A1DBAC1130047C036 /* PlayerFavouritesData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A0CF481DBAC1130047C036 /* PlayerFavouritesData+CoreDataClass.swift */; };
 		E8A0CF4B1DBAC1130047C036 /* PlayerFavouritesData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A0CF491DBAC1130047C036 /* PlayerFavouritesData+CoreDataProperties.swift */; };
 		E8BA081B1E07082D00C7290B /* templateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA081A1E07082D00C7290B /* templateViewController.swift */; };
+		E8BA081D1E074EDB00C7290B /* reload.png in Resources */ = {isa = PBXBuildFile; fileRef = E8BA081C1E074EDB00C7290B /* reload.png */; };
 		E8C0FCB71DBBB0D800260964 /* DrawCharts.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C0FCB61DBBB0D800260964 /* DrawCharts.swift */; };
 		E8C713E81D7DF3BF00B717F2 /* playerTopCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C713E71D7DF3BF00B717F2 /* playerTopCell.swift */; };
 		E8CDFB371DC6A2C500EFE69B /* playerRatingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CDFB361DC6A2C500EFE69B /* playerRatingCell.swift */; };
@@ -84,6 +85,7 @@
 		E8A0CF481DBAC1130047C036 /* PlayerFavouritesData+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerFavouritesData+CoreDataClass.swift"; sourceTree = "<group>"; };
 		E8A0CF491DBAC1130047C036 /* PlayerFavouritesData+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerFavouritesData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		E8BA081A1E07082D00C7290B /* templateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = templateViewController.swift; sourceTree = "<group>"; };
+		E8BA081C1E074EDB00C7290B /* reload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reload.png; sourceTree = "<group>"; };
 		E8C0FCB61DBBB0D800260964 /* DrawCharts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawCharts.swift; sourceTree = "<group>"; };
 		E8C713E71D7DF3BF00B717F2 /* playerTopCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerTopCell.swift; sourceTree = "<group>"; };
 		E8CDFB361DC6A2C500EFE69B /* playerRatingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerRatingCell.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 				E87F5AF91D78B82500C10A38 /* LaunchScreen.storyboard */,
 				E87F5AFC1D78B82500C10A38 /* Info.plist */,
 				E82125931D78B9B80024D016 /* back.png */,
+				E8BA081C1E074EDB00C7290B /* reload.png */,
 				E876E9F31E06E0380030661B /* close.png */,
 				E899B2811E05C0EA0059BCD7 /* config.png */,
 				E8180C421D7CBB2400043884 /* defaultPlayerImage.png */,
@@ -254,6 +257,7 @@
 				E82125A71D78BDBC0024D016 /* Images.xcassets in Resources */,
 				E87F5AF81D78B82500C10A38 /* Assets.xcassets in Resources */,
 				E82125A21D78B9B80024D016 /* favouriteButtonEmpty.png in Resources */,
+				E8BA081D1E074EDB00C7290B /* reload.png in Resources */,
 				E876E9F41E06E0380030661B /* close.png in Resources */,
 				E82125A31D78B9B80024D016 /* search.png in Resources */,
 				E84E1ADD1D7B367A00A0BC48 /* favouriteButtonFull.png in Resources */,

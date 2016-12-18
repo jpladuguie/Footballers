@@ -35,17 +35,17 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         self.navBar.toggleOptions()
         
         // Change the button to the search icon or the close icon depending on whether the search is already open.
-        let leftBarButton = UIBarButtonItem()
+        let rightBarButton = UIBarButtonItem()
         
         if self.navBar.viewExtended == true {
-            leftBarButton.customView = self.closeButton
+            rightBarButton.customView = self.closeButton
         }
         else {
-            leftBarButton.customView = self.optionsButton
+            rightBarButton.customView = self.searchButton
         }
         
         // Set the button to the navigation bar.
-        self.navigationItem.leftBarButtonItem = leftBarButton
+        self.navigationItem.rightBarButtonItem = rightBarButton
     }
     
 
@@ -54,13 +54,13 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     /* Called as soon as the view loads. */
     
     override func viewDidLoad() {
+        self.type = .Rankings
+        
         super.viewDidLoad()
         
         // Set the current page and title.
         currentView = .Rankings
         self.title = "Rankings"
-        
-        self.navBar.type = .Rankings
         
         // Add the search button to the navigation bar.
         self.optionsButton = UIButton(type: UIButtonType.custom) as UIButton

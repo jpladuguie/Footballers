@@ -9,20 +9,10 @@
 import Foundation
 import CoreData
 
-// 
-func setUpDataContainer(name: String) {
-    let container = NSPersistentContainer(name: name)
-    container.loadPersistentStores { storeDescription, error in
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        if let error = error {
-            print("Unable to load " + name + ". Error: \(error)")
-        }
-    }
-}
+/* Helper functions */
 
-// Checks whether player with given id is saved in favourites.
-func isPlayerInFavourites(_ playerId: String) -> Bool {
-    // Set up data container.
+// Sets up the data container for playerFavouritesDataModel and returns it.
+func setUpDataContainer() -> NSPersistentContainer {
     let container = NSPersistentContainer(name: "playerFavouritesDataModel")
     container.loadPersistentStores { storeDescription, error in
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
@@ -31,17 +21,38 @@ func isPlayerInFavourites(_ playerId: String) -> Bool {
         }
     }
     
+    return container
+}
+
+// Save the player to playerFavouritesDataModel.
+func saveChanges(container: NSPersistentContainer) {
+    do {
+        try container.viewContext.save()
+    } catch {
+        print("An error occurred while saving to playerFavouritesDataModel: \(error)")
+    }
+}
+
+/* Favourites functions */
+
+// Checks whether player with given id is saved in favourites.
+func isPlayerInFavourites(_ playerId: String) -> Bool {
+    // Set up data container.
+    let container = setUpDataContainer()
+    
     // Create a fetch request.
-    var players = [PlayerFavouritesData]()
+    var player = [PlayerFavouritesData]()
     let request = PlayerFavouritesData.createFetchRequest()
+    
     // Set the predicate to look for players with a matching playerId.
     request.predicate = NSPredicate(format: String("playerId == '" + playerId + "'"))
     
     // Get all players with matching id.
     do {
-        players = try container.viewContext.fetch(request)
+        player = try container.viewContext.fetch(request)
+        
         // If there are no matches, return false, else return true.
-        if players.count == 0 {
+        if player.count == 0 {
             return false
         }
         else {
@@ -58,55 +69,42 @@ func isPlayerInFavourites(_ playerId: String) -> Bool {
 // Adds a player to favourites.
 func savePlayerToFavourites(_ playerData: [String: String]) {
     // Set up data container.
-    let container = NSPersistentContainer(name: "playerFavouritesDataModel")
-    container.loadPersistentStores { storeDescription, error in
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        if let error = error {
-            print("Unable to load playerFavouritesDataModel. Error: \(error)")
-        }
-    }
+    let container = setUpDataContainer()
     
-    // Creates a player model with the correct data.
+    // Creates a player model to save the data as.
     let player = PlayerFavouritesData(context: container.viewContext)
+    
+    // Add the attributes to the player data.
     player.playerId = playerData["PlayerId"]
     player.name = playerData["Name"]
     player.regionCode = playerData["RegionCode"]
     
-    // Saves the player to playerFavouritesDataModel.
-    do {
-        try container.viewContext.save()
-    } catch {
-        print("An error occurred while saving to playerFavouritesDataModel: \(error)")
-    }
+    // Save changes to playerFavouritesDataModel.
+    saveChanges(container: container)
 }
 
 // Removes a player from favourites.
 func removePlayerFromFavourites(_ playerId: String) {
     // Set up data container.
-    let container = NSPersistentContainer(name: "playerFavouritesDataModel")
-    container.loadPersistentStores { storeDescription, error in
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        if let error = error {
-            print("Unable to load playerFavouritesDataModel. Error: \(error)")
-        }
-    }
+    let container = setUpDataContainer()
     
     // Get the player to delete from the model.
-    var players = [PlayerFavouritesData]()
+    var player = [PlayerFavouritesData]()
     let request = PlayerFavouritesData.createFetchRequest()
+    
     // Set up a predicate to look for a player with a matching playerId.
     request.predicate = NSPredicate(format: String("playerId == '" + playerId + "'"))
     
     // Find all players with a matching id.
     do {
-        players = try container.viewContext.fetch(request)
+        player = try container.viewContext.fetch(request)
         // If no players found.
-        if players.count == 0 {
+        if player.count == 0 {
             print("Unable to delete player as not found in playerFavouritesDataModel.")
         }
         else {
             // Delete player.
-            let player = players[0]
+            let player = player[0]
             container.viewContext.delete(player)
         }
     } catch {
@@ -114,23 +112,13 @@ func removePlayerFromFavourites(_ playerId: String) {
     }
     
     // Save changes to playerFavouritesDataModel.
-    do {
-        try container.viewContext.save()
-    } catch {
-        print("An error occurred while saving to playerFavouritesDataModel: \(error)")
-    }
+    saveChanges(container: container)
 }
 
 // Returns all the player saved in favourites.
 func getPlayersFromFavourites() -> [[String]] {
     // Set up data container.
-    let container = NSPersistentContainer(name: "playerFavouritesDataModel")
-    container.loadPersistentStores { storeDescription, error in
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        if let error = error {
-            print("Unable to load playerFavouritesDataModel. \(error)")
-        }
-    }
+    let container = setUpDataContainer()
     
     // Set up players variable to store the data.
     var playerData = [[String]]()
@@ -145,8 +133,6 @@ func getPlayersFromFavourites() -> [[String]] {
     } catch {
         print("Unable to access playerFavouritesDataModel.")
     }
-    
-    
     
     // Add each player to the array and return it.
     for player in players {

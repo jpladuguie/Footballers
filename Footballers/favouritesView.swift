@@ -15,7 +15,7 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
     var playersTableView: UITableView!
     var isTableViewSetUp: Bool = false
     
-    override func viewDidAppear(_ animated: Bool) {
+    /*override func viewDidAppear(_ animated: Bool) {
         self.players = getPlayersFromFavourites()
         if self.players.count != 0 {
             if isTableViewSetUp == false {
@@ -29,21 +29,26 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
         else {
             createErrorMessage(viewController: self, message: "No players in favourites")
         }
-    }
+    }*/
     
     override func viewDidLoad() {
+        self.type = .Favourites
+        
         super.viewDidLoad()
         
         currentView = .Favourites
         self.title = "Favourites"
         
-        self.navBar.type = .Favourites
-        
         self.players = getPlayersFromFavourites()
         
         if self.players.count != 0 {
-            setUpTableView()
-            isTableViewSetUp = true
+            if isTableViewSetUp == false {
+                setUpTableView()
+                isTableViewSetUp = true
+            }
+            else {
+                self.playersTableView.reloadData()
+            }
         }
         else {
             createErrorMessage(viewController: self, message: "No players in favourites")

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NVActivityIndicatorView
 
 // The main home View Controller.
 class homeView: templateViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
@@ -22,11 +23,63 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     // Section titles, such as "Top Scorers" and "Most Assists".
     var sectionTitles: [String]!
     
+    var refreshControl: UIRefreshControl!
     
     /* viewDidLoad() */
     
+    
+    override func reloadData(sender:AnyObject) {
+        
+        self.refreshControl.endRefreshing()
+        self.view.addSubview(self.activityIndicator)
+        
+        UIView.animate(withDuration: 0.5, animations: {
+            self.activityIndicator.alpha = 1.0
+            self.tableView.alpha = 0.0
+            }, completion: { (complete: Bool) in
+                // Code to refresh table view
+                // Get the data in the background, and once it has finished create all the subviews.
+                DispatchQueue.global(qos: .background).async {
+                    
+                    // Get the data needed for the tableViews.
+                    self.topScorersData = getPlayerRankings(SortValue: "Goals", StartPosition: 0, EndPosition: 5)
+                    self.topAssistsData = getPlayerRankings(SortValue: "Assists", StartPosition: 0, EndPosition: 3)
+                    self.topPasserData = getPlayerRankings(SortValue: "PassSuccess", StartPosition: 0, EndPosition: 1)
+                    DispatchQueue.main.async {
+                        
+                        // If the data has been received, create all the subViews with the data.
+                        if self.topScorersData.isEmpty == false {
+                            self.tableView.reloadData()
+                            
+                            UIView.animate(withDuration: 1.0, animations: {
+                             self.activityIndicator.alpha = 0.0
+                             self.tableView.alpha = 1.0
+                             }, completion: { (complete: Bool) in
+                             self.activityIndicator.removeFromSuperview()
+                             })
+                            
+                        }
+                            // Otherwise, display the error message.
+                        else {
+                            createErrorMessage(viewController: self, message: "Unable to connect to server.")
+                            
+                            // Fade out activity indicator and remove it from the view.
+                            UIView.animate(withDuration: 0.5, animations: {
+                                self.activityIndicator.alpha = 0.0
+                                }, completion: { (complete: Bool) in
+                                    self.activityIndicator.removeFromSuperview()
+                            })
+                        }
+                    }
+                }
+        })
+    }
+    
+    
     // Called when the view loads.
     override func viewDidLoad() {
+        
+        self.type = .Home
         
         // Call viewDidLoad() in parent view controller.
         super.viewDidLoad()
@@ -34,7 +87,6 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         // Set the current page and title.
         currentView = .Home
         self.title = "Home"
-        self.navBar.type = .Home
         
         // Create loading activity indicator.
         self.activityIndicator = configureActivityIndicator(viewController: self)
@@ -53,13 +105,13 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
                 if self.topScorersData.isEmpty == false {
                     self.createSubViews()
                 }
-                // Otherwise, display the error message.
+                    // Otherwise, display the error message.
                 else {
                     createErrorMessage(viewController: self, message: "Unable to connect to server.")
                     
                     // Fade out activity indicator and remove it from the view.
                     UIView.animate(withDuration: 1.0, animations: {
-                    self.activityIndicator.alpha = 0.0
+                        self.activityIndicator.alpha = 0.0
                         }, completion: { (complete: Bool) in
                             self.activityIndicator.removeFromSuperview()
                     })
@@ -87,6 +139,12 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         self.tableView.backgroundColor = lightGrey
         // Set the alpha to zero so it can be faded in.
         self.tableView.alpha = 0
+        
+        // Add the refresh control.
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.tintColor = UIColor.white
+        self.refreshControl.addTarget(self, action: #selector(reloadData(sender:)), for: UIControlEvents.valueChanged)
+        self.tableView.addSubview(self.refreshControl)
         
         // Add views in correct order.
         self.view.addSubview(self.tableView)
@@ -207,23 +265,39 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     
     // Called when a tableViewCell is selected, i.e. a player has been clicked on.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Select the correct PlayerId depending on which tableView the selected cell is in.
-        let playerData: [String: String]
         
-        if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
-            tableView.deselectRow(at: indexPath, animated: true)
-            playerData = self.topScorersData[(indexPath as NSIndexPath).row - 1]
+        if (indexPath as NSIndexPath).row != 0 && (indexPath as NSIndexPath).row != 6 {
+        
+            // Select the correct PlayerId depending on which tableView the selected cell is in.
+            let playerData: [String: String]
+        
+            if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
+                tableView.deselectRow(at: indexPath, animated: true)
+                playerData = self.topScorersData[(indexPath as NSIndexPath).row - 1]
+            }
+            else {
+                tableView.deselectRow(at: indexPath, animated: true)
+                playerData = self.topAssistsData[(indexPath as NSIndexPath).row - 7]
+            }
+        
+            // Assign value to selectedPlayerData.
+            self.selectedPlayerData = playerData
+        
+            // Perform the segue to the player view.
+            performSegue(withIdentifier: "homePlayerSegue", sender: self)
+            
         }
         else {
-            tableView.deselectRow(at: indexPath, animated: true)
-            playerData = self.topAssistsData[(indexPath as NSIndexPath).row - 7]
+            
+            if (indexPath as NSIndexPath).row == 0 {
+                self.selectedRanking = "Goals"
+            }
+            else {
+                self.selectedRanking = "Assists"
+            }
+            
+            performSegue(withIdentifier: "homeRankingSegue", sender: self)
         }
-        
-        // Assign value to selectedPlayerData.
-        self.selectedPlayerData = playerData
-        
-        // Perform the segue to the player view.
-        performSegue(withIdentifier: "homePlayerSegue", sender: self)
     }
     
     // Called when a segue is about to be performed.
@@ -235,6 +309,7 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         }
         // If a ranking has been selected, send the correct type of ranking to rankingsView.
         else if (segue.identifier == "homeRankingSegue") {
+            //self.tabBarController?.selectedIndex = 1
             let rankingClass = (segue.destination as! rankingsView)
             rankingClass.rankingType = self.selectedRanking
         }

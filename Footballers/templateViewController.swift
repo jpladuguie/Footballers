@@ -30,11 +30,16 @@ class templateViewController: UIViewController {
     var rankingType: String! = "TacklesWon"
     
     
+    var type: viewType!
+    
+    
     /* viewDidLoad() */
     
     // Called when the view loads.
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         
         // Set background colour.
         self.view.backgroundColor = lightGrey
@@ -44,7 +49,7 @@ class templateViewController: UIViewController {
         self.navigationController?.navigationBar.shadowImage = UIImage()
         
         // Create the custom navigation bar.
-        self.navBar = navigationBar(frame: self.view.frame)
+        self.navBar = navigationBar(frame: self.view.frame, type: self.type)
         self.navBar.viewController = self
         self.view.addSubview(self.navBar)
         
@@ -84,6 +89,11 @@ class templateViewController: UIViewController {
             self.navigationItem.rightBarButtonItem = rightBarButton
         }
     }
+    
+    // Called when the view appears.
+    override func viewDidAppear(_ animated: Bool) {
+        self.navBar.updateSearchBar()
+    }
 
     // Called when the search button is pressed.
     @IBAction func searchButtonTouched(_ sender: UIButton) {
@@ -102,6 +112,10 @@ class templateViewController: UIViewController {
         
         // Set the button to the navigation bar.
         self.navigationItem.rightBarButtonItem = rightBarButton
+        
+    }
+    
+    func reloadData(sender:AnyObject) {
         
     }
     

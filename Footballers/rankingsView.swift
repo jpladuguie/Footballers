@@ -25,69 +25,27 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     var players = [[String: String]]()
     
     
-    // Called when the back button is pressed.
-    @IBAction func optionButtonTouched(_ sender: UIButton) {
-        // Open/close the search bar.
-        self.navBar.toggleOptions()
-        
-        // Change the button to the search icon or the close icon depending on whether the search is already open.
-        let rightBarButton = UIBarButtonItem()
-        
-        if self.navBar.viewExtended == true {
-            rightBarButton.customView = self.closeButton
-        }
-        else {
-            rightBarButton.customView = self.searchButton
-        }
-        
-        // Set the button to the navigation bar.
-        self.navigationItem.rightBarButtonItem = rightBarButton
-    }
+    /* viewDidLoad() */
     
-    override func getData() -> Bool {
-        self.players = getPlayerRankings(SortValue: self.rankingType, StartPosition: self.currentStartPosition, EndPosition: self.currentStartPosition + 50)
-        
-        if self.players.isEmpty == false {
-            return true
-        }
-        else {
-            return false
-        }
-    }
-    
-    override func reloadData(sender: AnyObject) {
-        
-        self.currentStartPosition = 0
-        self.bottomReached = false
-        self.title = self.rankingTitle
-        //self.tableView.setContentOffset(CGPoint.zero, animated: true)
-        
-        self.refreshControl.endRefreshing()
-        self.view.addSubview(self.activityIndicator)
-        
-        super.reloadData(sender: self)
-    }
-    
-    
-    
-    /* Called as soon as the view loads. */
-    
+    // Called as soon as the view loads.
     override func viewDidLoad() {
+        // Set the view type.
         self.type = .Rankings
         
+        // Call
         super.viewDidLoad()
         
         // Set the current page and title.
         currentView = .Rankings
-        self.title = "Rankings"
+        self.title = "Goals"
         
-        // Add the search button to the navigation bar.
+        // Add the options button to the navigation bar.
         self.optionsButton = UIButton(type: UIButtonType.custom) as UIButton
         self.optionsButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
         self.optionsButton.setImage(UIImage(named: "config.png"), for: UIControlState())
         self.optionsButton.addTarget(self, action: #selector(rankingsView.optionButtonTouched(_:)), for:.touchUpInside)
         
-        // Add the back bar button to the navigation bar.
+        // Set the navigation bar button to the options button.
         let leftBarButton = UIBarButtonItem()
         leftBarButton.customView = self.optionsButton
         self.navigationItem.leftBarButtonItem = leftBarButton
@@ -95,32 +53,9 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         // Create loading activity indicator.
         self.activityIndicator = configureActivityIndicator(viewController: self)
         self.view.addSubview(self.activityIndicator)
-
-        // Get the data for the players in the background.
-        DispatchQueue.global(qos: .background).async {
-            // Get the data needed for the tableView.
-            self.players = getPlayerRankings(SortValue: self.rankingType, StartPosition: self.currentStartPosition, EndPosition: self.currentStartPosition + 50)
-            
-            // Once the data has been fetched, create the sub views.
-            DispatchQueue.main.async {
-                
-                // If the data has been received, create all the subViews with the data.
-                if self.players.isEmpty == false {
-                    self.createSubViews()
-                }
-                // Otherwise, display the error message.
-                else {
-                    createErrorMessage(viewController: self, message: "Unable to connect to server.")
-                    
-                    // Fade out activity indicator.
-                    UIView.animate(withDuration: 1.0, animations: {
-                        self.activityIndicator.alpha = 0.0
-                        }, completion: { (complete: Bool) in
-                            self.activityIndicator.removeFromSuperview()
-                    })
-                }
-            }
-        }
+        
+        // Get the data and create the sub views.
+        getData()
     }
     
     /* Table View Functions. */
@@ -204,14 +139,55 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    /* Other functions */
+    /* Data Functions */
+    
+    // Get the data.
+    override func getData() {
+        // Run in the background to prevent the UI from freezing.
+        DispatchQueue.global(qos: .background).async {
+            // Create the request.
+            self.players = getPlayerRankings(SortValue: self.rankingType, StartPosition: self.currentStartPosition, EndPosition: self.currentStartPosition + 50)
+            
+            // Create a boolean which is true if the data is successfully received.
+            var success: Bool!
+            
+            // If players is empty, then the data wasn't successfully received, so success should be set to false, and vice versa.
+            if self.players.isEmpty == false {
+                success = true }
+            else {
+                success = false }
+            
+            // Reload the table view and show the correct views.
+            super.getData(success: success)
+            
+        }
+    }
+    
+    // Called either when the table has been pulled down to reload it, or if the ranking type has been changed in the options menu.
+    override func reloadData(sender: AnyObject) {
+        
+        // Reset the start position and bottom reached boolean.
+        self.currentStartPosition = 0
+        self.bottomReached = false
+        
+        // Set the new title to the ranking type if it has changed.
+        self.title = self.rankingTitle
+        
+        // Get the data and reload the table view.
+        super.reloadData(sender: self)
+        
+        // Scroll back to the top of the table view if needed.
+        self.tableView.setContentOffset(CGPoint.zero, animated: true)
+    }
+    
+    /* createSubViews() */
     
     // Create all the subviews and add them to the main view.
     // Includes the main table view, as well as the column titles.
-    func createSubViews() {
+    override func createSubViews() {
         
         // Create player column.
-        let playerLabel = UILabel(frame: CGRect(x: 95.0, y: Double((self.navigationController?.navigationBar.frame.height)! + 25.0), width: 100.0, height: 30.0))
+        /*let playerLabel = UILabel(frame: CGRect(x: 95.0, y: Double((self.navigationController?.navigationBar.frame.height)! + 25.0), width: 100.0, height: 30.0))
         // Set the colour to white, add the text and add to view.
         playerLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
         playerLabel.text = "Player"
@@ -225,10 +201,10 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         statlabel.text = self.rankingTitle
         statlabel.textAlignment = .right
         statlabel.textColor = UIColor.white
-        statlabel.alpha = 0.0
+        statlabel.alpha = 0.0*/
         
         // Create the tableView with the data,
-        self.tableView = UITableView(frame: CGRect(x: 0, y: 100, width: self.view.frame.width, height: self.view.frame.height - 100))
+        self.tableView = UITableView(frame: CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 124))
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
@@ -239,23 +215,54 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         // Add the refresh control.
         self.refreshControl = UIRefreshControl()
         self.refreshControl.tintColor = UIColor.white
-        self.refreshControl.addTarget(self, action: #selector(reloadData(sender:)), for: UIControlEvents.valueChanged)
         self.tableView.addSubview(self.refreshControl)
         
-        self.view.addSubview(playerLabel)
-        self.view.addSubview(statlabel)
+        // Add the views in the correct order.
+        //self.view.addSubview(playerLabel)
+        //self.view.addSubview(statlabel)
         self.view.addSubview(self.tableView)
         self.view.bringSubview(toFront: self.navBar)
         
         // Fade the items in.
-        UIView.animate(withDuration: 1.0, animations: {
+        /*UIView.animate(withDuration: 1.0, animations: {
             playerLabel.alpha = 1.0
             statlabel.alpha = 1.0
-        })
+        })*/
         
         self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView)
     }
-
+    
+    /* Other Functions */
+    
+    // Reload data when table view pulled down and released.
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if self.refreshControl.isRefreshing == true {
+            self.reloadData(sender: self)
+        }
+    }
+    
+    // Called when the back button is pressed.
+    @IBAction func optionButtonTouched(_ sender: AnyObject) {
+        // Open/close the search bar.
+        self.navBar.toggleView(type: .Options)
+        
+         // Change the button to the search icon or the close icon depending on whether the search is already open.
+         let rightBarButton = UIBarButtonItem()
+         
+         if self.navBar.viewExtended == true {
+         rightBarButton.customView = self.closeButton
+         }
+         else {
+         rightBarButton.customView = self.searchButton
+         }
+         
+         // Set the button to the navigation bar.
+         self.navigationItem.rightBarButtonItem = rightBarButton
+    }
+    
+    
+    
+ 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

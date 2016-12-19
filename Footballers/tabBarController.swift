@@ -27,6 +27,8 @@ class tabBarController: UITabBarController, SlidingTabBarDataSource, SlidingTabB
         frame.origin.y -= 11
         frame.size.height += 11
         
+        
+        
         tabBarView = SlidingTabBar(frame: frame, initialTabBarItemIndex: self.selectedIndex)
         tabBarView.tabBarBackgroundColor = darkGrey
         tabBarView.tabBarItemTintColor = UIColor.gray

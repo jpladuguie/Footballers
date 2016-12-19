@@ -23,28 +23,32 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     
     /* viewDidLoad() */
     
-    override func getData() -> Bool {
-        self.topScorersData = getPlayerRankings(SortValue: "Goals", StartPosition: 0, EndPosition: 5)
-        self.topAssistsData = getPlayerRankings(SortValue: "Assists", StartPosition: 0, EndPosition: 3)
-        self.topPasserData = getPlayerRankings(SortValue: "PassSuccess", StartPosition: 0, EndPosition: 1)
-        
-        if self.topScorersData.isEmpty == false {
-            return true
-        }
-        else {
-            return false
+    // Reload data when table view pulled down and released.
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if self.refreshControl.isRefreshing == true {
+            self.reloadData(sender: self)
         }
     }
     
-    override func reloadData(sender:AnyObject) {
+    override func getData() {
         
-        self.refreshControl.endRefreshing()
-        self.view.addSubview(self.activityIndicator)
+        DispatchQueue.global(qos: .background).async {
         
-        super.reloadData(sender: self)
+            self.topScorersData = getPlayerRankings(SortValue: "Goals", StartPosition: 0, EndPosition: 5)
+            self.topAssistsData = getPlayerRankings(SortValue: "Assists", StartPosition: 0, EndPosition: 3)
+            self.topPasserData = getPlayerRankings(SortValue: "PassSuccess", StartPosition: 0, EndPosition: 1)
+            
+            var success: Bool!
+            
+            if self.topScorersData.isEmpty == false {
+                success = true }
+            else {
+                success = false }
         
+            super.getData(success: success)
+            
+        }
     }
-    
     
     // Called when the view loads.
     override func viewDidLoad() {
@@ -63,40 +67,16 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         self.view.addSubview(self.activityIndicator)
         
         // Get the data in the background, and once it has finished create all the subviews.
-        DispatchQueue.global(qos: .background).async {
-            
-            // Get the data needed for the tableViews.
-            self.topScorersData = getPlayerRankings(SortValue: "Goals", StartPosition: 0, EndPosition: 5)
-            self.topAssistsData = getPlayerRankings(SortValue: "Assists", StartPosition: 0, EndPosition: 3)
-            self.topPasserData = getPlayerRankings(SortValue: "PassSuccess", StartPosition: 0, EndPosition: 1)
-            DispatchQueue.main.async {
-                
-                // If the data has been received, create all the subViews with the data.
-                if self.topScorersData.isEmpty == false {
-                    self.createSubViews()
-                }
-                    // Otherwise, display the error message.
-                else {
-                    createErrorMessage(viewController: self, message: "Unable to connect to server.")
-                    
-                    // Fade out activity indicator and remove it from the view.
-                    UIView.animate(withDuration: 1.0, animations: {
-                        self.activityIndicator.alpha = 0.0
-                        }, completion: { (complete: Bool) in
-                            self.activityIndicator.removeFromSuperview()
-                    })
-                }
-            }
-        }
+        getData()
     }
     
     /* createSubViews() */
     
     // Initiate all the subViews, and fade them in.
-    func createSubViews() {
+    override func createSubViews() {
         
         // Create the main table view.
-        self.tableView = UITableView(frame: CGRect(x: 0, y: 70, width: self.view.frame.width, height: self.view.frame.height - 116))
+        self.tableView = UITableView(frame: CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 124))
         // Register the seperate cell classes.
         self.tableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
         self.tableView.register(playerRatingCell.self, forCellReuseIdentifier: NSStringFromClass(playerRatingCell.self))
@@ -113,7 +93,7 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         // Add the refresh control.
         self.refreshControl = UIRefreshControl()
         self.refreshControl.tintColor = UIColor.white
-        self.refreshControl.addTarget(self, action: #selector(reloadData(sender:)), for: UIControlEvents.valueChanged)
+        //self.refreshControl.addTarget(self, action: #selector(reloadData(sender:)), for: UIControlEvents.valueChanged)
         self.tableView.addSubview(self.refreshControl)
         
         // Add views in correct order.
@@ -121,13 +101,6 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         self.view.bringSubview(toFront: self.navBar)
         
         // Fade items in.
-        /*UIView.animate(withDuration: 1.0, animations: {
-            self.tableView.alpha = 1.0
-            self.activityIndicator.alpha = 0.0
-            }, completion: { (complete: Bool) in
-                self.activityIndicator.removeFromSuperview()
-        })*/
-        
         self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView)
         
     }

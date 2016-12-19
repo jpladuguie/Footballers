@@ -107,15 +107,15 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
     func setUpTableView() {
         
         // Create player label.
-        let playerLabel = UILabel(frame: CGRect(x: 95.0, y: Double((self.navigationController?.navigationBar.frame.height)! + 25.0), width: 100.0, height: 30.0))
+        /*let playerLabel = UILabel(frame: CGRect(x: 95.0, y: Double((self.navigationController?.navigationBar.frame.height)! + 25.0), width: 100.0, height: 30.0))
         // Set the colour to white, add the text and add to view.
         playerLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
         playerLabel.text = "Player"
         playerLabel.textColor = UIColor.white
-        playerLabel.alpha = 0.0
+        playerLabel.alpha = 0.0*/
         
         // Create table view.
-        self.playersTableView = UITableView(frame: CGRect(x: 0, y: 100, width: self.view.frame.width, height: self.view.frame.height - 100))
+        self.playersTableView = UITableView(frame: CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 124))
         self.playersTableView.delegate = self
         self.playersTableView.dataSource = self
         self.playersTableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
@@ -123,13 +123,13 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
         self.playersTableView.backgroundColor = lightGrey
         self.playersTableView.alpha = 0.0
         
-        self.view.addSubview(playerLabel)
+        //self.view.addSubview(playerLabel)
         self.view.addSubview(self.playersTableView)
         self.view.bringSubview(toFront: self.navBar)
         
         UIView.animate(withDuration: 1.0, animations: {
             self.playersTableView.alpha = 1.0
-            playerLabel.alpha = 1.0
+            //playerLabel.alpha = 1.0
         })
     }
 

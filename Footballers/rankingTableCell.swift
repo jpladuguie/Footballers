@@ -51,7 +51,7 @@ class rankingTableCell: UITableViewCell {
         
         // Stat value label.
         self.statValueLabel = UILabel()
-        self.statValueLabel.frame = CGRect(x: self.contentView.frame.width, y: 0, width: 35, height: 40)
+        self.statValueLabel.frame = CGRect(x: self.contentView.frame.width - 15, y: 0, width: 50, height: 40)
         self.statValueLabel.textAlignment = .right
         self.statValueLabel.font = UIFont.boldSystemFont(ofSize: 16.0)
         self.statValueLabel.textColor = UIColor.white

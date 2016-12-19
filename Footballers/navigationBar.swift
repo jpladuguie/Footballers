@@ -55,10 +55,15 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
             ["Shots on Target", "ShotSuccess"],
             ["Passes Completed", "PassSuccess"],
             ["Tackles Won per Game", "TacklesWon"],
-            ["Age", "BirthDate"],
+            ["Age", "Age"],
             ["Height", "Height"],
             ["Weight", "Weight"]
     ]
+    
+    enum menuType {
+        case Search
+        case Options
+    }
 
     
     // Called when the view initiates.
@@ -70,11 +75,9 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         // Initiate the class.
         super.init(frame : CGRect(x: -1, y: 0, width: frame.width + 1, height: 64))
         
-        
+        // Keep all subviews within the nav bar view.
         self.clipsToBounds = true
-        
-        
-        
+    
         // Set the screen height.
         self.frameHeight = frame.height
         
@@ -96,8 +99,24 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         
     }
     
-    // Called when the search icon is pressed.
-    func toggleSearch() {
+    
+    
+    func toggleView(type: menuType) {
+        
+        if type == .Search {
+            self.addSubview(self.searchField)
+            self.addSubview(self.divider)
+            self.addSubview(self.searchTableView)
+            self.addSubview(self.noResultsLabel)
+            self.optionsTableView.removeFromSuperview()
+        }
+        else {
+            self.addSubview(self.optionsTableView)
+            self.searchField.removeFromSuperview()
+            self.divider.removeFromSuperview()
+            self.searchTableView.removeFromSuperview()
+            self.noResultsLabel.removeFromSuperview()
+        }
         
         // Switch values for fading items in/out and extending the view depending on whether it is already extended.
         var height: CGFloat!
@@ -115,16 +134,23 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         UIView.animate(withDuration: 0.3, animations: {
             // Change view size.
             self.frame = CGRect(x: -1, y: 0, width: self.frame.width, height: height)
-           
-            self.searchField.alpha = alpha
-            self.divider.alpha = alpha
             
+            if type == .Search {
+            
+                self.searchField.alpha = alpha
+                self.divider.alpha = alpha
+            }
+            else {
+                self.optionsTableView.alpha = alpha
+            }
             }, completion: { (complete: Bool) in
-                // Remove or bring up the keyboard.
-                if self.viewExtended == false {
-                    self.searchField.resignFirstResponder() }
-                else {
-                    self.searchField.becomeFirstResponder()
+                if type == .Search {
+                    // Remove or bring up the keyboard.
+                    if self.viewExtended == false {
+                        self.searchField.resignFirstResponder() }
+                    else {
+                        self.searchField.becomeFirstResponder()
+                    }
                 }
         })
         
@@ -133,30 +159,9 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         
     }
     
-    func toggleOptions() {
-        // Switch values for fading items in/out and extending the view depending on whether it is already extended.
-        var height: CGFloat!
-        var alpha: CGFloat!
-        
-        if self.viewExtended == false {
-            height = self.frameHeight
-            alpha = 1.0 }
-        else {
-            height = 64
-            alpha = 0.0
-        }
-        
-        // Fade items in.
-        UIView.animate(withDuration: 0.3, animations: {
-            // Change view size.
-            self.frame = CGRect(x: -1, y: 0, width: self.frame.width, height: height)
-            self.optionsTableView.alpha = alpha
-        })
-        
-        // Negate the viewExtended variable.
-        self.viewExtended = !self.viewExtended
-    }
     
+    
+        
     func createSearchBar() {
         
         // Create search bar.
@@ -202,7 +207,7 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         self.searchTableView.dataSource = self
         self.searchTableView.alwaysBounceVertical = false
         self.searchTableView.backgroundColor = UIColor.clear
-        self.searchTableView.alpha = 0.0
+        self.searchTableView.alpha = 1.0
         self.searchTableView.rowHeight = 40.0
         self.searchTableView.separatorStyle = UITableViewCellSeparatorStyle.none
         
@@ -318,8 +323,18 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         else {
             self.viewController.rankingType = self.optionValues[indexPath.row][1]
             self.viewController.rankingTitle = self.optionValues[indexPath.row][0]
+            
+            self.viewController.tableView.alpha = 0.0
+            self.viewController.activityIndicator.alpha = 1.0
+            
             self.viewController.reloadData(sender: self)
-            toggleOptions()
+            
+            // Set the button to the navigation bar.
+            let rightBarButton = UIBarButtonItem()
+            rightBarButton.customView = self.viewController.searchButton
+            self.viewController.navigationItem.rightBarButtonItem = rightBarButton
+            
+            toggleView(type: .Options)
         }
         
         
@@ -339,6 +354,13 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         // If there are no results, show the no results label.
         if self.searchedPlayers.count == 0 && self.searchField.text != "" {
             self.noResults = true
+            self.noResultsLabel.alpha = 1.0
+            self.searchTableView.alpha = 0.0
+        }
+        else {
+            self.noResults = false
+            self.noResultsLabel.alpha = 0.0
+            self.searchTableView.alpha = 1.0
         }
     }
     

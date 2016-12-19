@@ -58,7 +58,7 @@ func createErrorMessage(viewController: UIViewController, message: String) {
     errorLabel.alpha = 0.0
     viewController.view.addSubview(errorLabel)
     
-    UIView.animate(withDuration: 1.0, animations: {
+    UIView.animate(withDuration: 0.5, animations: {
         errorLabel.alpha = 1.0
     })
 }

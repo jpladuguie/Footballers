@@ -12,9 +12,6 @@ import NVActivityIndicatorView
 // The main home View Controller.
 class homeView: templateViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
-    // Table view.
-    var tableView: UITableView = UITableView()
-    
     // Data.
     var topScorersData = [[String: String]]()
     var topAssistsData = [[String: String]]()
@@ -23,56 +20,29 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     // Section titles, such as "Top Scorers" and "Most Assists".
     var sectionTitles: [String]!
     
-    var refreshControl: UIRefreshControl!
     
     /* viewDidLoad() */
     
+    override func getData() -> Bool {
+        self.topScorersData = getPlayerRankings(SortValue: "Goals", StartPosition: 0, EndPosition: 5)
+        self.topAssistsData = getPlayerRankings(SortValue: "Assists", StartPosition: 0, EndPosition: 3)
+        self.topPasserData = getPlayerRankings(SortValue: "PassSuccess", StartPosition: 0, EndPosition: 1)
+        
+        if self.topScorersData.isEmpty == false {
+            return true
+        }
+        else {
+            return false
+        }
+    }
     
     override func reloadData(sender:AnyObject) {
         
         self.refreshControl.endRefreshing()
         self.view.addSubview(self.activityIndicator)
         
-        UIView.animate(withDuration: 0.5, animations: {
-            self.activityIndicator.alpha = 1.0
-            self.tableView.alpha = 0.0
-            }, completion: { (complete: Bool) in
-                // Code to refresh table view
-                // Get the data in the background, and once it has finished create all the subviews.
-                DispatchQueue.global(qos: .background).async {
-                    
-                    // Get the data needed for the tableViews.
-                    self.topScorersData = getPlayerRankings(SortValue: "Goals", StartPosition: 0, EndPosition: 5)
-                    self.topAssistsData = getPlayerRankings(SortValue: "Assists", StartPosition: 0, EndPosition: 3)
-                    self.topPasserData = getPlayerRankings(SortValue: "PassSuccess", StartPosition: 0, EndPosition: 1)
-                    DispatchQueue.main.async {
-                        
-                        // If the data has been received, create all the subViews with the data.
-                        if self.topScorersData.isEmpty == false {
-                            self.tableView.reloadData()
-                            
-                            UIView.animate(withDuration: 1.0, animations: {
-                             self.activityIndicator.alpha = 0.0
-                             self.tableView.alpha = 1.0
-                             }, completion: { (complete: Bool) in
-                             self.activityIndicator.removeFromSuperview()
-                             })
-                            
-                        }
-                            // Otherwise, display the error message.
-                        else {
-                            createErrorMessage(viewController: self, message: "Unable to connect to server.")
-                            
-                            // Fade out activity indicator and remove it from the view.
-                            UIView.animate(withDuration: 0.5, animations: {
-                                self.activityIndicator.alpha = 0.0
-                                }, completion: { (complete: Bool) in
-                                    self.activityIndicator.removeFromSuperview()
-                            })
-                        }
-                    }
-                }
-        })
+        super.reloadData(sender: self)
+        
     }
     
     
@@ -151,12 +121,15 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         self.view.bringSubview(toFront: self.navBar)
         
         // Fade items in.
-        UIView.animate(withDuration: 1.0, animations: {
+        /*UIView.animate(withDuration: 1.0, animations: {
             self.tableView.alpha = 1.0
             self.activityIndicator.alpha = 0.0
             }, completion: { (complete: Bool) in
                 self.activityIndicator.removeFromSuperview()
-        })
+        })*/
+        
+        self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView)
+        
     }
     
     /* Table view functions */

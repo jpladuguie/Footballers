@@ -267,7 +267,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     // Called when the back button is pressed.
     @IBAction func backButtonTouched(_ sender: UIButton) {
         // Pop the current player view, and return to the previous view.
-        self.navigationController?.popViewController(animated: true)
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
     // Called when the favourite button is pressed.
@@ -350,19 +350,23 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         self.tableView.alpha = 0
         self.view.addSubview(self.tableView)
         
-        // Fade in each view.
-        UIView.animate(withDuration: 1.0, animations: {
+        // Fade views in.
+        UIView.animate(withDuration: 0.5, animations: {
             playerImageView.alpha = 1.0
             nameLabel.alpha = 1.0
             teamLabel.alpha = 1.0
-            self.tableView.alpha = 1.0
             // Fade out the activity indicator, as the data has finished loading.
             self.activityIndicator.alpha = 0.0
             }, completion: { (complete: Bool) in
                 // Once the animation has finished, remove the activity indicator from the view.
                 self.activityIndicator.removeFromSuperview()
-                return
+                // Fade the table view in.
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.tableView.alpha = 1.0
+                })
         })
+        
+        
     }
     
     // Get the images from the API, such as player image and team image.

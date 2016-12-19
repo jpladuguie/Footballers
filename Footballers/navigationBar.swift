@@ -31,6 +31,9 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
     var cancelButton: UIButton = UIButton()
     var noResultsLabel: UILabel = UILabel()
     
+    // Divider line.
+    var divider: UIImageView = UIImageView()
+    
     // Table views.
     var searchTableView: UITableView = UITableView()
     var optionsTableView: UITableView = UITableView()
@@ -40,9 +43,6 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
     
     // The PlayerId needed for a segue when a player is selected.
     var selectedPlayerData = [String: String]()
-    
-    // Divider line.
-    var divider: UIImageView = UIImageView()
 
     // Option values for rankings view.
     var optionValues: [[String]] = [
@@ -69,6 +69,11 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         
         // Initiate the class.
         super.init(frame : CGRect(x: -1, y: 0, width: frame.width + 1, height: 64))
+        
+        
+        self.clipsToBounds = true
+        
+        
         
         // Set the screen height.
         self.frameHeight = frame.height
@@ -114,21 +119,6 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
             self.searchField.alpha = alpha
             self.divider.alpha = alpha
             
-            if self.viewExtended == false {
-                if self.noResults == true {
-                    self.searchTableView.alpha = 0.0
-                    self.noResultsLabel.alpha = 1.0
-                }
-                
-                else {
-                    self.searchTableView.alpha = 1.0
-                    self.noResultsLabel.alpha = 0.0
-                }
-            }
-            else {
-                self.searchTableView.alpha = 0.0
-                self.noResultsLabel.alpha = 0.0
-            }
             }, completion: { (complete: Bool) in
                 // Remove or bring up the keyboard.
                 if self.viewExtended == false {
@@ -160,9 +150,7 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         UIView.animate(withDuration: 0.3, animations: {
             // Change view size.
             self.frame = CGRect(x: -1, y: 0, width: self.frame.width, height: height)
-            }, completion: { (complete: Bool) in
-            
-                self.optionsTableView.alpha = alpha
+            self.optionsTableView.alpha = alpha
         })
         
         // Negate the viewExtended variable.
@@ -329,6 +317,8 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         
         else {
             self.viewController.rankingType = self.optionValues[indexPath.row][1]
+            self.viewController.rankingTitle = self.optionValues[indexPath.row][0]
+            self.viewController.reloadData(sender: self)
             toggleOptions()
         }
         
@@ -419,40 +409,6 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
                 })
             }
         }
-    }
-    
-    // Called when the search bar selected.
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        // Show cancel button and search tableview, and remove menu tableview.
-        UIView.animate(withDuration: 0.25, animations: {
-            self.cancelButton.alpha = 1.0
-            self.searchTableView.alpha = 1.0
-            }, completion: { (complete: Bool) in
-                //self.mainTableView.removeFromSuperview()
-        })
-    }
-    
-    // Cancel button pressed next to search bar.
-    func searchCanceled(_ sender: UIButton!) {
-        // Remove keyboard.
-        self.searchField.resignFirstResponder()
-        
-        // Reset search bar text.
-        self.searchField.text = ""
-        
-        // Refresh search tableview data.
-        self.searchedPlayers = []
-        let range = NSMakeRange(0, self.searchTableView.numberOfSections)
-        let sections = IndexSet(integersIn: range.toRange() ?? 0..<0)
-        self.searchTableView.reloadSections(sections, with: .automatic)
-        
-        // Remove cancel button and search tableview, and show menu tableview.
-        UIView.animate(withDuration: 0.25, animations: {
-            self.cancelButton.alpha = 0.0
-            self.searchTableView.alpha = 0.0
-            }, completion: { (complete: Bool) in
-                //self.searchTableView.removeFromSuperview()
-        })
     }
     
     required init?(coder aDecoder: NSCoder) {

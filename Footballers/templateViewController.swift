@@ -11,13 +11,19 @@ import NVActivityIndicatorView
 
 // Template class for homeView, rankingsView and favouritesView.
 class templateViewController: UIViewController {
-
+    
+    // Type of view - home, rankings or favourites.
+    var type: viewType!
+    
     // Navigation bar, using the custom navigationBar class.
     var navBar: navigationBar!
     
     // Navigation bar buttons.
     var searchButton: UIButton!
     var closeButton: UIButton!
+    
+    // Table view.
+    var tableView: UITableView = UITableView()
     
     // Activity indicator.
     var activityIndicator: NVActivityIndicatorView!
@@ -27,10 +33,16 @@ class templateViewController: UIViewController {
     var selectedRanking: String?
     
     // Ranking type needed for rankingsView.
-    var rankingType: String! = "TacklesWon"
+    var rankingType: String! = "Goals"
+    // Set default values for page title and ranking type.
+    var rankingTitle: String! = "Goals"
+    
+    // Refresh control.
+    var refreshControl: UIRefreshControl!
     
     
-    var type: viewType!
+    
+    var viewInitialised: Bool = false
     
     
     /* viewDidLoad() */
@@ -115,8 +127,59 @@ class templateViewController: UIViewController {
         
     }
     
+    func getData() -> Bool {
+        return false
+    }
+    
     func reloadData(sender:AnyObject) {
         
+        UIView.animate(withDuration: 0.25, animations: {
+            self.tableView.alpha = 0.0
+            }, completion: { (complete: Bool) in
+                
+                UIView.animate(withDuration: 0.25, animations: {
+                    self.activityIndicator.alpha = 1.0
+                    }, completion: { (complete: Bool) in
+                // Code to refresh table view
+                // Get the data in the background, and once it has finished create all the subviews.
+                DispatchQueue.global(qos: .background).async {
+                    
+                    // Get the data needed for the tableViews.
+                    let success = self.getData()
+                    
+                    DispatchQueue.main.async {
+                        
+                        // If the data has been received, create all the subViews with the data.
+                        if success == true {
+                            self.tableView.reloadData()
+                            self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView)
+                        }
+                            // Otherwise, display the error message.
+                        else {
+                            createErrorMessage(viewController: self, message: "Unable to connect to server.")
+                            
+                            // Fade out activity indicator and remove it from the view.
+                            UIView.animate(withDuration: 0.5, animations: {
+                                self.activityIndicator.alpha = 0.0
+                                }, completion: { (complete: Bool) in
+                                    self.activityIndicator.removeFromSuperview()
+                            })
+                        }
+                    }
+                }
+            })
+        })
+    }
+    
+    func transitionBetweenViews(firstView: UIView, secondView: UIView) {
+        UIView.animate(withDuration: 0.25, animations: {
+            firstView.alpha = 0.0
+            }, completion: { (complete: Bool) in
+                firstView.removeFromSuperview()
+                UIView.animate(withDuration: 0.25, animations: {
+                    secondView.alpha = 1.0
+                })
+        })
     }
     
     override func didReceiveMemoryWarning() {

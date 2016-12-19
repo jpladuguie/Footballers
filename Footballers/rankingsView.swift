@@ -13,9 +13,6 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     // Navigation bar.
     var optionsButton: UIButton!
     
-    // Set default values for page title and ranking type.
-    var rankingTitle: String! = "Tackles Won per Game"
-    
     // currentStartPosition holds the value used in the next call to the API. As the table is scrolled through, it is increased,
     // As players further down in the rankings need to be fetched.
     var currentStartPosition: Int = 0
@@ -26,7 +23,6 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     
     // Player data array and table view.
     var players = [[String: String]]()
-    var tableView: UITableView!
     
     
     // Called when the back button is pressed.
@@ -48,7 +44,30 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         self.navigationItem.rightBarButtonItem = rightBarButton
     }
     
-
+    override func getData() -> Bool {
+        self.players = getPlayerRankings(SortValue: self.rankingType, StartPosition: self.currentStartPosition, EndPosition: self.currentStartPosition + 50)
+        
+        if self.players.isEmpty == false {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    
+    override func reloadData(sender: AnyObject) {
+        
+        self.currentStartPosition = 0
+        self.bottomReached = false
+        self.title = self.rankingTitle
+        //self.tableView.setContentOffset(CGPoint.zero, animated: true)
+        
+        self.refreshControl.endRefreshing()
+        self.view.addSubview(self.activityIndicator)
+        
+        super.reloadData(sender: self)
+    }
+    
     
     
     /* Called as soon as the view loads. */
@@ -217,6 +236,12 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         self.tableView.backgroundColor = lightGrey
         self.tableView.alpha = 0.0
         
+        // Add the refresh control.
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.tintColor = UIColor.white
+        self.refreshControl.addTarget(self, action: #selector(reloadData(sender:)), for: UIControlEvents.valueChanged)
+        self.tableView.addSubview(self.refreshControl)
+        
         self.view.addSubview(playerLabel)
         self.view.addSubview(statlabel)
         self.view.addSubview(self.tableView)
@@ -224,13 +249,11 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         
         // Fade the items in.
         UIView.animate(withDuration: 1.0, animations: {
-            self.tableView.alpha = 1.0
-            self.activityIndicator.alpha = 0.0
             playerLabel.alpha = 1.0
             statlabel.alpha = 1.0
-            }, completion: { (complete: Bool) in
-                self.activityIndicator.removeFromSuperview()
         })
+        
+        self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView)
     }
 
     override func didReceiveMemoryWarning() {

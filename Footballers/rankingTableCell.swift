@@ -44,7 +44,7 @@ class rankingTableCell: UITableViewCell {
         self.nameLabel = UILabel()
         self.nameLabel.frame = CGRect(x: 95, y: 0, width: self.contentView.frame.width, height: 40)
         self.nameLabel.textAlignment = .left
-        self.nameLabel.font = UIFont.systemFont(ofSize: 16.0)
+        self.nameLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightLight)
         self.nameLabel.textColor = UIColor.white
         self.nameLabel.backgroundColor = UIColor.clear
         self.addSubview(self.nameLabel)

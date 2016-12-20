@@ -20,14 +20,16 @@ class templateViewController: UIViewController {
     var navBar: navigationBar!
     
     // Navigation bar buttons.
-    var searchButton: UIButton!
-    var closeButton: UIButton!
+    var searchButton: UIBarButtonItem!
+    var closeButton: UIBarButtonItem!
+    // Options button is only for rankings view.
+    var optionsButton: UIBarButtonItem!
     
     // Activity indicator.
     var activityIndicator: NVActivityIndicatorView!
     
     // Error message if unable to connect to server.
-    var errorLabel: UILabel!
+    var errorLabel: UIButton!
     
     // Table view.
     var tableView: UITableView = UITableView()
@@ -70,33 +72,55 @@ class templateViewController: UIViewController {
         self.navBar.layer.zPosition = CGFloat(MAXFLOAT)
         
         // Add the search button to the navigation bar.
-        self.searchButton = UIButton(type: UIButtonType.custom) as UIButton
-        self.searchButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        self.searchButton.setImage(UIImage(named: "search.png"), for: UIControlState())
-        self.searchButton.addTarget(self, action: #selector(searchButtonTouched(_:)), for:.touchUpInside)
+        let searchButtonView = UIButton(type: UIButtonType.custom) as UIButton
+        searchButtonView.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+        searchButtonView.setImage(UIImage(named: "search.png"), for: UIControlState())
+        searchButtonView.addTarget(self, action: #selector(searchButtonTouched(_:)), for:.touchUpInside)
+        self.searchButton = UIBarButtonItem()
+        self.searchButton.customView = searchButtonView
         
         // Create a close button, but don't add it to the navigation bar yet.
-        self.closeButton = UIButton(type: UIButtonType.custom) as UIButton
-        self.closeButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        self.closeButton.setImage(UIImage(named: "close.png"), for: UIControlState())
-        self.closeButton.addTarget(self, action: #selector(searchButtonTouched(_:)), for:.touchUpInside)
+        let closeButtonView = UIButton(type: UIButtonType.custom) as UIButton
+        closeButtonView.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+        closeButtonView.setImage(UIImage(named: "close.png"), for: UIControlState())
+        closeButtonView.addTarget(self, action: #selector(searchButtonTouched(_:)), for:.touchUpInside)
+        self.closeButton = UIBarButtonItem()
+        self.closeButton.customView = closeButtonView
+        
+        // Create an options button for rankings view.
+        let optionsButtonView = UIButton(type: UIButtonType.custom) as UIButton
+        optionsButtonView.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+        optionsButtonView.setImage(UIImage(named: "config.png"), for: UIControlState())
+        optionsButtonView.addTarget(self, action: #selector(rankingsView.optionButtonTouched(_:)), for:.touchUpInside)
+        self.optionsButton = UIBarButtonItem()
+        self.optionsButton.customView = optionsButtonView
         
         // Set the navigation bar button to the search button.
-        let rightBarButton = UIBarButtonItem()
-        rightBarButton.customView = self.searchButton
-        self.navigationItem.rightBarButtonItem = rightBarButton
+        self.navigationItem.rightBarButtonItem = self.searchButton
         
         // Keep the table view in position.
         self.automaticallyAdjustsScrollViewInsets = false
         
-        self.errorLabel = UILabel(frame: CGRect(x: (self.view.frame.width / 2) - 150, y: (self.view.frame.height / 2) - 15, width: 300, height: 30))
-        // Set the colour to white, add the text and add to view.
-        self.errorLabel.font = UIFont.systemFont(ofSize: 22.0)
-        self.errorLabel.text = "No network connection"
-        self.errorLabel.textColor = UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1.0)
-        self.errorLabel.textAlignment = .center
+        // Create an error label in case it is needed, i.e. if the app is unable to connect to the server.
+        let errorText = NSMutableAttributedString(string: "No network connection", attributes: [NSFontAttributeName:UIFont.systemFont(ofSize: 22.0, weight: UIFontWeightLight)])
+        let errorTextBottomLine = NSMutableAttributedString(string: "\nTap to refresh", attributes: [NSFontAttributeName:UIFont.systemFont(ofSize: 18.0, weight: UIFontWeightLight)])
+        errorText.append(errorTextBottomLine)
+        
+        // Create the error label.
+        self.errorLabel = UIButton(type: .system) as UIButton
+        self.errorLabel.frame = CGRect(x: (self.view.frame.width / 2) - 150, y: (self.view.frame.height / 2) - 30, width: 300, height: 60)
+        // Set it to reload the data when pressed.
+        self.errorLabel.addTarget(self, action: #selector(reloadData(sender:)), for: .touchUpInside)
+        self.errorLabel.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
+        self.errorLabel.titleLabel?.textAlignment = .center
+        self.errorLabel.tintColor = UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1.0)
+        // Set the button's label.
+        self.errorLabel.setAttributedTitle(errorText, for: .normal)
+        // Initialise it with alpha = 0.0 as it should appear off screen at first.
         self.errorLabel.alpha = 0.0
+        // Add it to view.
         self.view.addSubview(self.errorLabel)
+        
     }
     
     /* viewDidDisappear()/viewDidAppear() */
@@ -108,10 +132,8 @@ class templateViewController: UIViewController {
         if self.navBar.viewExtended == true {
             self.navBar.toggleView(type: .Search)
             
-            // Reset the search button.
-            let rightBarButton = UIBarButtonItem()
-            rightBarButton.customView = self.searchButton
-            self.navigationItem.rightBarButtonItem = rightBarButton
+            // Reset the search button, i.e remove the close button.
+            self.navigationItem.rightBarButtonItem = self.searchButton
         }
     }
     
@@ -129,25 +151,20 @@ class templateViewController: UIViewController {
         self.navBar.toggleView(type: .Search)
         
         // Change the button to the search icon or the close icon depending on whether the search is already open.
-        let rightBarButton = UIBarButtonItem()
-        
         if self.navBar.viewExtended == true {
-            rightBarButton.customView = self.closeButton
+            self.navigationItem.setRightBarButton(self.closeButton, animated: true)
+            self.navigationItem.setLeftBarButton(nil, animated: true)
         }
         else {
-            rightBarButton.customView = self.searchButton
+            self.navigationItem.setRightBarButton(self.searchButton, animated: true)
         }
-        
-        // Set the button to the navigation bar.
-        self.navigationItem.rightBarButtonItem = rightBarButton
-        
     }
     
     /* Data functions */
     
     // Gets the data.
     // Called from the getData() method declared below down. This code is generic to all views, so the seperate
-    // getData() method allows for custom code to be added.
+    // getData() method defined further down allows for custom code to be added.
     func getData(success: Bool) {
             
         // At this point the request to get the data has already been made. The success variable depends on whether the data
@@ -188,8 +205,10 @@ class templateViewController: UIViewController {
     // Reloads data in the table view.
     func reloadData(sender:AnyObject) {
         
-        // Ends the refresh control.
-        self.refreshControl.endRefreshing()
+        // End the refresh control if the function is being called after the view has been initialised.
+        if self.viewInitialised == true {
+            self.refreshControl.endRefreshing()
+        }
         
         // Adds the activity indicator to the view.
         self.view.addSubview(self.activityIndicator)
@@ -198,6 +217,8 @@ class templateViewController: UIViewController {
         UIView.animate(withDuration: 0.25, animations: {
             // Fade out the table view.
             self.tableView.alpha = 0.0
+            // Remove the error label if it is already showing.
+            self.errorLabel.alpha = 0.0
             }, completion: { (complete: Bool) in
                 // Fade in the acitivity indicator.
                 UIView.animate(withDuration: 0.25, animations: {
@@ -216,6 +237,22 @@ class templateViewController: UIViewController {
     // Creates the table view and any other views which need initialising.
     func createSubViews() {
         
+        // Create the tableView with the data,
+        self.tableView = UITableView(frame: CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 124))
+        self.tableView.backgroundColor = lightGrey
+        self.tableView.alpha = 0.0
+        
+        // Add the refresh control.
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.tintColor = UIColor.white
+        self.tableView.addSubview(self.refreshControl)
+        
+        // Add the views in the correct order.
+        self.view.addSubview(self.tableView)
+        self.view.bringSubview(toFront: self.navBar)
+        
+        // Fade table view in.
+        self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView)
     }
     
     // Gets the data needed for the view.
@@ -224,6 +261,14 @@ class templateViewController: UIViewController {
     }
     
     /* Other Functions */
+    
+    // Reload data when the table view has been pulled down and released.
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        // Only called when the table view is refreshing, i.e. it has been pulled below the threshold limit.
+        if self.refreshControl.isRefreshing == true {
+            self.reloadData(sender: self)
+        }
+    }
     
     // Transitions between two views by fading out the first view then fading in the second.
     func transitionBetweenViews(firstView: UIView, secondView: UIView) {

@@ -26,6 +26,7 @@ enum viewType {
     case Favourites
 }
 
+// Set the default view to home.
 var currentView = viewType.Home
 
 // Set the host url depending on whether the device is on the same network as the server.

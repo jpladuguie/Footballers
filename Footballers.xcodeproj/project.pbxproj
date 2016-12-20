@@ -24,6 +24,7 @@
 		E82125A91D78BF9A0024D016 /* rankingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125A81D78BF9A0024D016 /* rankingsView.swift */; };
 		E82125AD1D78C24C0024D016 /* favouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125AC1D78C24C0024D016 /* favouritesView.swift */; };
 		E84A6CA41DE8BEAA00127625 /* tabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84A6CA31DE8BEAA00127625 /* tabBarController.swift */; };
+		E84BABFC1E09AB3C006E1AF7 /* detailedRankingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84BABFB1E09AB3C006E1AF7 /* detailedRankingCell.swift */; };
 		E84E1ADD1D7B367A00A0BC48 /* favouriteButtonFull.png in Resources */ = {isa = PBXBuildFile; fileRef = E84E1ADC1D7B367A00A0BC48 /* favouriteButtonFull.png */; };
 		E84E1AE31D7B6B5F00A0BC48 /* whiteLine.png in Resources */ = {isa = PBXBuildFile; fileRef = E84E1AE11D7B6B5F00A0BC48 /* whiteLine.png */; };
 		E86644D71DE9D7CC00AA86BA /* titleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86644D61DE9D7CC00AA86BA /* titleCell.swift */; };
@@ -68,6 +69,7 @@
 		E82125A81D78BF9A0024D016 /* rankingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = rankingsView.swift; sourceTree = "<group>"; };
 		E82125AC1D78C24C0024D016 /* favouritesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = favouritesView.swift; sourceTree = "<group>"; };
 		E84A6CA31DE8BEAA00127625 /* tabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tabBarController.swift; sourceTree = "<group>"; };
+		E84BABFB1E09AB3C006E1AF7 /* detailedRankingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = detailedRankingCell.swift; sourceTree = "<group>"; };
 		E84E1ADC1D7B367A00A0BC48 /* favouriteButtonFull.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favouriteButtonFull.png; sourceTree = "<group>"; };
 		E84E1AE11D7B6B5F00A0BC48 /* whiteLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteLine.png; sourceTree = "<group>"; };
 		E86644D61DE9D7CC00AA86BA /* titleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = titleCell.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 				E8CDFB361DC6A2C500EFE69B /* playerRatingCell.swift */,
 				E8CDFB381DC6B67D00EFE69B /* playerDividerCell.swift */,
 				E8DE7BB61DBA81960031D83D /* rankingTableCell.swift */,
+				E84BABFB1E09AB3C006E1AF7 /* detailedRankingCell.swift */,
 				E86644D61DE9D7CC00AA86BA /* titleCell.swift */,
 				E87F5AF41D78B82500C10A38 /* Main.storyboard */,
 				E87F5AF91D78B82500C10A38 /* LaunchScreen.storyboard */,
@@ -325,6 +328,7 @@
 			files = (
 				E8A0CF4A1DBAC1130047C036 /* PlayerFavouritesData+CoreDataClass.swift in Sources */,
 				E8C713E81D7DF3BF00B717F2 /* playerTopCell.swift in Sources */,
+				E84BABFC1E09AB3C006E1AF7 /* detailedRankingCell.swift in Sources */,
 				E84A6CA41DE8BEAA00127625 /* tabBarController.swift in Sources */,
 				E8DE7BB71DBA81960031D83D /* rankingTableCell.swift in Sources */,
 				E82125901D78B99E0024D016 /* homeView.swift in Sources */,

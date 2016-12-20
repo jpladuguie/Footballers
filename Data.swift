@@ -65,7 +65,18 @@ func getPlayerRankings(SortValue: String, StartPosition: Int, EndPosition: Int) 
     
     // Loop through each player in the data, and append it as a dictionary to the returnData.
     for (_,player):(String, JSON) in players {
-        returnData.append(["PlayerId": player["PlayerId"].rawString()!, "Name": player["Name"].rawString()!, "RegionCode": player["RegionCode"].rawString()!, SortValue: player[SortValue].rawString()!, "Team": player["Team"].rawString()!])
+        
+        // Create the dictionary with the variables which are always present.
+        var playerDict = ["PlayerId": player["PlayerId"].rawString()!, "Name": player["Name"].rawString()!, "RegionCode": player["RegionCode"].rawString()!, "Team": player["Team"].rawString()!, "Age": player["Age"].rawString()!]
+        
+        // If the sort value is "Age", don't add age twice as there will be two identical keys in the dictionary.
+        // If the value isn't age, add it to the dictionary.
+        if SortValue != "Age" {
+            playerDict[SortValue] = player[SortValue].rawString()!
+        }
+        
+        // Add the dictionary to the returnData array.
+        returnData.append(playerDict)
     }
     
     // Return the data.

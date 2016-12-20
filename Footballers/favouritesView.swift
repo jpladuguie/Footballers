@@ -127,7 +127,7 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
         self.view.addSubview(self.playersTableView)
         self.view.bringSubview(toFront: self.navBar)
         
-        UIView.animate(withDuration: 1.0, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
             self.playersTableView.alpha = 1.0
             //playerLabel.alpha = 1.0
         })

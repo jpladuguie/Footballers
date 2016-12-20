@@ -10,9 +10,6 @@ import UIKit
 
 class rankingsView: templateViewController, UITableViewDelegate, UITableViewDataSource {
     
-    // Navigation bar.
-    var optionsButton: UIButton!
-    
     // currentStartPosition holds the value used in the next call to the API. As the table is scrolled through, it is increased,
     // As players further down in the rankings need to be fetched.
     var currentStartPosition: Int = 0
@@ -22,39 +19,32 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     var bottomReached = false
     
     // Player data array and table view.
-    var players = [[String: String]]()
+    var playerData = [[String: String]]()
     
     
     /* viewDidLoad() */
     
     // Called as soon as the view loads.
     override func viewDidLoad() {
+        
         // Set the view type.
         self.type = .Rankings
         
-        // Call
+        // Call viewDidLoad() in parent view controller.
         super.viewDidLoad()
         
         // Set the current page and title.
         currentView = .Rankings
         self.title = "Goals"
         
-        // Add the options button to the navigation bar.
-        self.optionsButton = UIButton(type: UIButtonType.custom) as UIButton
-        self.optionsButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        self.optionsButton.setImage(UIImage(named: "config.png"), for: UIControlState())
-        self.optionsButton.addTarget(self, action: #selector(rankingsView.optionButtonTouched(_:)), for:.touchUpInside)
-        
         // Set the navigation bar button to the options button.
-        let leftBarButton = UIBarButtonItem()
-        leftBarButton.customView = self.optionsButton
-        self.navigationItem.leftBarButtonItem = leftBarButton
+        self.navigationItem.leftBarButtonItem = self.optionsButton
         
         // Create loading activity indicator.
         self.activityIndicator = configureActivityIndicator(viewController: self)
         self.view.addSubview(self.activityIndicator)
         
-        // Get the data and create the sub views.
+        // Get the data in the background, and once it has finished create all the sub views.
         getData()
     }
     
@@ -62,24 +52,27 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     
     // Set the number of rows in table view. It is simply equal to the number of players in the players array.
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.players.count
+        return self.playerData.count
     }
     
     // Set up the table view cells.
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         // Create the cell as a rankingTableCell.
-        let cell: rankingTableCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(rankingTableCell.self), for: indexPath) as! rankingTableCell
+        let cell: detailedRankingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(detailedRankingCell.self), for: indexPath) as! detailedRankingCell
         
-        // Set the values for the ranking position, flag image, player name and statistic value.
+        // Set the values for the ranking position, flag image, player name, statistic value, age and team.
         cell.positionLabel.text = String(indexPath.row + 1)
-        cell.flagImage.image = UIImage(named: String((self.players[(indexPath as NSIndexPath).row]["RegionCode"]?.uppercased())! + ""))
-        cell.nameLabel.text = self.players[(indexPath as NSIndexPath).row]["Name"]
-        cell.statValueLabel.text = self.players[(indexPath as NSIndexPath).row][rankingType]
+        cell.flagImage.image = UIImage(named: String((self.playerData[(indexPath as NSIndexPath).row]["RegionCode"]?.uppercased())! + ""))
+        cell.nameLabel.text = self.playerData[(indexPath as NSIndexPath).row]["Name"]
+        cell.statValueLabel.text = self.playerData[(indexPath as NSIndexPath).row][rankingType]
+        cell.playingPositionValueLabel.text = self.playerData[(indexPath as NSIndexPath).row]["Age"]
+        cell.teamValueLabel.text = self.playerData[(indexPath as NSIndexPath).row]["Team"]
+        
         
         // Load more data as the table view is scrolled down.
         // If the current row is within 20 rows from the bottom, add more rows to the bottom.
-        if (indexPath.row == self.players.count - 20)
+        if (indexPath.row == self.playerData.count - 20)
         {
             // Check whether the bottom has already been reached.
             // If it has, no more data needs to be called.
@@ -100,7 +93,7 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
                     // This is called once the data has been fetched.
                     DispatchQueue.main.async {
                         // Append the new data to the old data.
-                        self.players += morePlayers
+                        self.playerData += morePlayers
                         // Reload the table view data.
                         self.tableView.reloadData()
                     }
@@ -114,7 +107,7 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     
     // Set the row height for the table view.
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40.0
+        return 85.0
     }
     
     // This is called when a row in the table view is selected, i.e. a player has been clicked on.
@@ -123,7 +116,7 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         self.tableView.deselectRow(at: indexPath, animated: true)
         
         // Get the data of the selected player, and save it in the variable selectedPlayerData.
-        self.selectedPlayerData = self.players[(indexPath as NSIndexPath).row]
+        self.selectedPlayerData = self.playerData[(indexPath as NSIndexPath).row]
         
         // Perform the segue to playerView, passing the data from the selected player.
         performSegue(withIdentifier: "rankingsPlayerSegue", sender: self)
@@ -146,13 +139,13 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         // Run in the background to prevent the UI from freezing.
         DispatchQueue.global(qos: .background).async {
             // Create the request.
-            self.players = getPlayerRankings(SortValue: self.rankingType, StartPosition: self.currentStartPosition, EndPosition: self.currentStartPosition + 50)
+            self.playerData = getPlayerRankings(SortValue: self.rankingType, StartPosition: self.currentStartPosition, EndPosition: self.currentStartPosition + 50)
             
             // Create a boolean which is true if the data is successfully received.
             var success: Bool!
             
             // If players is empty, then the data wasn't successfully received, so success should be set to false, and vice versa.
-            if self.players.isEmpty == false {
+            if self.playerData.isEmpty == false {
                 success = true }
             else {
                 success = false }
@@ -186,58 +179,31 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     // Includes the main table view, as well as the column titles.
     override func createSubViews() {
         
-        // Create player column.
-        /*let playerLabel = UILabel(frame: CGRect(x: 95.0, y: Double((self.navigationController?.navigationBar.frame.height)! + 25.0), width: 100.0, height: 30.0))
-        // Set the colour to white, add the text and add to view.
-        playerLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
-        playerLabel.text = "Player"
-        playerLabel.textColor = UIColor.white
-        playerLabel.alpha = 0.0
+        // Create the table view.
+        super.createSubViews()
         
-        // Create statistic label.
-        let statlabel = UILabel(frame: CGRect(x: 200.0, y: Double((self.navigationController?.navigationBar.frame.height)! + 25.0), width: Double(self.view.frame.width - 220.0), height: 30.0))
-        // Set the colour to white, add the text and add to view.
-        statlabel.font = UIFont.boldSystemFont(ofSize: 20.0)
-        statlabel.text = self.rankingTitle
-        statlabel.textAlignment = .right
-        statlabel.textColor = UIColor.white
-        statlabel.alpha = 0.0*/
-        
-        // Create the tableView with the data,
-        self.tableView = UITableView(frame: CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 124))
+        // Add the delegate and data source.
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        self.tableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
-        self.tableView.backgroundColor = lightGrey
-        self.tableView.alpha = 0.0
         
-        // Add the refresh control.
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl.tintColor = UIColor.white
-        self.tableView.addSubview(self.refreshControl)
-        
-        // Add the views in the correct order.
-        //self.view.addSubview(playerLabel)
-        //self.view.addSubview(statlabel)
-        self.view.addSubview(self.tableView)
-        self.view.bringSubview(toFront: self.navBar)
-        
-        // Fade the items in.
-        /*UIView.animate(withDuration: 1.0, animations: {
-            playerLabel.alpha = 1.0
-            statlabel.alpha = 1.0
-        })*/
-        
-        self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView)
+        // Add table view cell.
+        self.tableView.register(detailedRankingCell.self, forCellReuseIdentifier: NSStringFromClass(detailedRankingCell.self))
     }
     
     /* Other Functions */
     
-    // Reload data when table view pulled down and released.
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        if self.refreshControl.isRefreshing == true {
-            self.reloadData(sender: self)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        
+        self.navigationItem.setLeftBarButton(self.optionsButton, animated: true)
+    }
+    
+    override func searchButtonTouched(_ sender: AnyObject) {
+        super.searchButtonTouched(self)
+        
+        if self.navBar.viewExtended != true {
+        
+            self.navigationItem.setLeftBarButton(self.optionsButton, animated: true)
         }
     }
     
@@ -246,22 +212,15 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         // Open/close the search bar.
         self.navBar.toggleView(type: .Options)
         
-         // Change the button to the search icon or the close icon depending on whether the search is already open.
-         let rightBarButton = UIBarButtonItem()
-         
-         if self.navBar.viewExtended == true {
-         rightBarButton.customView = self.closeButton
-         }
-         else {
-         rightBarButton.customView = self.searchButton
-         }
-         
-         // Set the button to the navigation bar.
-         self.navigationItem.rightBarButtonItem = rightBarButton
+        // Change the button to the search icon or the close icon depending on whether the search is already open.
+        if self.navBar.viewExtended == true {
+            self.navigationItem.setRightBarButton(self.closeButton, animated: true)
+            self.navigationItem.setLeftBarButton(nil, animated: true)
+        }
+        else {
+            self.navigationItem.setRightBarButton(self.searchButton, animated: true)
+        }
     }
-    
-    
-    
  
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

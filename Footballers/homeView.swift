@@ -12,47 +12,18 @@ import NVActivityIndicatorView
 // The main home View Controller.
 class homeView: templateViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
-    // Data.
+    // Data variables.
     var topScorersData = [[String: String]]()
     var topAssistsData = [[String: String]]()
     var topPasserData = [[String: String]]()
     
-    // Section titles, such as "Top Scorers" and "Most Assists".
-    var sectionTitles: [String]!
-    
     
     /* viewDidLoad() */
-    
-    // Reload data when table view pulled down and released.
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        if self.refreshControl.isRefreshing == true {
-            self.reloadData(sender: self)
-        }
-    }
-    
-    override func getData() {
-        
-        DispatchQueue.global(qos: .background).async {
-        
-            self.topScorersData = getPlayerRankings(SortValue: "Goals", StartPosition: 0, EndPosition: 5)
-            self.topAssistsData = getPlayerRankings(SortValue: "Assists", StartPosition: 0, EndPosition: 3)
-            self.topPasserData = getPlayerRankings(SortValue: "PassSuccess", StartPosition: 0, EndPosition: 1)
-            
-            var success: Bool!
-            
-            if self.topScorersData.isEmpty == false {
-                success = true }
-            else {
-                success = false }
-        
-            super.getData(success: success)
-            
-        }
-    }
     
     // Called when the view loads.
     override func viewDidLoad() {
         
+        // Set the view type.
         self.type = .Home
         
         // Call viewDidLoad() in parent view controller.
@@ -66,48 +37,18 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         self.activityIndicator = configureActivityIndicator(viewController: self)
         self.view.addSubview(self.activityIndicator)
         
-        // Get the data in the background, and once it has finished create all the subviews.
+        // Get the data in the background, and once it has finished create all the sub views.
         getData()
-    }
-    
-    /* createSubViews() */
-    
-    // Initiate all the subViews, and fade them in.
-    override func createSubViews() {
-        
-        // Create the main table view.
-        self.tableView = UITableView(frame: CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 124))
-        // Register the seperate cell classes.
-        self.tableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
-        self.tableView.register(playerRatingCell.self, forCellReuseIdentifier: NSStringFromClass(playerRatingCell.self))
-        self.tableView.register(titleCell.self, forCellReuseIdentifier: NSStringFromClass(titleCell.self))
-        self.tableView.register(playerDividerCell.self, forCellReuseIdentifier: NSStringFromClass(playerDividerCell.self))
-        // Set the delegate and data source.
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
-        self.tableView.backgroundColor = lightGrey
-        // Set the alpha to zero so it can be faded in.
-        self.tableView.alpha = 0
-        
-        // Add the refresh control.
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl.tintColor = UIColor.white
-        //self.refreshControl.addTarget(self, action: #selector(reloadData(sender:)), for: UIControlEvents.valueChanged)
-        self.tableView.addSubview(self.refreshControl)
-        
-        // Add views in correct order.
-        self.view.addSubview(self.tableView)
-        self.view.bringSubview(toFront: self.navBar)
-        
-        // Fade items in.
-        self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView)
-        
     }
     
     /* Table view functions */
     
     // Set the number of rows in the tableView.
+    // 10 are needed:
+    //  - Top Scorers title
+    //  - 5 for the top scorers
+    //  - Most Assists title
+    //  - 3 for the most assists
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 10
     }
@@ -117,7 +58,8 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         
         // Create cell.
         var cell:UITableViewCell?
-            
+        
+        // Top Scorers title cell.
         if (indexPath as NSIndexPath).row == 0 {
             // Create a cell from the playerDividerCell class.
             let title: titleCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(titleCell.self), for: indexPath) as! titleCell
@@ -127,7 +69,8 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             // Set the main cell to the new one.
             cell = title
         }
-            
+        
+        // Top Scorer cells.
         else if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
             
             // Create the custom cell using the rankingTableCell class..
@@ -149,7 +92,8 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             // Set the cell.
             cell = rankingCell
         }
-            
+        
+        // Most Assists title cell.
         else if (indexPath as NSIndexPath).row == 6 {
             // Create a cell from the playerDividerCell class.
             let title: titleCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(titleCell.self), for: indexPath) as! titleCell
@@ -159,7 +103,8 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             // Set the main cell to the new one.
             cell = title
         }
-                
+            
+        // Most Assist cells.
         else {
             // Create a cell from the playerRatingCell class.
             let ratingCell: playerRatingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerRatingCell.self), for: indexPath) as! playerRatingCell
@@ -193,34 +138,37 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         return cell!
     }
     
-    // Set the row height for all tableViews to 40.0.
+    // Set the row height for the table view cells depending on which cell they are.
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        // Titles
+        // Title cells.
         if (indexPath as NSIndexPath).row == 0 || (indexPath as NSIndexPath).row == 6{
             return 40.0
         }
-        // Top Scorers
+        // Top Scorer cells.
         else if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
             return 40.0
         }
-        // Most Assists
+        // Most Assist cells.
         else {
             return 50.0
         }
     }
     
-    // Called when a tableViewCell is selected, i.e. a player has been clicked on.
+    // This is called when a row in the table view is selected, i.e. a player has been clicked on.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        // If the cell is any cell but the title cells.
         if (indexPath as NSIndexPath).row != 0 && (indexPath as NSIndexPath).row != 6 {
         
             // Select the correct PlayerId depending on which tableView the selected cell is in.
             let playerData: [String: String]
-        
+            
+            // If the cell is a Top Scorers cell use the topScorersData variable.
             if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
                 tableView.deselectRow(at: indexPath, animated: true)
                 playerData = self.topScorersData[(indexPath as NSIndexPath).row - 1]
             }
+            // Otherwise the cell is a Most Assists cell, so use the topAssists variable.
             else {
                 tableView.deselectRow(at: indexPath, animated: true)
                 playerData = self.topAssistsData[(indexPath as NSIndexPath).row - 7]
@@ -233,6 +181,8 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             performSegue(withIdentifier: "homePlayerSegue", sender: self)
             
         }
+            
+        // The cell selected was a title cell.
         else {
             
             if (indexPath as NSIndexPath).row == 0 {
@@ -260,6 +210,56 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             rankingClass.rankingType = self.selectedRanking
         }
     }
+    
+    /* Data Functions */
+    
+    // Get the data.
+    override func getData() {
+        // Run in the background to prevent the UI from freezing.
+        DispatchQueue.global(qos: .background).async {
+            // Create the request.
+            self.topScorersData = getPlayerRankings(SortValue: "Goals", StartPosition: 0, EndPosition: 5)
+            self.topAssistsData = getPlayerRankings(SortValue: "Assists", StartPosition: 0, EndPosition: 3)
+            self.topPasserData = getPlayerRankings(SortValue: "PassSuccess", StartPosition: 0, EndPosition: 1)
+            
+            // Create a boolean which is true if the data is successfully received.
+            var success: Bool!
+            
+            // If topScorersData is empty, then the data wasn't successfully received, so success should be set to false, and vice versa.
+            if self.topScorersData.isEmpty == false {
+                success = true }
+            else {
+                success = false }
+            
+            // Reload the table view and show the correct views.
+            super.getData(success: success)
+            
+        }
+    }
+    
+    /* createSubViews() */
+    
+    // Initiate all the subViews, and fade them in.
+    override func createSubViews() {
+        
+        // Create the table view.
+        super.createSubViews()
+        
+        // Set the delegate and data source.
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        
+        // Remove separators.
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+        
+        // Add table view cells.
+        self.tableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
+        self.tableView.register(playerRatingCell.self, forCellReuseIdentifier: NSStringFromClass(playerRatingCell.self))
+        self.tableView.register(titleCell.self, forCellReuseIdentifier: NSStringFromClass(titleCell.self))
+        
+    }
+    
+    /* Other Functions */
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

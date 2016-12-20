@@ -23,7 +23,8 @@ class playerRatingCell: UITableViewCell {
         self.ratingNameLabel = UILabel()
         self.ratingNameLabel.frame = CGRect(x: 20, y: 0, width: self.contentView.frame.width, height: 35)
         self.ratingNameLabel.textAlignment = .left
-        self.ratingNameLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightUltraLight)
+        //self.ratingNameLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightUltraLight)
+        self.ratingNameLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightLight)
         self.ratingNameLabel.textColor = UIColor.white
         self.ratingNameLabel.backgroundColor = UIColor.clear
         self.addSubview(self.ratingNameLabel)
@@ -32,7 +33,7 @@ class playerRatingCell: UITableViewCell {
         self.ratingValueLabel = UILabel()
         self.ratingValueLabel.frame = CGRect(x: ((self.contentView.frame.width / 3) * 2), y: 0, width: (self.contentView.frame.width / 3) + 35, height: 35)
         self.ratingValueLabel.textAlignment = .right
-        self.ratingValueLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightHeavy)
+        self.ratingValueLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightBold)
         self.ratingValueLabel.textColor = UIColor.white
         self.ratingValueLabel.backgroundColor = UIColor.clear
         self.addSubview(self.ratingValueLabel)

@@ -89,13 +89,13 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
                 // Otherwise, display the error message.
                 else {
                     // Fade out activity indicator.
-                    UIView.animate(withDuration: 1.0, animations: {
+                    UIView.animate(withDuration: 0.5, animations: {
                         self.activityIndicator.alpha = 0.0
                         }, completion: { (complete: Bool) in
                             // Remove activity indicator from view.
                             self.activityIndicator.removeFromSuperview()
                             // Show error message.
-                            createErrorMessage(viewController: self, message: "Unable to connect to server.")
+                            createErrorMessage(viewController: self, message: "No network connection")
                     })
                 }
             }

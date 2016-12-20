@@ -31,6 +31,10 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
         }
     }*/
     
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        
+    }
+    
     override func viewDidLoad() {
         self.type = .Favourites
         
@@ -67,14 +71,31 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
         var cell:UITableViewCell
         
         // Create cell.
-        let rankingCell: rankingTableCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(rankingTableCell.self), for: indexPath) as! rankingTableCell
+        let rankingCell: imageRankingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(imageRankingCell.self), for: indexPath) as! imageRankingCell
         
-        rankingCell.positionLabel.text = String(indexPath.row + 1)
         rankingCell.nameLabel.text = self.players[(indexPath as NSIndexPath).row][1]
+        rankingCell.teamLabel.text = self.players[(indexPath as NSIndexPath).row][3]
         
         let image = UIImage(named: String(self.players[(indexPath as NSIndexPath).row][2].uppercased() + ""))
         
         rankingCell.flagImage.image = image
+        
+        DispatchQueue.main.async {
+        
+        var playerImage: UIImage!
+        
+        do {
+            let imageData = try Data(contentsOf: URL(string: self.players[(indexPath as NSIndexPath).row][4])!, options: NSData.ReadingOptions())
+            playerImage = UIImage(data: imageData)
+        } catch {
+            // If the image cannot be fetched from the API, set it to the default one.
+            playerImage = UIImage(named: "defaultPlayerImage.png")
+            print("No player image found for " + self.players[(indexPath as NSIndexPath).row][1] + ".")
+        }
+
+        
+        rankingCell.profilePhoto.image = playerImage
+        }
         
         // Set cell.
         cell = rankingCell
@@ -83,7 +104,7 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
     
     // Change height for specific rows.
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40.0
+        return 100.0
     }
     
     // Player selected
@@ -106,20 +127,11 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
     
     func setUpTableView() {
         
-        // Create player label.
-        /*let playerLabel = UILabel(frame: CGRect(x: 95.0, y: Double((self.navigationController?.navigationBar.frame.height)! + 25.0), width: 100.0, height: 30.0))
-        // Set the colour to white, add the text and add to view.
-        playerLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
-        playerLabel.text = "Player"
-        playerLabel.textColor = UIColor.white
-        playerLabel.alpha = 0.0*/
-        
         // Create table view.
         self.playersTableView = UITableView(frame: CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 124))
         self.playersTableView.delegate = self
         self.playersTableView.dataSource = self
-        self.playersTableView.register(rankingTableCell.self, forCellReuseIdentifier: NSStringFromClass(rankingTableCell.self))
-        self.playersTableView.separatorStyle = UITableViewCellSeparatorStyle.none
+        self.playersTableView.register(imageRankingCell.self, forCellReuseIdentifier: NSStringFromClass(imageRankingCell.self))
         self.playersTableView.backgroundColor = lightGrey
         self.playersTableView.alpha = 0.0
         

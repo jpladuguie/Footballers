@@ -78,6 +78,8 @@ func savePlayerToFavourites(_ playerData: [String: String]) {
     player.playerId = playerData["PlayerId"]
     player.name = playerData["Name"]
     player.regionCode = playerData["RegionCode"]
+    player.team = playerData["Team"]
+    player.photoUrl = playerData["PhotoUrl"]
     
     // Save changes to playerFavouritesDataModel.
     saveChanges(container: container)
@@ -136,7 +138,7 @@ func getPlayersFromFavourites() -> [[String]] {
     
     // Add each player to the array and return it.
     for player in players {
-        playerData.append([player.playerId!, player.name!, player.regionCode!])
+        playerData.append([player.playerId!, player.name!, player.regionCode!, player.team!, player.photoUrl!])
     }
     
     return playerData

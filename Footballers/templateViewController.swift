@@ -179,8 +179,11 @@ class templateViewController: UIViewController {
                     self.viewInitialised = true
                 }
                 else {
-                    // Otherwise, reload the table view, and fade it in.
+                    // Otherwise, reload the table view.
                     self.tableView.reloadData()
+                    // Scroll back to the top of the table view if needed.
+                    self.tableView.setContentOffset(CGPoint.zero, animated: false)
+                    // Fade the table view back in and remove the activity indicator.
                     self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView)
                 }
             }

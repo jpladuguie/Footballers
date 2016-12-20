@@ -168,9 +168,6 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         
         // Get the data and reload the table view.
         super.reloadData(sender: self)
-        
-        // Scroll back to the top of the table view if needed.
-        self.tableView.setContentOffset(CGPoint.zero, animated: true)
     }
     
     /* createSubViews() */

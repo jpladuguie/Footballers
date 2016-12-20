@@ -154,7 +154,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         else if ((indexPath as NSIndexPath).row == 2 || (indexPath as NSIndexPath).row == 7) {
             
             // Create a cell from the playerDividerCell class.
-            let titleCell: playerDividerCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerDividerCell.self), for: indexPath) as! playerDividerCell
+            let titleCell: dividerCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(dividerCell.self), for: indexPath) as! dividerCell
             
             // Set the main cell to the new one.
             cell = titleCell
@@ -281,6 +281,8 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         }
         else {
             // Otherwise, add the player to favourites.
+            // The player's photo url is needed so must be added to playerData.
+            self.playerData["PhotoUrl"] = self.player.photoUrl
             savePlayerToFavourites(self.playerData)
         }
         
@@ -341,7 +343,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         self.tableView.register(playerSecondCell.self, forCellReuseIdentifier: NSStringFromClass(playerSecondCell.self))
         self.tableView.register(playerRatingCell.self, forCellReuseIdentifier: NSStringFromClass(playerRatingCell.self))
         self.tableView.register(playerStatCell.self, forCellReuseIdentifier: NSStringFromClass(playerStatCell.self))
-        self.tableView.register(playerDividerCell.self, forCellReuseIdentifier: NSStringFromClass(playerDividerCell.self))
+        self.tableView.register(dividerCell.self, forCellReuseIdentifier: NSStringFromClass(dividerCell.self))
         // Set the delegate and data source.
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -375,7 +377,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         
         // Attempt to get the player image from the API.
         do {
-            let imageData = try Data(contentsOf: URL(string: self.player.imageUrl!)!, options: NSData.ReadingOptions())
+            let imageData = try Data(contentsOf: URL(string: self.player.photoUrl!)!, options: NSData.ReadingOptions())
             self.playerImage = UIImage(data: imageData)
         } catch {
             // If the image cannot be fetched from the API, set it to the default one.
@@ -385,7 +387,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         
         // Attempt to get the team image from the API.
         do {
-            let imageData = try Data(contentsOf: URL(string: self.player.teamImageUrl!)!, options: NSData.ReadingOptions())
+            let imageData = try Data(contentsOf: URL(string: self.player.teamPhotoUrl!)!, options: NSData.ReadingOptions())
             self.teamImage = UIImage(data: imageData)
         } catch {
             // If the image cannot be fetched from the API, set it to the default one.

@@ -19,8 +19,8 @@ class Player {
     // Player id.
     let id: String
     // Url for player profile image and team crest image.
-    var imageUrl: String?
-    var teamImageUrl: String?
+    var photoUrl: String?
+    var teamPhotoUrl: String?
     // Player personal details, e.g. age, nationality and height.
     var personalDetails = [String: String]()
     // Player ratings.
@@ -44,8 +44,8 @@ class Player {
             self.dataFetched = true
         
             // Set the profile image and team image urls.
-            self.imageUrl = data["PhotoUrl"].rawString()!
-            self.teamImageUrl = hostUrl + "/TeamImages/" + data["TeamId"].rawString()! + ".png"
+            self.photoUrl = data["PhotoUrl"].rawString()!
+            self.teamPhotoUrl = hostUrl + "/TeamImages/" + data["TeamId"].rawString()! + ".png"
         
             // Parse the data to get the personal details. Personal details never need to be loaded
             // From url again after the player has been initialised.

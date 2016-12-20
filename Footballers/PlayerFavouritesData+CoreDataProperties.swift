@@ -19,5 +19,7 @@ extension PlayerFavouritesData {
     @NSManaged public var playerId: String?
     @NSManaged public var name: String?
     @NSManaged public var regionCode: String?
+    @NSManaged public var team: String?
+    @NSManaged public var photoUrl: String?
 
 }

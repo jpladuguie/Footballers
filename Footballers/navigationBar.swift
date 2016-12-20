@@ -325,7 +325,7 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         
         // Create the divider.
         self.divider.image = UIImage(named: "whiteLine.png")
-        self.divider.frame = CGRect(x: 15.0, y: 110.0, width: self.frame.width - 30, height: 1.0)
+        self.divider.frame = CGRect(x: 15.0, y: 110.0, width: self.frame.width - 30, height: 0.5)
         self.divider.alpha = 0.0
         
         // Create no results label.

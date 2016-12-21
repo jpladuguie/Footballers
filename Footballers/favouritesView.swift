@@ -10,54 +10,61 @@ import UIKit
 
 class favouritesView: templateViewController, UITableViewDelegate, UITableViewDataSource {
 
-    // Player data array and tableView.
-    var players = [[String]]()
-    var playersTableView: UITableView!
-    var isTableViewSetUp: Bool = false
+    // Player data array.
+    var players = [[String: String]]()
     
-    /*override func viewDidAppear(_ animated: Bool) {
-        self.players = getPlayersFromFavourites()
-        if self.players.count != 0 {
-            if isTableViewSetUp == false {
-                setUpTableView()
-                isTableViewSetUp = true
-            }
-            else {
-                self.playersTableView.reloadData()
-            }
-        }
-        else {
-            createErrorMessage(viewController: self, message: "No players in favourites")
-        }
-    }*/
+    // Player image array.
+    var playerImages = [String: UIImage]()
     
-    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        
-    }
+    // No players label. Shown if there are no players in favourites.
+    var noPlayersLabel: UILabel!
     
+    // Button on the left-hand side of the nav bar which allows the table view to be edited, i.e. remove players.
+    var editButton: UIBarButtonItem!
+    
+    
+    /* viewDidLoad() */
+    
+    // Called when the view loads.
     override func viewDidLoad() {
+        
+        // Set the view type.
         self.type = .Favourites
         
+        // Call viewDidLoad() in parent view controller.
         super.viewDidLoad()
         
-        currentView = .Favourites
+        // Set the current page and title.
         self.title = "Favourites"
         
-        self.players = getPlayersFromFavourites()
+        // Set the no players label.
+        self.noPlayersLabel = createErrorMessage(message: "No players in favourites")
+        self.view.addSubview(self.noPlayersLabel)
         
-        if self.players.count != 0 {
-            if isTableViewSetUp == false {
-                setUpTableView()
-                isTableViewSetUp = true
-            }
-            else {
-                self.playersTableView.reloadData()
-            }
-        }
-        else {
-            createErrorMessage(viewController: self, message: "No players in favourites")
-        }
+        // Create a nav bar button to allow editing.
+        self.editButton = UIBarButtonItem(title: "Edit", style: UIBarButtonItemStyle.plain, target: self, action: #selector(editTableView(_:)))
+        self.editButton.tintColor = UIColor.white
+        self.navigationItem.leftBarButtonItem = self.editButton
     }
+    
+    /* viewWillAppear() */
+    
+    // Called when the view is about to appear.
+    // Reloads the table view data, in case players have been added/removed from favourites.
+    override func viewWillAppear(_ animated: Bool) {
+        
+        super.viewDidAppear(true)
+        
+        // Reload the data in the background to prevent the UI from freezing.
+        DispatchQueue.main.async {
+            self.getData()
+        }
+        
+        // Reset edit button if a player has been selected from search.
+        self.navigationItem.setLeftBarButton(self.editButton, animated: true)
+    }
+    
+    /* Table view functions */
     
     // Number of rows in tableview.
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -73,29 +80,14 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
         // Create cell.
         let rankingCell: imageRankingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(imageRankingCell.self), for: indexPath) as! imageRankingCell
         
-        rankingCell.nameLabel.text = self.players[(indexPath as NSIndexPath).row][1]
-        rankingCell.teamLabel.text = self.players[(indexPath as NSIndexPath).row][3]
+        rankingCell.nameLabel.text = self.players[(indexPath as NSIndexPath).row]["Name"]
+        rankingCell.teamLabel.text = self.players[(indexPath as NSIndexPath).row]["Team"]
         
-        let image = UIImage(named: String(self.players[(indexPath as NSIndexPath).row][2].uppercased() + ""))
+        let image = UIImage(named: String((self.players[(indexPath as NSIndexPath).row]["RegionCode"]?.uppercased())! + ""))
         
         rankingCell.flagImage.image = image
+        rankingCell.profilePhoto.image = self.playerImages[self.players[(indexPath as NSIndexPath).row]["PlayerId"]!]
         
-        DispatchQueue.main.async {
-        
-        var playerImage: UIImage!
-        
-        do {
-            let imageData = try Data(contentsOf: URL(string: self.players[(indexPath as NSIndexPath).row][4])!, options: NSData.ReadingOptions())
-            playerImage = UIImage(data: imageData)
-        } catch {
-            // If the image cannot be fetched from the API, set it to the default one.
-            playerImage = UIImage(named: "defaultPlayerImage.png")
-            print("No player image found for " + self.players[(indexPath as NSIndexPath).row][1] + ".")
-        }
-
-        
-        rankingCell.profilePhoto.image = playerImage
-        }
         
         // Set cell.
         cell = rankingCell
@@ -104,15 +96,64 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
     
     // Change height for specific rows.
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100.0
+        return 85.0
+    }
+    
+    func editTableView(_ sender: AnyObject) {
+        // Only allow editing if there are already players in favourites.
+        if self.players.isEmpty == false {
+            // Change the nav bar button depending on whether the editing is beginning or ending.
+            if self.tableView.isEditing == true {
+                self.navigationItem.leftBarButtonItem?.title = "Edit" }
+            else {
+                self.navigationItem.leftBarButtonItem?.title = "Done" }
+            
+            // Change the editing mode of the table view.
+            self.tableView.setEditing(!self.tableView.isEditing, animated: true)
+        }
+    }
+    
+    // Allows swipe to edit.
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    // Called when a cell is edited.
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
+    {
+        // If the cell is deleted.
+        if editingStyle == .delete
+        {
+            // Remove the selected player from favourites.
+            removePlayerFromFavourites(self.players[(indexPath.row)]["PlayerId"]!)
+            
+            // Update players array.
+            self.players.remove(at: indexPath.row)
+            
+            // Delete the row from the table view.
+            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+            
+            // If there are no more players in favourites.
+            if self.players.isEmpty == true {
+                // Stop the table view from editing.
+                self.tableView.isEditing = false
+                
+                // Reset the edit button.
+                self.navigationItem.leftBarButtonItem?.title = "Edit"
+                
+                // Remove the table view and show the 'no players' label.
+                self.transitionBetweenViews(firstView: self.tableView, secondView: self.noPlayersLabel, removeFirstView: false)
+                
+            }
+        }
     }
     
     // Player selected
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.playersTableView.deselectRow(at: indexPath, animated: true)
-        self.selectedPlayerData["PlayerId"] = self.players[(indexPath as NSIndexPath).row][0]
-        self.selectedPlayerData["Name"] = self.players[(indexPath as NSIndexPath).row][1]
-        self.selectedPlayerData["RegionCode"] = self.players[(indexPath as NSIndexPath).row][2]
+        self.tableView.deselectRow(at: indexPath, animated: true)
+        
+        self.selectedPlayerData = self.players[(indexPath as NSIndexPath).row]
+        
         performSegue(withIdentifier: "favouritesPlayerSegue", sender: self)
     }
     
@@ -125,25 +166,112 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    func setUpTableView() {
+    /* createSubViews() */
+    
+    // Initiate all the subViews, and fade them in.
+    override func createSubViews() {
         
-        // Create table view.
-        self.playersTableView = UITableView(frame: CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 124))
-        self.playersTableView.delegate = self
-        self.playersTableView.dataSource = self
-        self.playersTableView.register(imageRankingCell.self, forCellReuseIdentifier: NSStringFromClass(imageRankingCell.self))
-        self.playersTableView.backgroundColor = lightGrey
-        self.playersTableView.alpha = 0.0
+        // Create the table view.
+        super.createSubViews()
         
-        //self.view.addSubview(playerLabel)
-        self.view.addSubview(self.playersTableView)
-        self.view.bringSubview(toFront: self.navBar)
+        // Set the delegate and data source.
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
         
-        UIView.animate(withDuration: 0.5, animations: {
-            self.playersTableView.alpha = 1.0
-            //playerLabel.alpha = 1.0
-        })
+        // Add table view cells.
+        self.tableView.register(imageRankingCell.self, forCellReuseIdentifier: NSStringFromClass(imageRankingCell.self))
+        
+        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+
     }
+    
+    /* Data Functions */
+    
+    // Gets the data, including the images, for all the players in favourites.
+    override func getData() {
+        
+        // Get players data from CoreData.
+        self.players = getPlayersFromFavourites()
+        
+        // Check whether there are any players in favourites.
+        if self.players.count != 0 {
+            // If there is, create the table view in the background, as the images must be fetched.
+            DispatchQueue.main.async {
+                // If the view hasn't been initialised, i.e. this is the first time it has been called, create all subviews.
+                if self.viewInitialised == false {
+                    self.getImages()
+                    self.createSubViews()
+                    self.viewInitialised = true
+                }
+                // Otherwise, get the images and reload the table view.
+                else {
+                    self.getImages()
+                    
+                    // Remove the no players label if needed, and make sure the alpha of the table view is 1.0.
+                    self.transitionBetweenViews(firstView: self.noPlayersLabel, secondView: self.tableView, removeFirstView: false)
+                    
+                    // Reload the table view.
+                    DispatchQueue.main.async {
+                        UIView.transition(with: self.tableView, duration: 0.25, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: nil)
+                    }
+                }
+            }
+        }
+        // Otherwise display an error message saying there are no players in favourites.
+        else {
+            // Remove the activity indicator.
+            self.activityIndicator.removeFromSuperview()
+            
+            self.tableView.reloadData()
+            
+            // Remove the table view, and show the no players label.
+            self.transitionBetweenViews(firstView: self.tableView, secondView: self.noPlayersLabel, removeFirstView: false)
+        }
+    }
+    
+    // Gets the image for all the players in self.players.
+    // It only gets the images needed; ones which have already been loaded won't be fetched again.
+    func getImages() {
+        
+        // Create a temporary dictionary to hold the player images.
+        // This prevents images which have already been loaded being loaded again. Only the new players which have been added
+        // Will have to have their image fetched from the server.
+        var tempImages = [String: UIImage]()
+
+        // Loop through each player which will be in the table view.
+        for player in self.players {
+            // If their image has already been received, add it to the temp dictionary.
+            if let image = self.playerImages[player["PlayerId"]!] {
+                tempImages[player["PlayerId"]!] = image
+            }
+            // Otherwise, fetch the image from the server and add it to the temp dictionary.
+            else {
+                // Add it to the temp dictionary.
+                tempImages[player["PlayerId"]!] = getPlayerImage(url: player["PhotoUrl"]!)
+            }
+        }
+            
+        // Set playerImages to the temp dictionary.
+        self.playerImages = tempImages
+        
+    }
+    
+    /* Other Functions */
+    
+    // Remove the edit button when searching.
+    override func searchButtonTouched(_ sender: AnyObject) {
+        super.searchButtonTouched(self)
+        
+        // If the view is extended a search is active so remove the edit button.
+        if self.navBar.viewExtended == true {
+            self.navigationItem.setLeftBarButton(nil, animated: true)}
+        // Otherwise add it back.
+        else {
+            self.navigationItem.setLeftBarButton(self.editButton, animated: true)}
+    }
+    
+    // Prevent refresh control being called when scrolling.
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

@@ -45,6 +45,8 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
     var selectedPlayerData = [String: String]()
 
     // Option values for rankings view.
+    // The first element in each sub-array is the name of the option which will appear on the screen, and the second element
+    // Is the name of the value needed for the call to the API.
     var optionValues: [[String]] = [
             ["Goals", "Goals"],
             ["Assists", "Assists"],
@@ -60,11 +62,6 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
             ["Weight (kg)", "Weight"]
     ]
     
-    // The different types of menu.
-    enum menuType {
-        case Search
-        case Options
-    }
 
     /* init() */
     

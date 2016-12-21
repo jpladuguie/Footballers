@@ -21,6 +21,9 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     // Player data array and table view.
     var playerData = [[String: String]]()
     
+    // Current menu open/last opened.
+    var currentMenuType: menuType?
+    
     
     /* viewDidLoad() */
     
@@ -33,16 +36,11 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         // Call viewDidLoad() in parent view controller.
         super.viewDidLoad()
         
-        // Set the current page and title.
-        currentView = .Rankings
+        // Set the title.
         self.title = "Goals"
         
         // Set the navigation bar button to the options button.
         self.navigationItem.leftBarButtonItem = self.optionsButton
-        
-        // Create loading activity indicator.
-        self.activityIndicator = configureActivityIndicator(viewController: self)
-        self.view.addSubview(self.activityIndicator)
         
         // Get the data in the background, and once it has finished create all the sub views.
         getData()
@@ -185,38 +183,59 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         
         // Add table view cell.
         self.tableView.register(detailedRankingCell.self, forCellReuseIdentifier: NSStringFromClass(detailedRankingCell.self))
+        
+        // Add refresh control to table view.
+        self.tableView.addSubview(self.refreshControl)
     }
     
     /* Other Functions */
     
+    // Called when the view will disappear.
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         
+        // Reset the options button.
         self.navigationItem.setLeftBarButton(self.optionsButton, animated: true)
     }
     
+    // Called when the right-hand navigation bar button is called.
     override func searchButtonTouched(_ sender: AnyObject) {
-        super.searchButtonTouched(self)
         
-        if self.navBar.viewExtended != true {
-        
+        // When the view is extended, hide the options button and show a close button on the right.
+        // When the view is not extended, show both buttons.
+        if self.navBar.viewExtended == true {
             self.navigationItem.setLeftBarButton(self.optionsButton, animated: true)
-        }
+            self.navigationItem.setRightBarButton(self.searchButton, animated: true)}
+        else {
+            // If the view is not open, then search is being selected, so change the current menu variable accordingly.
+            self.currentMenuType = .Search
+            self.navigationItem.setRightBarButton(self.closeButton, animated: true)
+            self.navigationItem.setLeftBarButton(nil, animated: true)}
+        
+        // Open/close the search/options menu depending on which one is currently active.
+        if self.currentMenuType == .Options {
+            self.navBar.toggleView(type: .Options)}
+        else {
+            self.navBar.toggleView(type: .Search)}
     }
     
-    // Called when the back button is pressed.
+    // Called when the left-hand navigation bar button is called.
     @IBAction func optionButtonTouched(_ sender: AnyObject) {
-        // Open/close the search bar.
-        self.navBar.toggleView(type: .Options)
-        
-        // Change the button to the search icon or the close icon depending on whether the search is already open.
+    
+        // Change the buttons as described above depending on whether the menu is open or closed.
         if self.navBar.viewExtended == true {
-            self.navigationItem.setRightBarButton(self.closeButton, animated: true)
-            self.navigationItem.setLeftBarButton(nil, animated: true)
-        }
+            self.navigationItem.setRightBarButton(self.searchButton, animated: true)}
         else {
-            self.navigationItem.setRightBarButton(self.searchButton, animated: true)
-        }
+            // If the view is not open, then options is being selected, so change the current menu variable accordingly.
+            self.currentMenuType = .Options
+            self.navigationItem.setRightBarButton(self.closeButton, animated: true)
+            self.navigationItem.setLeftBarButton(nil, animated: true)}
+        
+        // Open/close the search/options menu depending on which one is currently active.
+        if self.currentMenuType == .Options {
+            self.navBar.toggleView(type: .Options)}
+        else {
+            self.navBar.toggleView(type: .Search)}
     }
  
     override func didReceiveMemoryWarning() {

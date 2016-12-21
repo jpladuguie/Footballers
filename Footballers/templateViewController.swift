@@ -98,28 +98,15 @@ class templateViewController: UIViewController {
         // Set the navigation bar button to the search button.
         self.navigationItem.rightBarButtonItem = self.searchButton
         
+        // Create loading activity indicator.
+        self.activityIndicator = configureActivityIndicator(viewController: self)
+        self.view.addSubview(self.activityIndicator)
+        
         // Keep the table view in position.
         self.automaticallyAdjustsScrollViewInsets = false
         
-        // Create an error label in case it is needed, i.e. if the app is unable to connect to the server.
-        let errorText = NSMutableAttributedString(string: "No network connection", attributes: [NSFontAttributeName:UIFont.systemFont(ofSize: 22.0, weight: UIFontWeightLight)])
-        let errorTextBottomLine = NSMutableAttributedString(string: "\nTap to refresh", attributes: [NSFontAttributeName:UIFont.systemFont(ofSize: 18.0, weight: UIFontWeightLight)])
-        errorText.append(errorTextBottomLine)
-        
-        // Create the error label.
-        self.errorLabel = UIButton(type: .system) as UIButton
-        self.errorLabel.frame = CGRect(x: (self.view.frame.width / 2) - 150, y: (self.view.frame.height / 2) - 30, width: 300, height: 60)
-        // Set it to reload the data when pressed.
-        self.errorLabel.addTarget(self, action: #selector(reloadData(sender:)), for: .touchUpInside)
-        self.errorLabel.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
-        self.errorLabel.titleLabel?.textAlignment = .center
-        self.errorLabel.tintColor = UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1.0)
-        // Set the button's label.
-        self.errorLabel.setAttributedTitle(errorText, for: .normal)
-        // Initialise it with alpha = 0.0 as it should appear off screen at first.
-        self.errorLabel.alpha = 0.0
-        // Add it to view.
-        self.view.addSubview(self.errorLabel)
+        // Create error label if the data is unable to be loaded.
+        createErrorLabel()
         
     }
     
@@ -153,7 +140,6 @@ class templateViewController: UIViewController {
         // Change the button to the search icon or the close icon depending on whether the search is already open.
         if self.navBar.viewExtended == true {
             self.navigationItem.setRightBarButton(self.closeButton, animated: true)
-            self.navigationItem.setLeftBarButton(nil, animated: true)
         }
         else {
             self.navigationItem.setRightBarButton(self.searchButton, animated: true)
@@ -184,7 +170,7 @@ class templateViewController: UIViewController {
                     // Scroll back to the top of the table view if needed.
                     self.tableView.setContentOffset(CGPoint.zero, animated: false)
                     // Fade the table view back in and remove the activity indicator.
-                    self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView)
+                    self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView, removeFirstView: true)
                 }
             }
             // Otherwise, display the error message.
@@ -192,15 +178,7 @@ class templateViewController: UIViewController {
                 self.view.bringSubview(toFront: self.navBar)
                     
                 // Fade out activity indicator and remove it from the view.
-                UIView.animate(withDuration: 0.5, animations: {
-                    self.activityIndicator.alpha = 0.0
-                    }, completion: { (complete: Bool) in
-                        self.activityIndicator.removeFromSuperview()
-                        //createErrorMessage(viewController: self, message: "Unable to connect to server.")
-                        UIView.animate(withDuration: 0.5, animations: {
-                            self.errorLabel.alpha = 1.0
-                        })
-                })
+                self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.errorLabel, removeFirstView: true)
             }
         }
     }
@@ -248,14 +226,13 @@ class templateViewController: UIViewController {
         // Add the refresh control.
         self.refreshControl = UIRefreshControl()
         self.refreshControl.tintColor = UIColor.white
-        self.tableView.addSubview(self.refreshControl)
         
         // Add the views in the correct order.
         self.view.addSubview(self.tableView)
         self.view.bringSubview(toFront: self.navBar)
         
         // Fade table view in.
-        self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView)
+        self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView, removeFirstView: true)
     }
     
     // Gets the data needed for the view.
@@ -264,6 +241,34 @@ class templateViewController: UIViewController {
     }
     
     /* Other Functions */
+    
+    // Creates the error button and adds it to view.
+    func createErrorLabel() {
+        
+        // Create an error label in case it is needed, i.e. if the app is unable to connect to the server.
+        let errorText = NSMutableAttributedString(string: "No network connection", attributes: [NSFontAttributeName:UIFont.systemFont(ofSize: 22.0, weight: UIFontWeightLight)])
+        let errorTextBottomLine = NSMutableAttributedString(string: "\nTap to refresh", attributes: [NSFontAttributeName:UIFont.systemFont(ofSize: 18.0, weight: UIFontWeightLight)])
+        errorText.append(errorTextBottomLine)
+        
+        // Create the error label.
+        self.errorLabel = UIButton(type: .system) as UIButton
+        self.errorLabel.frame = CGRect(x: (self.view.frame.width / 2) - 150, y: (self.view.frame.height / 2) - 30, width: 300, height: 60)
+        // Set it to reload the data when pressed.
+        self.errorLabel.addTarget(self, action: #selector(reloadData(sender:)), for: .touchUpInside)
+        self.errorLabel.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
+        self.errorLabel.titleLabel?.textAlignment = .center
+        self.errorLabel.tintColor = UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1.0)
+        // Set the button's label.
+        self.errorLabel.setAttributedTitle(errorText, for: .normal)
+        // Initialise it with alpha = 0.0 as it should appear off screen at first.
+        self.errorLabel.alpha = 0.0
+        // Add it to view.
+        self.view.addSubview(self.errorLabel)
+    }
+    
+    func createNavBarButton() {
+        
+    }
     
     // Reload data when the table view has been pulled down and released.
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -274,13 +279,15 @@ class templateViewController: UIViewController {
     }
     
     // Transitions between two views by fading out the first view then fading in the second.
-    func transitionBetweenViews(firstView: UIView, secondView: UIView) {
+    func transitionBetweenViews(firstView: UIView, secondView: UIView, removeFirstView: Bool) {
         UIView.animate(withDuration: 0.25, animations: {
             // Fade the first view out.
             firstView.alpha = 0.0
             }, completion: { (complete: Bool) in
-                // Remove the first view from view.
-                firstView.removeFromSuperview()
+                // If removeFirstView bool is true, remove the first view from view.
+                if removeFirstView == true {
+                    firstView.removeFromSuperview()
+                }
                 UIView.animate(withDuration: 0.25, animations: {
                     // Fade the second view in.
                     secondView.alpha = 1.0

@@ -118,12 +118,12 @@ func removePlayerFromFavourites(_ playerId: String) {
 }
 
 // Returns all the player saved in favourites.
-func getPlayersFromFavourites() -> [[String]] {
+func getPlayersFromFavourites() -> [[String: String]] {
     // Set up data container.
     let container = setUpDataContainer()
     
     // Set up players variable to store the data.
-    var playerData = [[String]]()
+    var playerData = [[String: String]]()
     
     // Create the request.
     var players = [PlayerFavouritesData]()
@@ -138,7 +138,7 @@ func getPlayersFromFavourites() -> [[String]] {
     
     // Add each player to the array and return it.
     for player in players {
-        playerData.append([player.playerId!, player.name!, player.regionCode!, player.team!, player.photoUrl!])
+        playerData.append(["PlayerId": player.playerId!, "Name": player.name!, "RegionCode": player.regionCode!, "Team": player.team!, "PhotoUrl": player.photoUrl!])
     }
     
     return playerData

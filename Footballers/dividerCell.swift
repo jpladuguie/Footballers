@@ -11,14 +11,18 @@ import UIKit
 class dividerCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        
+        //
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        // Set the background colour to clear, and prevent the cell from being selected.
         backgroundColor = UIColor.clear
         selectionStyle = .none
   
-        // Create the divider.
+        // Create the divider as an image view.
         let divider = UIImageView(image: UIImage(named: "whiteLine.png"))
         // Set its size and add it to view.
-        divider.frame = CGRect(x: 20.0, y: 10.0, width: 335, height: 1.0)
+        divider.frame = CGRect(x: 20.0, y: 10.0, width: UIScreen.main.bounds.width - 40, height: 0.5)
         self.addSubview(divider)
         
     }

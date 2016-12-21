@@ -34,6 +34,10 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     // Loading activity indicator.
     var activityIndicator: NVActivityIndicatorView!
     
+    // Error label in case the data cannot be received from the server.
+    var errorLabel: UILabel!
+    
+    
     /* Called as soon as the view loads. */
     
     override func viewDidLoad() {
@@ -63,6 +67,10 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         // Create the loading activity indicator.
         self.activityIndicator = configureActivityIndicator(viewController: self)
         self.view.addSubview(self.activityIndicator)
+        
+        // Create the error label.
+        self.errorLabel = createErrorMessage(message: "No network connection")
+        self.view.addSubview(errorLabel)
         
         // Keep the table view in position.
         self.automaticallyAdjustsScrollViewInsets = false
@@ -95,12 +103,13 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
                             // Remove activity indicator from view.
                             self.activityIndicator.removeFromSuperview()
                             // Show error message.
-                            createErrorMessage(viewController: self, message: "No network connection")
+                            UIView.animate(withDuration: 0.5, animations: {
+                                self.errorLabel.alpha = 1.0
+                            })
                     })
                 }
             }
         }
-        
     }
     
     /* Table View Functions. */
@@ -281,8 +290,6 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         }
         else {
             // Otherwise, add the player to favourites.
-            // The player's photo url is needed so must be added to playerData.
-            self.playerData["PhotoUrl"] = self.player.photoUrl
             savePlayerToFavourites(self.playerData)
         }
         
@@ -376,14 +383,7 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     func getImages() {
         
         // Attempt to get the player image from the API.
-        do {
-            let imageData = try Data(contentsOf: URL(string: self.player.photoUrl!)!, options: NSData.ReadingOptions())
-            self.playerImage = UIImage(data: imageData)
-        } catch {
-            // If the image cannot be fetched from the API, set it to the default one.
-            self.playerImage = UIImage(named: "defaultPlayerImage.png")
-            print("No player image found for " + self.player.personalDetails["Name"]! + ".")
-        }
+        self.playerImage = getPlayerImage(url: self.player.photoUrl!)
         
         // Attempt to get the team image from the API.
         do {

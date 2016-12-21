@@ -34,30 +34,30 @@ class imageRankingCell: UITableViewCell {
         
         // Flag image.
         self.flagImage = UIImageView()
-        self.flagImage.frame = CGRect(x: 95, y: 65, width: 23, height: 17)
+        self.flagImage.frame = CGRect(x: 85, y: 55, width: 23, height: 17)
         self.contentView.addSubview(flagImage)
         
         // Name label.
         self.nameLabel = UILabel()
-        self.nameLabel.frame = CGRect(x: 95, y: 10, width: self.contentView.frame.width - 105, height: 40)
+        self.nameLabel.frame = CGRect(x: 85, y: 0, width: self.contentView.frame.width - 105, height: 40)
         self.nameLabel.textAlignment = .left
-        self.nameLabel.font = UIFont.systemFont(ofSize: 20.0, weight: UIFontWeightMedium)
+        self.nameLabel.font = UIFont.systemFont(ofSize: 18.0, weight: UIFontWeightMedium)
         self.nameLabel.textColor = UIColor.white
         self.nameLabel.backgroundColor = UIColor.clear
-        self.addSubview(self.nameLabel)
+        self.contentView.addSubview(self.nameLabel)
        
         // Team label.
         self.teamLabel = UILabel()
-        self.teamLabel.frame = CGRect(x: 95, y: 35, width: self.contentView.frame.width - 105, height: 30)
+        self.teamLabel.frame = CGRect(x: 85, y: 25, width: self.contentView.frame.width - 105, height: 30)
         self.teamLabel.textAlignment = .left
-        self.teamLabel.font = UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightLight)
+        self.teamLabel.font = UIFont.systemFont(ofSize: 15.0, weight: UIFontWeightLight)
         self.teamLabel.textColor = UIColor.white
         self.teamLabel.backgroundColor = UIColor.clear
-        self.addSubview(self.teamLabel)
+        self.contentView.addSubview(self.teamLabel)
 
         // Profile image.
         self.profilePhoto = UIImageView()
-        self.profilePhoto.frame = CGRect(x: 20, y: 0, width: 65, height: 90)
+        self.profilePhoto.frame = CGRect(x: 20, y: 4.5, width: 48.75, height: 67.5)
         self.contentView.addSubview(self.profilePhoto)
         
     }

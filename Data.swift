@@ -67,7 +67,7 @@ func getPlayerRankings(SortValue: String, StartPosition: Int, EndPosition: Int) 
     for (_,player):(String, JSON) in players {
         
         // Create the dictionary with the variables which are always present.
-        var playerDict = ["PlayerId": player["PlayerId"].rawString()!, "Name": player["Name"].rawString()!, "RegionCode": player["RegionCode"].rawString()!, "Team": player["Team"].rawString()!, "Age": player["Age"].rawString()!]
+        var playerDict = ["PlayerId": player["PlayerId"].rawString()!, "Name": player["Name"].rawString()!, "RegionCode": player["RegionCode"].rawString()!, "Team": player["Team"].rawString()!, "Age": player["Age"].rawString()!, "PhotoUrl": player["PhotoUrl"].rawString()!]
         
         // If the sort value is "Age", don't add age twice as there will be two identical keys in the dictionary.
         // If the value isn't age, add it to the dictionary.
@@ -85,14 +85,18 @@ func getPlayerRankings(SortValue: String, StartPosition: Int, EndPosition: Int) 
 
 // Search for player.
 func searchForPlayer(SearchString: String) -> [[String: String]] {
+    // Create an array of dictionaries to return the data.
     var returnData: [[String: String]] = [[String: String]]()
     
-    // Replace spaces with %20.
+    // Replace spaces with %20, as it is an HTTP request.
     let string = SearchString.replacingOccurrences(of: " ", with: "%20", options: .literal, range: nil)
+    
+    // Get the data from the API.
     let players = getDataFromAPI(SearchString: string)
     
+    // Parse the data and return it.
     for (_,player):(String, JSON) in players {
-        returnData.append(["PlayerId": player["PlayerId"].rawString()!,"Name": player["Name"].rawString()!, "RegionCode": player["RegionCode"].rawString()!])
+        returnData.append(["PlayerId": player["PlayerId"].rawString()!,"Name": player["Name"].rawString()!, "RegionCode": player["RegionCode"].rawString()!, "Team": player["Team"].rawString()!, "Age": player["Age"].rawString()!, "PhotoUrl": player["PhotoUrl"].rawString()!])
     }
     
     return returnData

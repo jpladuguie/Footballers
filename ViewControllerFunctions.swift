@@ -26,8 +26,14 @@ enum viewType {
     case Favourites
 }
 
+// The different types of menu.
+enum menuType {
+    case Search
+    case Options
+}
+
 // Set the default view to home.
-var currentView = viewType.Home
+//var currentView = viewType.Home
 
 // Set the host url depending on whether the device is on the same network as the server.
 let hostUrl = "http://192.168.1.13:5000"
@@ -47,21 +53,36 @@ func configureActivityIndicator(viewController: UIViewController) -> NVActivityI
 }
 
 // Display an error message in the view, such as if connection to the server failed or there are no players to show.
-func createErrorMessage(viewController: UIViewController, message: String) {
+func createErrorMessage(message: String) -> UILabel {
     
     // Create the error label.
-    let errorLabel = UILabel(frame: CGRect(x: (viewController.view.frame.width / 2) - 150, y: (viewController.view.frame.height / 2) - 15, width: 300, height: 30))
+    let errorLabel = UILabel(frame: CGRect(x: (UIScreen.main.bounds.width / 2) - 150, y: (UIScreen.main.bounds.height / 2) - 15, width: 300, height: 30))
     // Set the colour to white, add the text and add to view.
-    errorLabel.font = UIFont.systemFont(ofSize: 22.0)
+    errorLabel.font = UIFont.systemFont(ofSize: 22.0, weight: UIFontWeightLight)
     errorLabel.text = message
     errorLabel.textColor = UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1.0)
     errorLabel.textAlignment = .center
     errorLabel.alpha = 0.0
-    viewController.view.addSubview(errorLabel)
     
-    UIView.animate(withDuration: 0.5, animations: {
-        errorLabel.alpha = 1.0
-    })
+    return errorLabel
+}
+
+// Gets an player image given the url.
+func getPlayerImage(url: String) -> UIImage {
+    var playerImage: UIImage!
+    
+    // Attempt to get the image.
+    do {
+        let imageData = try Data(contentsOf: URL(string: url)!, options: NSData.ReadingOptions())
+        playerImage = UIImage(data: imageData)
+    // Otherwise set it as the default image.
+    } catch {
+        // If the image cannot be fetched from the API, set it to the default one.
+        playerImage = UIImage(named: "defaultPlayerImage.png")
+        print("No player image found.")
+    }
+    
+    return playerImage
 }
 
 // Return the colour red, yellow or green depending on a variable.

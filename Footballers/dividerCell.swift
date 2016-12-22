@@ -10,6 +10,8 @@ import UIKit
 
 class dividerCell: UITableViewCell {
     
+    var divider: UIImageView!
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         //
@@ -20,10 +22,10 @@ class dividerCell: UITableViewCell {
         selectionStyle = .none
   
         // Create the divider as an image view.
-        let divider = UIImageView(image: UIImage(named: "whiteLine.png"))
+        self.divider = UIImageView(image: UIImage(named: "whiteLine.png"))
         // Set its size and add it to view.
-        divider.frame = CGRect(x: 20.0, y: 10.0, width: UIScreen.main.bounds.width - 40, height: 0.5)
-        self.addSubview(divider)
+        self.divider.frame = CGRect(x: 20.0, y: 10.0, width: UIScreen.main.bounds.width - 40, height: 0.5)
+        self.addSubview(self.divider)
         
     }
     

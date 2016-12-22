@@ -15,8 +15,10 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     // Data variables.
     var topScorersData = [[String: String]]()
     var topAssistsData = [[String: String]]()
-    var topPassersData = [[String: String]]()
+    var topPasserData = [[String: String]]()
     var topPlayerData = [[String: String]]()
+    
+    var topPasserImage: UIImage!
     
     
     /* viewDidLoad() */
@@ -40,13 +42,20 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     /* Table view functions */
     
     // Set the number of rows in the tableView.
-    // 10 are needed:
+    // 19 are needed:
     //  - Top Scorers title
     //  - 5 for the top scorers
+    //  - Divider
     //  - Most Assists title
     //  - 3 for the most assists
+    //  - Divider
+    //  - Best Passer title
+    //  - Best Passer cell
+    //  - Divider
+    //  - In Form Players title
+    //  - 3 for in form players
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 16
+        return 19
     }
     
     // Set up tableView cells.
@@ -127,12 +136,13 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             // Set the main cell to the new one.
             cell = ratingCell
         }
-            
+        
+        // Divider cell.
         else if (indexPath as NSIndexPath).row == 11 {
             // Create a cell from the playerDividerCell class.
             let divider: dividerCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(dividerCell.self), for: indexPath) as! dividerCell
             
-            //divider.
+            divider.divider.frame = CGRect(x: 20.0, y: 30.0, width: UIScreen.main.bounds.width - 40, height: 0.5)
             
             // Set the main cell to the new one.
             cell = divider
@@ -143,6 +153,31 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             // Create a cell from the playerDividerCell class.
             let title: titleCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(titleCell.self), for: indexPath) as! titleCell
             
+            title.titleLabel.text = "Best Passer"
+            
+            // Set the main cell to the new one.
+            cell = title
+        }
+        
+        else if (indexPath as NSIndexPath).row == 13 {
+            // Create cell.
+            let rankingCell: imageRankingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(imageRankingCell.self), for: indexPath) as! imageRankingCell
+            
+            rankingCell.nameLabel.text = self.topPasserData[0]["Name"]
+            rankingCell.teamLabel.text = self.topPasserData[0]["Team"]
+            
+            let image = UIImage(named: String((self.topPasserData[0]["RegionCode"]?.uppercased())! + ""))
+            
+            rankingCell.flagImage.image = image
+            rankingCell.profilePhoto.image = self.topPasserImage
+            
+            cell = rankingCell
+        }
+            
+        else if (indexPath as NSIndexPath).row == 15 {
+            // Create a cell from the playerDividerCell class.
+            let title: titleCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(titleCell.self), for: indexPath) as! titleCell
+            
             title.titleLabel.text = "In Form Players"
             
             // Set the main cell to the new one.
@@ -150,20 +185,21 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         }
             
         // In Form player cells.
-        else if (indexPath as NSIndexPath).row > 12 && (indexPath as NSIndexPath).row < 16 {
+        else if (indexPath as NSIndexPath).row > 15 && (indexPath as NSIndexPath).row < 19 {
             // Create the cell as a rankingTableCell.
             let detailedCell: detailedRankingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(detailedRankingCell.self), for: indexPath) as! detailedRankingCell
             
             // Set the values for the ranking position, flag image, player name, statistic value, age and team.
-            detailedCell.positionLabel.text = String(indexPath.row - 12)
-            detailedCell.flagImage.image = UIImage(named: String((self.topPlayerData[(indexPath as NSIndexPath).row - 13]["RegionCode"]?.uppercased())! + ""))
-            detailedCell.nameLabel.text = self.topPlayerData[(indexPath as NSIndexPath).row - 13]["Name"]
-            detailedCell.playingPositionValueLabel.text = self.topPlayerData[(indexPath as NSIndexPath).row - 13]["Age"]
-            detailedCell.teamValueLabel.text = self.topPlayerData[(indexPath as NSIndexPath).row - 13]["Team"]
+            detailedCell.positionLabel.text = String(indexPath.row - 15)
+            detailedCell.flagImage.image = UIImage(named: String((self.topPlayerData[(indexPath as NSIndexPath).row - 16]["RegionCode"]?.uppercased())! + ""))
+            detailedCell.nameLabel.text = self.topPlayerData[(indexPath as NSIndexPath).row - 16]["Name"]
+            detailedCell.playingPositionValueLabel.text = self.topPlayerData[(indexPath as NSIndexPath).row - 16]["Age"]
+            detailedCell.teamValueLabel.text = self.topPlayerData[(indexPath as NSIndexPath).row - 16]["Team"]
             
             cell = detailedCell
         }
         
+        // Otherwise any other cells should be divider cells.
         else {
             // Create a cell from the playerDividerCell class.
             let divider: dividerCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(dividerCell.self), for: indexPath) as! dividerCell
@@ -179,31 +215,51 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     
     // Set the row height for the table view cells depending on which cell they are.
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        // Title cells.
-        if (indexPath as NSIndexPath).row == 0 || (indexPath as NSIndexPath).row == 7 || (indexPath as NSIndexPath).row == 12 {
-            return 40.0
-        }
-        // Top Scorer cells.
-        else if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
-            return 40.0
-        }
-        // Most Assist cells.
-        else if (indexPath as NSIndexPath).row > 7 && (indexPath as NSIndexPath).row < 11 {
-            return 50.0
-        }
-        else if (indexPath as NSIndexPath).row > 12 && (indexPath as NSIndexPath).row < 16 {
-            return 85.0
-        }
-        else {
+    
+        switch (indexPath as NSIndexPath).row {
+        case 6:
             return 20.0
+        case 8..<11:
+            return 50.0
+        case 13:
+            return 85.0
+        case 14:
+            return 20.0
+        case 16..<19:
+            return 85.0
+        default:
+            return 40.0
         }
+        
     }
     
     // This is called when a row in the table view is selected, i.e. a player has been clicked on.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        // If the cell is any cell but the title cells.
-        if (indexPath as NSIndexPath).row != 0 && (indexPath as NSIndexPath).row != 6 {
+        // Deselect the row.
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        // Get the row of the cell which was selected.
+        let row = (indexPath as NSIndexPath).row
+        
+        switch row {
+        case 1..<6:
+            self.selectedPlayerData = self.topScorersData[(indexPath as NSIndexPath).row - 1]
+            performSegue(withIdentifier: "homePlayerSegue", sender: self)
+        case 8..<11:
+            self.selectedPlayerData = self.topAssistsData[(indexPath as NSIndexPath).row - 8]
+            performSegue(withIdentifier: "homePlayerSegue", sender: self)
+        case 13:
+            self.selectedPlayerData = self.topPasserData[0]
+            performSegue(withIdentifier: "homePlayerSegue", sender: self)
+        case 16..<19:
+            self.selectedPlayerData = self.topPlayerData[(indexPath as NSIndexPath).row - 16]
+            performSegue(withIdentifier: "homePlayerSegue", sender: self)
+        default: break
+        }
+        
+        /*// If the cell is any cell but the title cells.
+        if row != 0 && row != 6 {
         
             // Select the correct PlayerId depending on which tableView the selected cell is in.
             let playerData: [String: String]
@@ -240,7 +296,7 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             //performSegue(withIdentifier: "homeRankingSegue", sender: self)
             
             
-        }
+        }*/
     }
     
     // Called when a segue is about to be performed.
@@ -267,8 +323,10 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             // Create the request.
             self.topScorersData = getPlayerRankings(SortValue: "Goals", StartPosition: 0, EndPosition: 5)
             self.topAssistsData = getPlayerRankings(SortValue: "Assists", StartPosition: 0, EndPosition: 3)
-            self.topPassersData = getPlayerRankings(SortValue: "PassSuccess", StartPosition: 0, EndPosition: 1)
+            self.topPasserData = getPlayerRankings(SortValue: "PassingRating", StartPosition: 0, EndPosition: 1)
             self.topPlayerData = getPlayerRankings(SortValue: "OverallRating", StartPosition: 0, EndPosition: 3)
+            
+            self.topPasserImage = getPlayerImage(url: self.topPasserData[0]["PhotoUrl"]!)
             
             // Create a boolean which is true if the data is successfully received.
             var success: Bool!

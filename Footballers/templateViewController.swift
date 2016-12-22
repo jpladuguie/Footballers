@@ -219,7 +219,7 @@ class templateViewController: UIViewController {
     func createSubViews() {
         
         // Create the tableView with the data,
-        self.tableView = UITableView(frame: CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 124))
+        self.tableView = UITableView(frame: CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 122))
         self.tableView.backgroundColor = lightGrey
         self.tableView.alpha = 0.0
         

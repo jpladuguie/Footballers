@@ -9,7 +9,7 @@
 import UIKit
 import NVActivityIndicatorView
 
-class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITableViewDataSource {
+class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate, UITableViewDataSource {
     
     // Player data passed from previous view controller.
     // Includes only basic information such as PlayerId, Name and RegionCode.
@@ -25,23 +25,18 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     // The playerView class consists of a topBar showing the player's image, name and team name, and a table view 
     // Showing information such as personal details, ratings and statistics.
     var topBar: UIView!
-    var tableView: UITableView!
     
     // Player and team images.
     var playerImage: UIImage!
     var teamImage: UIImage!
     
-    // Loading activity indicator.
-    var activityIndicator: NVActivityIndicatorView!
-    
-    // Error label in case the data cannot be received from the server.
-    var errorLabel: UILabel!
-    
     
     /* Called as soon as the view loads. */
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+        
+        // Set the view type.
+        self.type = .Player
         
         // Check whether the player is in favourites, to know which button to use for navigation bar.
         // If the player is in favourites, the star must be filled white, else it is only an outline.
@@ -56,60 +51,21 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
         self.topBar.backgroundColor = darkGrey
         self.view.addSubview(self.topBar)
         
-        // Create a shadow effect at the bottom of the top bar, so that it appears above the table view.
-        self.topBar.layer.shadowRadius = 1
-        self.topBar.layer.shadowOpacity = 1
-        self.topBar.layer.shadowColor = UIColor.black.cgColor
-        self.topBar.layer.shadowOffset = CGSize.zero
-        self.topBar.layer.shouldRasterize = true
-        self.topBar.layer.shadowPath = UIBezierPath(rect: topBar.bounds).cgPath
-        
         // Create the loading activity indicator.
         self.activityIndicator = configureActivityIndicator(viewController: self)
         self.view.addSubview(self.activityIndicator)
         
         // Create the error label.
-        self.errorLabel = createErrorMessage(message: "No network connection")
-        self.view.addSubview(errorLabel)
-        
-        // Keep the table view in position.
-        self.automaticallyAdjustsScrollViewInsets = false
+        createErrorLabel()
         
         // Create the back button and favourite button and add them to the navigation bar.
         self.createNavBarButtons()
         
-        // Get the data in the background, and once it has finished create all the subviews.
-        DispatchQueue.global(qos: .background).async {
-            
-            // Get the data.
-            self.player = Player(id: self.playerData["PlayerId"]!)
-            
-            // Called once all the data has been fetched.
-            DispatchQueue.main.async {
-                
-                // If the data has been received, create all the subViews with the data.
-                if self.player.dataFetched == true {
-                    // Fetch the images once the data has successfully be received, as the data contains the image urls.
-                    self.getImages()
-                    // Create all the sub views with the data.
-                    self.createSubViews()
-                }
-                // Otherwise, display the error message.
-                else {
-                    // Fade out activity indicator.
-                    UIView.animate(withDuration: 0.5, animations: {
-                        self.activityIndicator.alpha = 0.0
-                        }, completion: { (complete: Bool) in
-                            // Remove activity indicator from view.
-                            self.activityIndicator.removeFromSuperview()
-                            // Show error message.
-                            UIView.animate(withDuration: 0.5, animations: {
-                                self.errorLabel.alpha = 1.0
-                            })
-                    })
-                }
-            }
-        }
+        // Keep the table view in position.
+        self.automaticallyAdjustsScrollViewInsets = false
+        
+        // Get the data and create the table view.
+        getData()
     }
     
     /* Table View Functions. */
@@ -219,21 +175,61 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
     // Change the height of specific rows in the table view.
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
+        let row = (indexPath as NSIndexPath).row
+        
         // Height of the top two rows showing personal information.
-        if (indexPath as NSIndexPath).row == 0 || (indexPath as NSIndexPath).row == 1 {
+        if row == 0 || row == 1 {
             return 90.0
         }
         // Height of the dividers.
-        else if ((indexPath as NSIndexPath).row == 2 || (indexPath as NSIndexPath).row == 7) {
+        else if row == 2 || row == 7 {
             return 21.0
         }
         // Height of the rating cells.
-        else if ((indexPath as NSIndexPath).row == 3 || (indexPath as NSIndexPath).row == 4 || (indexPath as NSIndexPath).row == 5 || (indexPath as NSIndexPath).row == 6) {
+        else if row > 2 && row < 7 {
             return 60.0
         }
         // Height of the statistic cells.
         else {
             return 40.0
+        }
+    }
+    
+    /* Data Functions */
+    
+    override func getData() {
+        
+        // Get the data in the background, and once it has finished create all the subviews.
+        DispatchQueue.global(qos: .background).async {
+            
+            // Get the data.
+            self.player = Player(id: self.playerData["PlayerId"]!)
+            
+            // Called once all the data has been fetched.
+            DispatchQueue.main.async {
+                
+                // If the data has been received, create all the subViews with the data.
+                if self.player.dataFetched == true {
+                    // Fetch the images once the data has successfully be received, as the data contains the image urls.
+                    self.getImages()
+                    // Create all the sub views with the data.
+                    self.createSubViews()
+                }
+                    // Otherwise, display the error message.
+                else {
+                    // Fade out activity indicator.
+                    UIView.animate(withDuration: 0.5, animations: {
+                        self.activityIndicator.alpha = 0.0
+                        }, completion: { (complete: Bool) in
+                            // Remove activity indicator from view.
+                            self.activityIndicator.removeFromSuperview()
+                            // Show error message.
+                            UIView.animate(withDuration: 0.5, animations: {
+                                self.errorLabel.alpha = 1.0
+                            })
+                    })
+                }
+            }
         }
     }
     
@@ -375,8 +371,6 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
                     self.tableView.alpha = 1.0
                 })
         })
-        
-        
     }
     
     // Get the images from the API, such as player image and team image.
@@ -394,6 +388,11 @@ class playerView: UIViewController, UIWebViewDelegate, UITableViewDelegate, UITa
             self.teamImage = UIImage(named: "team.png")
             print("No team image found for " + self.player.personalDetails["Team"]! + ".")
         }
+    }
+    
+    // Reload data when the table view has been pulled down and released.
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+       
     }
     
     override func didReceiveMemoryWarning() {

@@ -115,19 +115,25 @@ class templateViewController: UIViewController {
     // Called when the view disappears from the main view.
     // Move the search bar back to its original position if a player has been selected from search.
     override func viewDidDisappear(_ animated: Bool) {
-        // Only toggle the view when it is already extended, i.e. a player has been selected from search.
-        if self.navBar.viewExtended == true {
-            self.navBar.toggleView(type: .Search)
+        // Not relevant to player view, as it has no nav bar.
+        if self.type != .Player {
+            // Only toggle the view when it is already extended, i.e. a player has been selected from search.
+            if self.navBar.viewExtended == true {
+                self.navBar.toggleView(type: .Search)
             
-            // Reset the search button, i.e remove the close button.
-            self.navigationItem.rightBarButtonItem = self.searchButton
+                // Reset the search button, i.e remove the close button.
+                self.navigationItem.rightBarButtonItem = self.searchButton
+            }
         }
     }
     
     // Called when the view appears.
     // Update the search bar in case the user has began a search in another view.
     override func viewDidAppear(_ animated: Bool) {
-        self.navBar.updateSearchBar()
+        // Not relevant to player view, as it has no nav bar.
+        if self.type != .Player {
+            self.navBar.updateSearchBar()
+        }
     }
     
     /* Search button function. */
@@ -161,7 +167,7 @@ class templateViewController: UIViewController {
             if success == true {
                 // If the view hasn't been initialised, i.e. this is the first time it has been called, create all subviews.
                 if self.viewInitialised == false {
-                    self.createSubViews()
+                    self.createTableView()
                     self.viewInitialised = true
                 }
                 else {
@@ -211,12 +217,30 @@ class templateViewController: UIViewController {
         })
     }
     
+    // Gets an player image given the url.
+    func getPlayerImage(url: String) -> UIImage {
+        var playerImage: UIImage!
+        
+        // Attempt to get the image.
+        do {
+            let imageData = try Data(contentsOf: URL(string: url)!, options: NSData.ReadingOptions())
+            playerImage = UIImage(data: imageData)
+            // Otherwise set it as the default image.
+        } catch {
+            // If the image cannot be fetched from the API, set it to the default one.
+            playerImage = UIImage(named: "defaultPlayerImage.png")
+            print("No player image found.")
+        }
+        
+        return playerImage
+    }
+    
     /* Function declarations.
        Both are specific to the view so needed overriding in the individual classes. */
     
     // Called if the data is successfully obtained from the server.
     // Creates the table view and any other views which need initialising.
-    func createSubViews() {
+    func createTableView() {
         
         // Create the tableView with the data,
         self.tableView = UITableView(frame: CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 122))
@@ -262,8 +286,17 @@ class templateViewController: UIViewController {
         self.errorLabel.setAttributedTitle(errorText, for: .normal)
         // Initialise it with alpha = 0.0 as it should appear off screen at first.
         self.errorLabel.alpha = 0.0
-        // Add it to view.
+        // Add the label to view
         self.view.addSubview(self.errorLabel)
+        
+    }
+    
+    // Create ActivityIndicator centred in the middle of the view and return it.
+    func configureActivityIndicator(viewController: UIViewController) -> NVActivityIndicatorView {
+        let activityIndicator = NVActivityIndicatorView(frame: CGRect(x: (viewController.view.frame.size.width/2 - 25), y: (viewController.view.frame.size.height/2 - 25), width: 50, height: 50), type: NVActivityIndicatorType.ballClipRotate, color: UIColor.white)
+        activityIndicator.startAnimating()
+        
+        return activityIndicator
     }
     
     func createNavBarButton() {
@@ -294,6 +327,20 @@ class templateViewController: UIViewController {
                 })
         })
     }
+    
+    // Return the colour red, yellow or green depending on a variable.
+    func getRatingColour(value: Int) -> UIColor {
+        if value < 35 {
+            return red
+        }
+        else if value >= 35 && value <= 65 {
+            return yellow
+        }
+        else {
+            return green
+        }
+    }
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

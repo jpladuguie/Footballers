@@ -189,6 +189,7 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
                 identifier = "rankingsPlayerSegue"
             case .Favourites:
                 identifier = "favouritesPlayerSegue"
+            default: break
             }
             
             // Perform the segue.

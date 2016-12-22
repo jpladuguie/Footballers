@@ -37,8 +37,14 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
         // Set the current page and title.
         self.title = "Favourites"
         
-        // Set the no players label.
-        self.noPlayersLabel = createErrorMessage(message: "No players in favourites")
+        // Create the no players label.
+        self.noPlayersLabel = UILabel(frame: CGRect(x: (UIScreen.main.bounds.width / 2) - 150, y: (UIScreen.main.bounds.height / 2) - 15, width: 300, height: 30))
+        // Set the colour to white, add the text and add to view.
+        self.noPlayersLabel.font = UIFont.systemFont(ofSize: 22.0, weight: UIFontWeightLight)
+        self.noPlayersLabel.text = "No players in favourites"
+        self.noPlayersLabel.textColor = UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1.0)
+        self.noPlayersLabel.textAlignment = .center
+        self.noPlayersLabel.alpha = 0.0
         self.view.addSubview(self.noPlayersLabel)
         
         // Create a nav bar button to allow editing.
@@ -169,10 +175,10 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
     /* createSubViews() */
     
     // Initiate all the subViews, and fade them in.
-    override func createSubViews() {
+    override func createTableView() {
         
         // Create the table view.
-        super.createSubViews()
+        super.createTableView()
         
         // Set the delegate and data source.
         self.tableView.delegate = self
@@ -200,7 +206,7 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
                 // If the view hasn't been initialised, i.e. this is the first time it has been called, create all subviews.
                 if self.viewInitialised == false {
                     self.getImages()
-                    self.createSubViews()
+                    self.createTableView()
                     self.viewInitialised = true
                 }
                 // Otherwise, get the images and reload the table view.

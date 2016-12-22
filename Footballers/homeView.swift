@@ -326,14 +326,14 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             self.topPasserData = getPlayerRankings(SortValue: "PassingRating", StartPosition: 0, EndPosition: 1)
             self.topPlayerData = getPlayerRankings(SortValue: "OverallRating", StartPosition: 0, EndPosition: 3)
             
-            self.topPasserImage = getPlayerImage(url: self.topPasserData[0]["PhotoUrl"]!)
-            
             // Create a boolean which is true if the data is successfully received.
             var success: Bool!
             
             // If topScorersData is empty, then the data wasn't successfully received, so success should be set to false, and vice versa.
             if self.topScorersData.isEmpty == false {
-                success = true }
+                success = true
+                // If the data has been successfully received, get any images needed.
+                self.topPasserImage = self.getPlayerImage(url: self.topPasserData[0]["PhotoUrl"]!) }
             else {
                 success = false }
             
@@ -346,10 +346,10 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     /* createSubViews() */
     
     // Initiate all the subViews, and fade them in.
-    override func createSubViews() {
+    override func createTableView() {
         
         // Create the table view.
-        super.createSubViews()
+        super.createTableView()
         
         // Set the delegate and data source.
         self.tableView.delegate = self

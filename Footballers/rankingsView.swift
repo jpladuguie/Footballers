@@ -172,10 +172,10 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     
     // Create all the subviews and add them to the main view.
     // Includes the main table view, as well as the column titles.
-    override func createSubViews() {
+    override func createTableView() {
         
         // Create the table view.
-        super.createSubViews()
+        super.createTableView()
         
         // Add the delegate and data source.
         self.tableView.delegate = self

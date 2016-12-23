@@ -284,8 +284,16 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     
     // Get the data.
     override func getData() {
+        
+        // Cancel any pending operations.
+        self.queue.cancelAllOperations()
+        
+        // Define the operation.
+        self.getDataOperation = BlockOperation()
+        
         // Run in the background to prevent the UI from freezing.
-        DispatchQueue.global(qos: DispatchQoS.userInitiated.qosClass).async {
+        getDataOperation.addExecutionBlock {
+            
             // Create the request.
             self.topScorersData = getPlayerRankings(SortValue: "Goals", StartPosition: 0, EndPosition: 5)
             self.topAssistsData = getPlayerRankings(SortValue: "Assists", StartPosition: 0, EndPosition: 3)
@@ -307,6 +315,9 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             super.getData(success: success)
             
         }
+        
+        // Add the operation to the queue.
+        self.queue.addOperation(self.getDataOperation)
     }
     
     /* createSubViews() */

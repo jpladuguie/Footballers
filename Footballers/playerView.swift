@@ -64,6 +64,9 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         // Keep the table view in position.
         self.automaticallyAdjustsScrollViewInsets = false
         
+        // Initialise the queue.
+        self.queue = OperationQueue()
+        
         // Get the data and create the table view.
         self.getData()
         
@@ -200,8 +203,14 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
     
     override func getData() {
         
-        // Get the data in the background, and once it has finished create all the subviews.
-        DispatchQueue.global(qos: DispatchQoS.userInitiated.qosClass).async {
+        // Cancel any pending operations.
+        self.queue.cancelAllOperations()
+        
+        // Define the operation.
+        self.getDataOperation = BlockOperation()
+        
+        // Run in the background to prevent the UI from freezing.
+        self.getDataOperation.addExecutionBlock {
             
             // Get the data.
             self.player = Player(id: self.playerData["PlayerId"]!)
@@ -213,19 +222,30 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
                 // Fetch the images once the data has successfully be received, as the data contains the image urls.
                 self.getImages()
                 
-                DispatchQueue.main.async {
-                    // Create all the sub views with the data.
-                    self.createSubViews()
+                // Before updating the view, make sure the operation hasn't been canceled.
+                if !self.getDataOperation.isCancelled {
+                    // Execute on the main thread.
+                    OperationQueue.main.addOperation({
+                        // Create all the sub views with the data.
+                        self.createSubViews()
+                    })
                 }
             }
             // Otherwise, display the error message.
             else {
-                DispatchQueue.main.async {
-                    // Fade out activity indicator.
-                    self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.errorLabel, removeFirstView: true)
+                // Before updating the view, make sure the operation hasn't been canceled.
+                if !self.getDataOperation.isCancelled {
+                    // Execute on the main thread.
+                    OperationQueue.main.addOperation({
+                        // Fade out activity indicator.
+                        self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.errorLabel, removeFirstView: true)
+                    })
                 }
             }
         }
+        
+        // Add the operation to the queue.
+        self.queue.addOperation(self.getDataOperation)
     }
     
     

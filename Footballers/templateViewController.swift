@@ -49,6 +49,10 @@ class templateViewController: UIViewController {
     // Boolean which becomes true once the views, such as the table view, are initialised for the first time.
     var viewInitialised: Bool = false
     
+    // Queue to load data.
+    var queue: OperationQueue!
+    var getDataOperation: BlockOperation!
+    
     
     /* viewDidLoad() */
     
@@ -108,6 +112,9 @@ class templateViewController: UIViewController {
         // Create error label if the data is unable to be loaded.
         createErrorLabel()
         
+        // Initialise the queue.
+        self.queue = OperationQueue()
+        
     }
     
     /* viewDidDisappear()/viewDidAppear() */
@@ -166,29 +173,41 @@ class templateViewController: UIViewController {
         if success == true {
             // If the view hasn't been initialised, i.e. this is the first time it has been called, create all subviews.
             if self.viewInitialised == false {
-                DispatchQueue.main.async {
-                    self.createTableView()
+                // Before updating the view, make sure the operation hasn't been canceled.
+                if !getDataOperation.isCancelled {
+                    // Execute on the main thread.
+                    OperationQueue.main.addOperation({
+                        self.createTableView()
+                        self.viewInitialised = true
+                    })
                 }
-                self.viewInitialised = true
             }
             else {
-                DispatchQueue.main.async {
-                    // Otherwise, reload the table view.
-                    self.tableView.reloadData()
-                    // Scroll back to the top of the table view if needed.
-                    self.tableView.setContentOffset(CGPoint.zero, animated: false)
-                    // Fade the table view back in and remove the activity indicator.
-                    self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView, removeFirstView: true)
+                // Before updating the view, make sure the operation hasn't been canceled.
+                if !getDataOperation.isCancelled {
+                    // Execute on the main thread.
+                    OperationQueue.main.addOperation({
+                        // Otherwise, reload the table view.
+                        self.tableView.reloadData()
+                        // Scroll back to the top of the table view if needed.
+                        self.tableView.setContentOffset(CGPoint.zero, animated: false)
+                        // Fade the table view back in and remove the activity indicator.
+                        self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView, removeFirstView: true)
+                    })
                 }
             }
         }
         // Otherwise, display the error message.
         else {
-            DispatchQueue.main.async {
-                self.view.bringSubview(toFront: self.navBar)
+            // Before updating the view, make sure the operation hasn't been canceled.
+            if !getDataOperation.isCancelled {
+                // Execute on the main thread.
+                OperationQueue.main.addOperation({
+                    self.view.bringSubview(toFront: self.navBar)
                     
-                // Fade out activity indicator and remove it from the view.
-                self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.errorLabel, removeFirstView: true)
+                    // Fade out activity indicator and remove it from the view.
+                    self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.errorLabel, removeFirstView: true)
+                })
             }
         }
         

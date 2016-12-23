@@ -134,8 +134,16 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     
     // Get the data.
     override func getData() {
+        
+        // Cancel any pending operations.
+        self.queue.cancelAllOperations()
+        
+        // Define the operation.
+        self.getDataOperation = BlockOperation()
+        
         // Run in the background to prevent the UI from freezing.
-        DispatchQueue.global(qos: DispatchQoS.userInitiated.qosClass).async {
+        getDataOperation.addExecutionBlock {
+            
             // Create the request.
             self.playerData = getPlayerRankings(SortValue: self.rankingType, StartPosition: self.currentStartPosition, EndPosition: self.currentStartPosition + 50)
             
@@ -152,6 +160,9 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
             super.getData(success: success)
             
         }
+        
+        // Add the operation to the queue.
+        self.queue.addOperation(self.getDataOperation)
     }
     
     // Called either when the table has been pulled down to reload it, or if the ranking type has been changed in the options menu.

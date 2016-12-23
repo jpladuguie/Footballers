@@ -65,7 +65,8 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         self.automaticallyAdjustsScrollViewInsets = false
         
         // Get the data and create the table view.
-        getData()
+        self.getData()
+        
     }
     
     /* Table View Functions. */
@@ -200,36 +201,48 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
     override func getData() {
         
         // Get the data in the background, and once it has finished create all the subviews.
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: DispatchQoS.userInitiated.qosClass).async {
             
             // Get the data.
             self.player = Player(id: self.playerData["PlayerId"]!)
             
             // Called once all the data has been fetched.
-            DispatchQueue.main.async {
                 
-                // If the data has been received, create all the subViews with the data.
-                if self.player.dataFetched == true {
-                    // Fetch the images once the data has successfully be received, as the data contains the image urls.
-                    self.getImages()
+            // If the data has been received, create all the subViews with the data.
+            if self.player.dataFetched == true {
+                // Fetch the images once the data has successfully be received, as the data contains the image urls.
+                self.getImages()
+                
+                DispatchQueue.main.async {
                     // Create all the sub views with the data.
                     self.createSubViews()
                 }
-                    // Otherwise, display the error message.
-                else {
+            }
+            // Otherwise, display the error message.
+            else {
+                DispatchQueue.main.async {
                     // Fade out activity indicator.
-                    UIView.animate(withDuration: 0.5, animations: {
-                        self.activityIndicator.alpha = 0.0
-                        }, completion: { (complete: Bool) in
-                            // Remove activity indicator from view.
-                            self.activityIndicator.removeFromSuperview()
-                            // Show error message.
-                            UIView.animate(withDuration: 0.5, animations: {
-                                self.errorLabel.alpha = 1.0
-                            })
-                    })
+                    self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.errorLabel, removeFirstView: true)
                 }
             }
+        }
+    }
+    
+    
+    // Get the images from the API, such as player image and team image.
+    func getImages() {
+        
+        // Attempt to get the player image from the API.
+        self.playerImage = getPlayerImage(url: self.player.photoUrl!)
+        
+        // Attempt to get the team image from the API.
+        do {
+            let imageData = try Data(contentsOf: URL(string: self.player.teamPhotoUrl!)!, options: NSData.ReadingOptions())
+            self.teamImage = UIImage(data: imageData)
+        } catch {
+            // If the image cannot be fetched from the API, set it to the default one.
+            self.teamImage = UIImage(named: "team.png")
+            print("No team image found for " + self.player.personalDetails["Team"]! + ".")
         }
     }
     
@@ -371,23 +384,6 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
                     self.tableView.alpha = 1.0
                 })
         })
-    }
-    
-    // Get the images from the API, such as player image and team image.
-    func getImages() {
-        
-        // Attempt to get the player image from the API.
-        self.playerImage = getPlayerImage(url: self.player.photoUrl!)
-        
-        // Attempt to get the team image from the API.
-        do {
-            let imageData = try Data(contentsOf: URL(string: self.player.teamPhotoUrl!)!, options: NSData.ReadingOptions())
-            self.teamImage = UIImage(data: imageData)
-        } catch {
-            // If the image cannot be fetched from the API, set it to the default one.
-            self.teamImage = UIImage(named: "team.png")
-            print("No team image found for " + self.player.personalDetails["Team"]! + ".")
-        }
     }
     
     // Reload data when the table view has been pulled down and released.

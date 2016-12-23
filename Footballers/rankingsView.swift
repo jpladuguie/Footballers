@@ -135,7 +135,7 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     // Get the data.
     override func getData() {
         // Run in the background to prevent the UI from freezing.
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: DispatchQoS.userInitiated.qosClass).async {
             // Create the request.
             self.playerData = getPlayerRankings(SortValue: self.rankingType, StartPosition: self.currentStartPosition, EndPosition: self.currentStartPosition + 50)
             

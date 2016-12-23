@@ -62,9 +62,8 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
         super.viewDidAppear(true)
         
         // Reload the data in the background to prevent the UI from freezing.
-        DispatchQueue.main.async {
-            self.getData()
-        }
+        self.getData()
+        
         
         // Reset edit button if a player has been selected from search.
         self.navigationItem.setLeftBarButton(self.editButton, animated: true)
@@ -130,17 +129,19 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
         // If the cell is deleted.
         if editingStyle == .delete
         {
+            DispatchQueue.global(qos: DispatchQoS.userInitiated.qosClass).async {
             // Remove the selected player from favourites.
             removePlayerFromFavourites(self.players[(indexPath.row)]["PlayerId"]!)
             
             // Update players array.
             self.players.remove(at: indexPath.row)
-            
+            DispatchQueue.main.async {
             // Delete the row from the table view.
             tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
-            
+                }
             // If there are no more players in favourites.
             if self.players.isEmpty == true {
+                DispatchQueue.main.async {
                 // Stop the table view from editing.
                 self.tableView.isEditing = false
                 
@@ -149,7 +150,9 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
                 
                 // Remove the table view and show the 'no players' label.
                 self.transitionBetweenViews(firstView: self.tableView, secondView: self.noPlayersLabel, removeFirstView: false)
+                }
                 
+            }
             }
         }
     }
@@ -196,42 +199,47 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
     // Gets the data, including the images, for all the players in favourites.
     override func getData() {
         
-        // Get players data from CoreData.
-        self.players = getPlayersFromFavourites()
-        
-        // Check whether there are any players in favourites.
-        if self.players.count != 0 {
-            // If there is, create the table view in the background, as the images must be fetched.
-            DispatchQueue.main.async {
+        DispatchQueue.global(qos: DispatchQoS.userInitiated.qosClass).async {
+    
+            // Get players data from CoreData.
+            self.players = getPlayersFromFavourites()
+            
+            // Check whether there are any players in favourites.
+            if self.players.count != 0 {
+                // If there is, create the table view in the background, as the images must be fetched.
                 // If the view hasn't been initialised, i.e. this is the first time it has been called, create all subviews.
                 if self.viewInitialised == false {
                     self.getImages()
-                    self.createTableView()
-                    self.viewInitialised = true
+                    DispatchQueue.main.async {
+                        self.createTableView()
+                        self.viewInitialised = true
+                    }
                 }
                 // Otherwise, get the images and reload the table view.
                 else {
                     self.getImages()
-                    
-                    // Remove the no players label if needed, and make sure the alpha of the table view is 1.0.
-                    self.transitionBetweenViews(firstView: self.noPlayersLabel, secondView: self.tableView, removeFirstView: false)
-                    
-                    // Reload the table view.
                     DispatchQueue.main.async {
+                        // Remove the no players label if needed, and make sure the alpha of the table view is 1.0.
+                        self.transitionBetweenViews(firstView: self.noPlayersLabel, secondView: self.tableView, removeFirstView: false)
+                    
+                        // Reload the table view.
                         UIView.transition(with: self.tableView, duration: 0.25, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: nil)
                     }
                 }
             }
-        }
-        // Otherwise display an error message saying there are no players in favourites.
-        else {
-            // Remove the activity indicator.
-            self.activityIndicator.removeFromSuperview()
+            // Otherwise display an error message saying there are no players in favourites.
+            else {
+                DispatchQueue.main.async {
+                    // Remove the activity indicator.
+                    self.activityIndicator.removeFromSuperview()
+                    
+                    // Reload the table view.
+                    self.tableView.reloadData()
             
-            self.tableView.reloadData()
-            
-            // Remove the table view, and show the no players label.
-            self.transitionBetweenViews(firstView: self.tableView, secondView: self.noPlayersLabel, removeFirstView: false)
+                    // Remove the table view, and show the no players label.
+                    self.transitionBetweenViews(firstView: self.tableView, secondView: self.noPlayersLabel, removeFirstView: false)
+                }
+            }
         }
     }
     

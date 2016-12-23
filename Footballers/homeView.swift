@@ -18,6 +18,7 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     var topPasserData = [[String: String]]()
     var topPlayerData = [[String: String]]()
     
+    // Image for the top passer.
     var topPasserImage: UIImage!
     
     
@@ -142,7 +143,7 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             // Create a cell from the playerDividerCell class.
             let divider: dividerCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(dividerCell.self), for: indexPath) as! dividerCell
             
-            divider.divider.frame = CGRect(x: 20.0, y: 30.0, width: UIScreen.main.bounds.width - 40, height: 0.5)
+            divider.divider.frame = CGRect(x: 20.0, y: 32.5, width: UIScreen.main.bounds.width - 40, height: 0.5)
             
             // Set the main cell to the new one.
             cell = divider
@@ -215,12 +216,15 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     
     // Set the row height for the table view cells depending on which cell they are.
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    
+        
+        // Depending on which cell is being used vary the height.
         switch (indexPath as NSIndexPath).row {
         case 6:
             return 20.0
         case 8..<11:
             return 50.0
+        case 11:
+            return 45.0
         case 13:
             return 85.0
         case 14:
@@ -242,6 +246,7 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         // Get the row of the cell which was selected.
         let row = (indexPath as NSIndexPath).row
         
+        // Depending on which player was selected, open the correct player view.
         switch row {
         case 1..<6:
             self.selectedPlayerData = self.topScorersData[(indexPath as NSIndexPath).row - 1]
@@ -258,45 +263,6 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         default: break
         }
         
-        /*// If the cell is any cell but the title cells.
-        if row != 0 && row != 6 {
-        
-            // Select the correct PlayerId depending on which tableView the selected cell is in.
-            let playerData: [String: String]
-            
-            // If the cell is a Top Scorers cell use the topScorersData variable.
-            if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
-                tableView.deselectRow(at: indexPath, animated: true)
-                playerData = self.topScorersData[(indexPath as NSIndexPath).row - 1]
-            }
-            // Otherwise the cell is a Most Assists cell, so use the topAssists variable.
-            else {
-                tableView.deselectRow(at: indexPath, animated: true)
-                playerData = self.topAssistsData[(indexPath as NSIndexPath).row - 7]
-            }
-        
-            // Assign value to selectedPlayerData.
-            self.selectedPlayerData = playerData
-        
-            // Perform the segue to the player view.
-            performSegue(withIdentifier: "homePlayerSegue", sender: self)
-            
-        }
-            
-        // The cell selected was a title cell.
-        else {
-            
-            if (indexPath as NSIndexPath).row == 0 {
-                self.selectedRanking = "Goals"
-            }
-            else {
-                self.selectedRanking = "Assists"
-            }
-            
-            //performSegue(withIdentifier: "homeRankingSegue", sender: self)
-            
-            
-        }*/
     }
     
     // Called when a segue is about to be performed.
@@ -319,7 +285,7 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     // Get the data.
     override func getData() {
         // Run in the background to prevent the UI from freezing.
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: DispatchQoS.userInitiated.qosClass).async {
             // Create the request.
             self.topScorersData = getPlayerRankings(SortValue: "Goals", StartPosition: 0, EndPosition: 5)
             self.topAssistsData = getPlayerRankings(SortValue: "Assists", StartPosition: 0, EndPosition: 3)

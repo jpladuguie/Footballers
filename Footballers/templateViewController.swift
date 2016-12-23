@@ -161,16 +161,18 @@ class templateViewController: UIViewController {
             
         // At this point the request to get the data has already been made. The success variable depends on whether the data
         // Was successfully retrieved.
-        DispatchQueue.main.async {
-                
-            // If the data has been received, create all the subViews with the data.
-            if success == true {
-                // If the view hasn't been initialised, i.e. this is the first time it has been called, create all subviews.
-                if self.viewInitialised == false {
+        
+        // If the data has been received, create all the subViews with the data.
+        if success == true {
+            // If the view hasn't been initialised, i.e. this is the first time it has been called, create all subviews.
+            if self.viewInitialised == false {
+                DispatchQueue.main.async {
                     self.createTableView()
-                    self.viewInitialised = true
                 }
-                else {
+                self.viewInitialised = true
+            }
+            else {
+                DispatchQueue.main.async {
                     // Otherwise, reload the table view.
                     self.tableView.reloadData()
                     // Scroll back to the top of the table view if needed.
@@ -179,14 +181,17 @@ class templateViewController: UIViewController {
                     self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView, removeFirstView: true)
                 }
             }
-            // Otherwise, display the error message.
-            else {
+        }
+        // Otherwise, display the error message.
+        else {
+            DispatchQueue.main.async {
                 self.view.bringSubview(toFront: self.navBar)
                     
                 // Fade out activity indicator and remove it from the view.
                 self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.errorLabel, removeFirstView: true)
             }
         }
+        
     }
     
     // Reloads data in the table view.

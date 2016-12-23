@@ -62,6 +62,9 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
             ["Weight (kg)", "Weight"]
     ]
     
+    // Queue to load search results serially.
+    var queue: OperationQueue!
+    
 
     /* init() */
     
@@ -95,6 +98,9 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         if self.type == .Rankings {
             createOptionsTable()
         }
+        
+        // Initialise the queue.
+        self.queue = OperationQueue()
         
     }
     
@@ -407,66 +413,103 @@ class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextF
         let string = textField.text?.lowercased().folding(options: .diacriticInsensitive, locale: nil)
         currentSearchText = textField.text!
         
-        // If the text hasn't been cleared, check if it matches any players.
-        if string != "" {
+        // Cancel any pending operations.
+        self.queue.cancelAllOperations()
+        
+        // Define the operation.
+        let getSearchResult = BlockOperation()
+        
+        // Create the request in the background to prevent any delay.
+        getSearchResult.addExecutionBlock {
+        
+            // If the text hasn't been cleared, check if it matches any players.
+            if string != "" {
             
-            // Create the request in the background to prevent any delay.
-            DispatchQueue.global(qos: .background).async {
-                
                 // Get the data.
                 self.searchedPlayers = searchForPlayer(SearchString: string!)
                 currentSearchedPlayers = self.searchedPlayers
                 
-                // Execute in the background to allow for the data to be received.
-                DispatchQueue.main.async {
+                // If there are no results from the search.
+                if self.searchedPlayers.count == 0 {
                     
-                    // If there are no results from the search.
-                    if self.searchedPlayers.count == 0 {
+                    // Set noResults to true.
+                    self.noResults = true
+                    
+                    // Before updating the view, make sure the operation hasn't been canceled.
+                    if !getSearchResult.isCancelled {
                         
-                        self.noResults = true
+                        // Execute on the main thread.
+                        OperationQueue.main.addOperation({
                         
-                        // Fade out the table view, and fade in the no results label.
-                        UIView.animate(withDuration: 0.25, animations: {
-                            self.searchTableView.alpha = 0.0
-                            self.noResultsLabel.alpha = 1.0
+                            // Fade out the table view, and fade in the no results label.
+                            UIView.animate(withDuration: 0.25, animations: {
+                                self.searchTableView.alpha = 0.0
+                                self.noResultsLabel.alpha = 1.0
                             }, completion: { (complete: Bool) in
                                 self.searchTableView.reloadData()
-                    })}
-                    
-                    // If there are results from the search.
-                    else {
-                        self.noResults = false
-                        
-                        // Bring back the table view and remove the no results label if needed.
-                        if self.searchTableView.alpha == 0 {
-                            UIView.animate(withDuration: 0.25, animations: {
-                                self.searchTableView.alpha = 1.0
-                                self.noResultsLabel.alpha = 0.0
                             })
-                        }
-                        // Reload the table view data.
-                        UIView.transition(with: self.searchTableView, duration: 0.25, options: .transitionCrossDissolve, animations: {self.searchTableView.reloadData()}, completion: nil)
+                        })
                     }
                 }
-            }
-        }
+                    
+                // If there are results from the search.
+                else {
+                    
+                    // Set noResults to false.
+                    self.noResults = false
+                    
+                    // Before updating the view, make sure the operation hasn't been canceled.
+                    if !getSearchResult.isCancelled {
+                        
+                        // Execute on the main thread.
+                        OperationQueue.main.addOperation({
+                            
+                            // Bring back the table view and remove the no results label if needed.
+                            if self.searchTableView.alpha == 0 {
+                                UIView.animate(withDuration: 0.25, animations: {
+                                    self.searchTableView.alpha = 1.0
+                                    self.noResultsLabel.alpha = 0.0
+                                })
+                            }
+                            
+                            // Reload the table view data.
+                            UIView.transition(with: self.searchTableView, duration: 0.25, options: .transitionCrossDissolve, animations: {self.searchTableView.reloadData()}, completion: nil)
+                            })
+                        }
+                    }
+                }
+            
         // If the text is empty or been cleared give an empty array.
         else {
+            
+            // Set noResults to false.
             self.noResults = false
             
+            // Empty searchedPlayers.
             self.searchedPlayers = []
             currentSearchedPlayers = self.searchedPlayers
             
-            // Reload the table view with an animation.
-            DispatchQueue.main.async {
-                UIView.animate(withDuration: 0.25, animations: {
-                    self.searchTableView.alpha = 0.0
-                    self.noResultsLabel.alpha = 0.0
+                // Before updating the view, make sure the operation hasn't been canceled.
+            if !getSearchResult.isCancelled {
+                
+                // Execute on the main thread.
+                OperationQueue.main.addOperation({
+                    
+                    // Reload the table view with an animation.
+                    UIView.animate(withDuration: 0.25, animations: {
+                        self.searchTableView.alpha = 0.0
+                        self.noResultsLabel.alpha = 0.0
                     }, completion: { (complete: Bool) in
                         self.searchTableView.reloadData()
-                })
+                        })
+                    })
+                }
             }
         }
+        
+        // Add the operation to the queue.
+        self.queue.addOperation(getSearchResult)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {

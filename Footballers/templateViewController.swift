@@ -241,22 +241,29 @@ class templateViewController: UIViewController {
         })
     }
     
-    // Gets an player image given the url.
-    func getPlayerImage(url: String) -> UIImage {
-        var playerImage: UIImage!
+    // Attempts to get an image given the url. If it fails, it provides the correct default image depending on the image type.
+    func getImage(url: String, type: imageType) -> UIImage {
+        
+        // Define the image.
+        var image: UIImage!
         
         // Attempt to get the image.
         do {
             let imageData = try Data(contentsOf: URL(string: url)!, options: NSData.ReadingOptions())
-            playerImage = UIImage(data: imageData)
-            // Otherwise set it as the default image.
+            image = UIImage(data: imageData)
+            
+        // Otherwise set it as the default image.
         } catch {
-            // If the image cannot be fetched from the API, set it to the default one.
-            playerImage = UIImage(named: "defaultPlayerImage.png")
-            print("No player image found.")
+            print("No image found for " + url + ".")
+            
+            // Depending on the type given, set the image as a different default image.
+            if type == .Player {
+                image = UIImage(named: "defaultPlayerImage.png")}
+            else {
+                image = UIImage(named: "defaultTeamImage.png")}
         }
         
-        return playerImage
+        return image
     }
     
     /* Function declarations.

@@ -33,6 +33,12 @@ enum menuType {
     case Options
 }
 
+// Different image types which are fetched from the API.
+enum imageType {
+    case Player
+    case Team
+}
+
 // Set the host url depending on whether the device is on the same network as the server.
 //let hostUrl = "http://192.168.1.13:5000"
 let hostUrl = "http://91.134.242.17:5000"

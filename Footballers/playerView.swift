@@ -7,32 +7,31 @@
 //
 
 import UIKit
-import NVActivityIndicatorView
 
 class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate, UITableViewDataSource {
     
-    // Player data passed from previous view controller.
-    // Includes only basic information such as PlayerId, Name and RegionCode.
+    // Player data passed from previous view controller. Includes only basic information such as PlayerId, 
+    // Name and RegionCode needed to load the player data/check whether they are in Favourites.
     var playerData: [String: String]!
     
-    // Main player class.
+    // Main player class which handles all the data associated with the player.
     var player: Player!
     
-    // Boolean value of whether player is in favourites.
+    // Boolean value which is true if the player is in Favourites.
     var isPlayerFavourite: Bool!
     
-    // Main views.
-    // The playerView class consists of a topBar showing the player's image, name and team name, and a table view 
-    // Showing information such as personal details, ratings and statistics.
+    // The main view which occupies the upper part of the Player view. Within it is the player photo, name and team.
     var topBar: UIView!
     
-    // Player and team images.
+    // Player and team crest image declarations.
     var playerImage: UIImage!
     var teamImage: UIImage!
     
     
-    /* Called as soon as the view loads. */
+    /* viewDidLoad() */
     
+    // Called as soon as the view loads.
+    // It doesn't call its parent's viewDidLoad to prevent a nav bar being created.
     override func viewDidLoad() {
         
         // Set the view type.
@@ -46,8 +45,7 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         self.view.backgroundColor = lightGrey
         
         // Create the top bar view, and set its colour to dark grey.
-        self.topBar = UIView()
-        self.topBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 160)
+        self.topBar = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 160))
         self.topBar.backgroundColor = darkGrey
         self.view.addSubview(self.topBar)
         
@@ -59,7 +57,7 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         createErrorLabel()
         
         // Create the back button and favourite button and add them to the navigation bar.
-        self.createNavBarButtons()
+        self.setNavBarButtons()
         
         // Keep the table view in position.
         self.automaticallyAdjustsScrollViewInsets = false
@@ -72,11 +70,15 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         
     }
     
-    /* Table View Functions. */
+    /* Table View Functions */
     
     // Set the number of rows in table view.
-    // It includes the number of statistic rows, the two top rows displaying personal information, the four ratings rows,
-    // And the two divider rows.
+    // 17 rows are needed:
+    //  - The top two rows which show information such as shirt number, nationality and height.
+    //  - A divider row.
+    //  - 4 rating cells with horizontal bars.
+    //  - Another divider row.
+    //  - 9 rows which show various statistics such as goals scored and yellow cards.
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 17
     }
@@ -84,11 +86,14 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
     // Set up the individual cells in the table view.
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        // Get the current row.
+        let row = (indexPath as NSIndexPath).row
+        
         // Create a gerneric cell.
         var cell:UITableViewCell
         
         // Create the top cell.
-        if (indexPath as NSIndexPath).row == 0 {
+        if row == 0 {
             
             // Create a cell from the playerTopCell class.
             let topCell: playerTopCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerTopCell.self), for: indexPath) as! playerTopCell
@@ -105,7 +110,7 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         }
             
         // Create the second cell.
-        else if (indexPath as NSIndexPath).row == 1 {
+        else if row == 1 {
             
             // Create a cell from the playerSecondCell class.
             let secondCell: playerSecondCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerSecondCell.self), for: indexPath) as! playerSecondCell
@@ -120,31 +125,40 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         }
             
         // Create divider cells between personal details and ratings, and ratings and statistics.
-        else if ((indexPath as NSIndexPath).row == 2 || (indexPath as NSIndexPath).row == 7) {
+        else if row == 2 || row == 7 {
             
             // Create a cell from the playerDividerCell class.
-            let titleCell: dividerCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(dividerCell.self), for: indexPath) as! dividerCell
+            let divider: dividerCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(dividerCell.self), for: indexPath) as! dividerCell
             
             // Set the main cell to the new one.
-            cell = titleCell
+            cell = divider
         }
             
         // Create rating cells. Each one has the name of the rating, the value, and a horizontal bar chart.
-        else if ((indexPath as NSIndexPath).row == 3 || (indexPath as NSIndexPath).row == 4 || (indexPath as NSIndexPath).row == 5 || (indexPath as NSIndexPath).row == 6) {
+        else if row > 2 && row < 7 {
             
-            // Create a cell from the playerRatingCell class.
-            let ratingCell: playerRatingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerRatingCell.self), for: indexPath) as! playerRatingCell
+            // Create a cell from the playerCell class.
+            let ratingCell: playerCell = tableView.dequeueReusableCell( withIdentifier: "rating", for: indexPath) as! playerCell
             
-            // Set the values of the rating name and its value.
-            ratingCell.ratingNameLabel.text = self.player.ratings[(indexPath as NSIndexPath).row - 3][0]
-            ratingCell.ratingValueLabel.text = self.player.ratings[(indexPath as NSIndexPath).row - 3][1]
+            // Disable selection.
+            ratingCell.selectionStyle = .none
+            
+            // Set the name label.
+            ratingCell.nameLabel.frame = CGRect(x: 20, y: 0, width: ((UIScreen.main.bounds.width / 3) * 2), height: 35)
+            ratingCell.nameLabel.text = self.player.ratings[(indexPath as NSIndexPath).row - 3][0]
+            ratingCell.contentView.addSubview(ratingCell.nameLabel)
+            
+            // Add the rating bar.
+            ratingCell.contentView.addSubview(ratingCell.ratingBar)
             
             // Get the rating value as a float.
             let ratingValue = Float(self.player.ratings[(indexPath as NSIndexPath).row - 3][1])
+            
             // Get the bar width depending on the value and the screen width.
+            // The larger the value, the longer the bar.
             let barWidth: Int = Int((Float(ratingValue! * Float(self.view.frame.width - 40)) / Float(100.0)))
-            // Create the bar as a UIView and set its colour depending on the strength of the rating.
-            ratingCell.ratingBar.frame = CGRect(x: 20, y: 40, width: 0, height: 10)
+            
+            // Set the bar's colour depending on the strength of the rating.
             ratingCell.ratingBar.backgroundColor = getRatingColour(value: Int(self.player.ratings[(indexPath as NSIndexPath).row - 3][1])!)
             
             // Animate the rating bar so that it slides in.
@@ -159,13 +173,20 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         // Otherwise, the cell is a row in the statistics section.
         else {
         
-            // Create a cell from the playerStatCell class.
-            let statCell: playerStatCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerStatCell.self), for: indexPath) as! playerStatCell
+            // Create a cell from the playerCell class.
+            let statCell: playerCell = tableView.dequeueReusableCell( withIdentifier: "stat", for: indexPath) as! playerCell
             
-            // Set the values of the statistic name and value.
-            statCell.statNameLabel.text = self.player?.getSummaryStats()[(indexPath as NSIndexPath).row - 8][0]
-            statCell.statValueLabel.text = self.player?.getSummaryStats()[(indexPath as NSIndexPath).row - 8][1]
+            // Disable selection.
+            statCell.selectionStyle = .none
             
+            // Set the name label.
+            statCell.contentView.addSubview(statCell.nameLabel)
+            statCell.nameLabel.text = self.player?.getSummaryStats()[(indexPath as NSIndexPath).row - 8][0]
+            
+            // Set the value label.
+            statCell.contentView.addSubview(statCell.valueLabel)
+            statCell.valueLabel.text = self.player?.getSummaryStats()[(indexPath as NSIndexPath).row - 8][1]
+        
             // Set the main cell to the new one.
             cell = statCell
             
@@ -179,28 +200,32 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
     // Change the height of specific rows in the table view.
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
+        // Get the row.
         let row = (indexPath as NSIndexPath).row
         
+        switch row {
         // Height of the top two rows showing personal information.
-        if row == 0 || row == 1 {
+        case 0..<2:
             return 90.0
-        }
-        // Height of the dividers.
-        else if row == 2 || row == 7 {
-            return 21.0
-        }
+        // Height of divider.
+        case 2:
+            return 20.0
         // Height of the rating cells.
-        else if row > 2 && row < 7 {
+        case 3..<7:
             return 60.0
-        }
+        // Height of divider.
+        case 7:
+            return 20
         // Height of the statistic cells.
-        else {
+        default:
             return 40.0
         }
+    
     }
     
     /* Data Functions */
     
+    // Get the data needed for the view.
     override func getData() {
         
         // Cancel any pending operations.
@@ -214,16 +239,17 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
             
             // Get the data.
             self.player = Player(id: self.playerData["PlayerId"]!)
-            
-            // Called once all the data has been fetched.
                 
-            // If the data has been received, create all the subViews with the data.
+            // If the data has been successfully received, create all the subViews with the data.
             if self.player.dataFetched == true {
-                // Fetch the images once the data has successfully be received, as the data contains the image urls.
+                
+                // Fetch the images once the data has successfully be received, as the data contains the image urls so 
+                // The images have to wait for the data to be received.
                 self.getImages()
                 
                 // Before updating the view, make sure the operation hasn't been canceled.
                 if !self.getDataOperation.isCancelled {
+                    
                     // Execute on the main thread.
                     OperationQueue.main.addOperation({
                         // Create all the sub views with the data.
@@ -231,20 +257,23 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
                     })
                 }
             }
+                
             // Otherwise, display the error message.
             else {
                 // Before updating the view, make sure the operation hasn't been canceled.
                 if !self.getDataOperation.isCancelled {
+                    
                     // Execute on the main thread.
                     OperationQueue.main.addOperation({
-                        // Fade out activity indicator.
+                        
+                        // Fade out activity indicator and fade in the error label.
                         self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.errorLabel, removeFirstView: true)
                     })
                 }
             }
         }
         
-        // Add the operation to the queue.
+        // Add the operation to the queue to execute in a seperate thread.
         self.queue.addOperation(self.getDataOperation)
     }
     
@@ -253,23 +282,17 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
     func getImages() {
         
         // Attempt to get the player image from the API.
-        self.playerImage = getPlayerImage(url: self.player.photoUrl!)
+        self.playerImage = getImage(url: self.player.photoUrl!, type: .Player)
         
         // Attempt to get the team image from the API.
-        do {
-            let imageData = try Data(contentsOf: URL(string: self.player.teamPhotoUrl!)!, options: NSData.ReadingOptions())
-            self.teamImage = UIImage(data: imageData)
-        } catch {
-            // If the image cannot be fetched from the API, set it to the default one.
-            self.teamImage = UIImage(named: "team.png")
-            print("No team image found for " + self.player.personalDetails["Team"]! + ".")
-        }
+        self.teamImage = getImage(url: self.player.teamPhotoUrl!, type: .Team)
+
     }
     
     /* Navigation bar functions. */
     
     // Create the back button and favourite button and add them to the navigation bar.
-    func createNavBarButtons() {
+    func setNavBarButtons() {
         
         // Create a back bar button to return to the previous view.
         // Set a custom back button image for the button, and call backButtonTouched() once it has been pressed.
@@ -287,6 +310,8 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         // Set a custom image for the button, and call favouriteButtonTouched() once it has been pressed.
         let favouriteButton = UIButton(type: UIButtonType.custom) as UIButton
         favouriteButton.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
+        favouriteButton.addTarget(self, action: #selector(playerView.favouriteButtonTouched(_:)), for:.touchUpInside)
+        
         // If the player is currently in favourites, set the image to the filled star.
         if isPlayerFavourite == true {
             favouriteButton.setImage(UIImage(named: "favouriteButtonFull.png"), for: UIControlState())
@@ -295,7 +320,6 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         else {
             favouriteButton.setImage(UIImage(named: "favouriteButtonEmpty.png"), for: UIControlState())
         }
-        favouriteButton.addTarget(self, action: #selector(playerView.favouriteButtonTouched(_:)), for:.touchUpInside)
         
         // Add the favourite button to the naviagtion bar.
         let rightBarButton = UIBarButtonItem()
@@ -326,9 +350,9 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         isPlayerFavourite = !isPlayerFavourite!
         
         // Change the favourite button to the new image.
-        createNavBarButtons()
+        setNavBarButtons()
         
-        // Set the button's alpha to zero, and fade it back in.
+        // Set the button's alpha to zero, and fade it back in to create a transition between the two images.
         self.navigationItem.rightBarButtonItem?.customView?.alpha = 0.0
         UIView.animate(withDuration: 0.25, animations: {
             self.navigationItem.rightBarButtonItem?.customView?.alpha = 1.0
@@ -339,46 +363,40 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
     
     // Create all the subviews and add them to the main view.
     // Includes the player image, name, team name, and main table view.
+    // Set the alpha of each view to 0.0 so that they can be faded in when the view loads.
     func createSubViews() {
         
         // Create the image view for the player image.
         let playerImageView = UIImageView(image: self.playerImage)
-        playerImageView.frame = CGRect(x: self.view.frame.size.width/2 - 32.5, y: 15, width: 65, height: 90)
-        // Set the alpha to zero so it can be faded in.
+        playerImageView.frame = CGRect(x: UIScreen.main.bounds.width/2 - 32.5, y: 15, width: 65, height: 90)
         playerImageView.alpha = 0
-        self.view.addSubview(playerImageView)
         
         // Create the name label for the player's name.
-        let nameLabel: UILabel = UILabel()
-        nameLabel.frame = CGRect(x: 0, y: 100, width: self.view.frame.size.width, height: 40)
+        let nameLabel = UILabel(frame: CGRect(x: 0, y: 100, width: UIScreen.main.bounds.width, height: 40))
         nameLabel.text = self.player.personalDetails["Name"]
         nameLabel.textColor = UIColor.white
         nameLabel.textAlignment = NSTextAlignment.center
         nameLabel.backgroundColor = UIColor.clear
         nameLabel.font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
-        // Set the alpha to zero so it can be faded in.
         nameLabel.alpha = 0
-        self.view.addSubview(nameLabel)
         
         // Create the team label for the player's team.
-        let teamLabel: UILabel = UILabel()
-        teamLabel.frame = CGRect(x: 0, y: 120, width: self.view.frame.size.width, height: 40)
+        let teamLabel = UILabel(frame: CGRect(x: 0, y: 120, width: UIScreen.main.bounds.width, height: 40))
         teamLabel.text = self.player.personalDetails["Team"]
         teamLabel.textColor = UIColor.white
         teamLabel.textAlignment = NSTextAlignment.center
         teamLabel.backgroundColor = UIColor.clear
         teamLabel.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightUltraLight)
-        // Set the alpha to zero so it can be faded in.
         teamLabel.alpha = 0
         self.view.addSubview(teamLabel)
         
         // Create the main table view.
-        self.tableView = UITableView(frame: CGRect(x: 0, y: 160, width: self.view.frame.width, height: self.view.frame.height - 220))
+        self.tableView = UITableView(frame: CGRect(x: 0, y: 160, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 220))
         // Register the seperate cell classes.
         self.tableView.register(playerTopCell.self, forCellReuseIdentifier: NSStringFromClass(playerTopCell.self))
         self.tableView.register(playerSecondCell.self, forCellReuseIdentifier: NSStringFromClass(playerSecondCell.self))
-        self.tableView.register(playerRatingCell.self, forCellReuseIdentifier: NSStringFromClass(playerRatingCell.self))
-        self.tableView.register(playerStatCell.self, forCellReuseIdentifier: NSStringFromClass(playerStatCell.self))
+        self.tableView.register(playerCell.self, forCellReuseIdentifier: "rating")
+        self.tableView.register(playerCell.self, forCellReuseIdentifier: "stat")
         self.tableView.register(dividerCell.self, forCellReuseIdentifier: NSStringFromClass(dividerCell.self))
         // Set the delegate and data source.
         self.tableView.delegate = self
@@ -387,10 +405,15 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         self.tableView.backgroundColor = lightGrey
         // Set the alpha to zero so it can be faded in.
         self.tableView.alpha = 0
+        
+        // Add the sub views to the main view in the correct order.
+        self.view.addSubview(playerImageView)
+        self.view.addSubview(nameLabel)
         self.view.addSubview(self.tableView)
         
-        // Fade views in.
+        // Fade the views in.
         UIView.animate(withDuration: 0.5, animations: {
+            // Fade the items in the top view in first.
             playerImageView.alpha = 1.0
             nameLabel.alpha = 1.0
             teamLabel.alpha = 1.0
@@ -406,10 +429,8 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         })
     }
     
-    // Reload data when the table view has been pulled down and released.
-    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-       
-    }
+    // Prevent the refresh control being called when the table view is scrolled, as no refresh control is needed for Player view.
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {}
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

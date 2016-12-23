@@ -63,9 +63,9 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         cell.positionLabel.text = String(indexPath.row + 1)
         cell.flagImage.image = UIImage(named: String((self.playerData[(indexPath as NSIndexPath).row]["RegionCode"]?.uppercased())! + ""))
         cell.nameLabel.text = self.playerData[(indexPath as NSIndexPath).row]["Name"]
-        cell.statValueLabel.text = self.playerData[(indexPath as NSIndexPath).row][rankingType]
-        cell.playingPositionValueLabel.text = self.playerData[(indexPath as NSIndexPath).row]["Age"]
-        cell.teamValueLabel.text = self.playerData[(indexPath as NSIndexPath).row]["Team"]
+        cell.valueLabel.text = self.playerData[(indexPath as NSIndexPath).row][rankingType]
+        cell.ageLabel.text = self.playerData[(indexPath as NSIndexPath).row]["Age"]
+        cell.teamLabel.text = self.playerData[(indexPath as NSIndexPath).row]["Team"]
         
         
         // Load more data as the table view is scrolled down.

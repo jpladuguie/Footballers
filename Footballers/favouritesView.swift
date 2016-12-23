@@ -91,7 +91,7 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
         let image = UIImage(named: String((self.players[(indexPath as NSIndexPath).row]["RegionCode"]?.uppercased())! + ""))
         
         rankingCell.flagImage.image = image
-        rankingCell.profilePhoto.image = self.playerImages[self.players[(indexPath as NSIndexPath).row]["PlayerId"]!]
+        rankingCell.playerImage.image = self.playerImages[self.players[(indexPath as NSIndexPath).row]["PlayerId"]!]
         
         
         // Set cell.
@@ -136,8 +136,8 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
             // Update players array.
             self.players.remove(at: indexPath.row)
             DispatchQueue.main.async {
-            // Delete the row from the table view.
-            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+                // Delete the row from the table view.
+                tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
                 }
             // If there are no more players in favourites.
             if self.players.isEmpty == true {
@@ -261,7 +261,7 @@ class favouritesView: templateViewController, UITableViewDelegate, UITableViewDa
             // Otherwise, fetch the image from the server and add it to the temp dictionary.
             else {
                 // Add it to the temp dictionary.
-                tempImages[player["PlayerId"]!] = getPlayerImage(url: player["PhotoUrl"]!)
+                tempImages[player["PlayerId"]!] = getImage(url: player["PhotoUrl"]!, type: .Player)
             }
         }
             

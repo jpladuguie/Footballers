@@ -1,11 +1,3 @@
-//
-//  playerView.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 24/07/2016.
-//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
-//
-
 import UIKit
 
 class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate, UITableViewDataSource {
@@ -144,26 +136,26 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
             ratingCell.selectionStyle = .none
             
             // Set the name label.
-            ratingCell.nameLabel.frame = CGRect(x: 20, y: 0, width: ((UIScreen.main.bounds.width / 3) * 2), height: 35)
-            ratingCell.nameLabel.text = self.player.ratings[(indexPath as NSIndexPath).row - 3][0]
+            ratingCell.nameLabel.frame = CGRect(x: 15, y: 0, width: ((UIScreen.main.bounds.width / 3) * 2), height: 35)
+            ratingCell.nameLabel.text = self.player.ratings[row - 3][0]
             ratingCell.contentView.addSubview(ratingCell.nameLabel)
             
             // Add the rating bar.
             ratingCell.contentView.addSubview(ratingCell.ratingBar)
             
             // Get the rating value as a float.
-            let ratingValue = Float(self.player.ratings[(indexPath as NSIndexPath).row - 3][1])
+            let ratingValue = Float(self.player.ratings[row - 3][1])
             
             // Get the bar width depending on the value and the screen width.
             // The larger the value, the longer the bar.
-            let barWidth: Int = Int((Float(ratingValue! * Float(self.view.frame.width - 40)) / Float(100.0)))
+            let barWidth: Int = Int((Float(ratingValue! * Float(self.view.frame.width - 30)) / Float(100.0)))
             
             // Set the bar's colour depending on the strength of the rating.
-            ratingCell.ratingBar.backgroundColor = getRatingColour(value: Int(self.player.ratings[(indexPath as NSIndexPath).row - 3][1])!)
+            ratingCell.ratingBar.backgroundColor = getRatingColour(value: Int(self.player.ratings[row - 3][1])!)
             
             // Animate the rating bar so that it slides in.
             UIView.animate(withDuration: 1.0, animations: {
-                ratingCell.ratingBar.frame = CGRect(x: 20, y: 40, width: barWidth, height: 10)
+                ratingCell.ratingBar.frame = CGRect(x: 15, y: 40, width: barWidth, height: 10)
             })
             
             // Set the main cell to the new one.
@@ -181,11 +173,11 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
             
             // Set the name label.
             statCell.contentView.addSubview(statCell.nameLabel)
-            statCell.nameLabel.text = self.player?.getSummaryStats()[(indexPath as NSIndexPath).row - 8][0]
+            statCell.nameLabel.text = self.player?.getSummaryStats()[row - 8][0]
             
             // Set the value label.
             statCell.contentView.addSubview(statCell.valueLabel)
-            statCell.valueLabel.text = self.player?.getSummaryStats()[(indexPath as NSIndexPath).row - 8][1]
+            statCell.valueLabel.text = self.player?.getSummaryStats()[row - 8][1]
         
             // Set the main cell to the new one.
             cell = statCell
@@ -193,7 +185,7 @@ class playerView: templateViewController, UIWebViewDelegate, UITableViewDelegate
         }
         
         // Set the cells anchor point to prevent it moving unexpectedly, and return it.
-        cell.layer.anchorPointZ = CGFloat((indexPath as NSIndexPath).row)
+        cell.layer.anchorPointZ = CGFloat(row)
         return cell
     }
     

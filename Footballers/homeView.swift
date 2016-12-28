@@ -1,24 +1,14 @@
-//
-//  homeView.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 23/08/2016.
-//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
-//
-
 import UIKit
-import NVActivityIndicatorView
 
-// The main home View Controller.
 class homeView: templateViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
-    // Data variables.
+    // Declare data variables for the view.
     var topScorersData = [[String: String]]()
     var topAssistsData = [[String: String]]()
     var topDefenderData = [[String: String]]()
     var topPlayersData = [[String: String]]()
     
-    // Image for the top passer.
+    // Image for the top defender.
     var topDefenderImage: UIImage!
     
     
@@ -40,7 +30,7 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         getData()
     }
     
-    /* Table view functions */
+    /* Table View Functions */
     
     // Set the number of rows in the table view.
     // 19 are needed:
@@ -62,14 +52,19 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     // Set up tableView cells.
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        // Get the row.
+        let row = (indexPath as NSIndexPath).row
+        
         // Create cell.
         var cell:UITableViewCell?
         
         // Top Scorers title cell.
-        if (indexPath as NSIndexPath).row == 0 {
-            // Create a cell from the playerDividerCell class.
+        if row == 0 {
+            
+            // Create a cell from the titleCell class.
             let title: titleCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(titleCell.self), for: indexPath) as! titleCell
-                
+            
+            // Set the title.
             title.titleLabel.text = "Top Scorers"
                 
             // Set the main cell to the new one.
@@ -77,49 +72,45 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         }
         
         // Top Scorer cells.
-        else if (indexPath as NSIndexPath).row > 0 && (indexPath as NSIndexPath).row < 6 {
+        else if row > 0 && row < 6 {
             
-            // Create the custom cell using the rankingTableCell class..
-            let rankingCell: playerCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerCell.self), for: indexPath) as! playerCell
+            // Create the custom cell using the playerCell class.
+            let topScorerCell: playerCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerCell.self), for: indexPath) as! playerCell
             
-            rankingCell.selectionStyle = .gray
+            // Set the selection style.
+            topScorerCell.selectionStyle = .gray
             
-            rankingCell.contentView.addSubview(rankingCell.positionLabel)
+            // Set the position label.
+            topScorerCell.positionLabel.frame = CGRect(x: 20, y: 0, width: 10, height: 40)
+            topScorerCell.positionLabel.text = String(row)
+            topScorerCell.contentView.addSubview(topScorerCell.positionLabel)
             
-            // Flag image.
+            // Set the flag image.
+            topScorerCell.flagImage.frame = CGRect(x: 40, y: 11.5, width: 23, height: 17)
+            topScorerCell.flagImage.image = UIImage(named: String((self.topScorersData[row - 1]["RegionCode"]?.uppercased())! + "")!)!
+            topScorerCell.contentView.addSubview(topScorerCell.flagImage)
             
-            rankingCell.contentView.addSubview(rankingCell.flagImage)
+            // Set the name label.
+            topScorerCell.nameLabel.frame = CGRect(x: 75, y: 0, width: UIScreen.main.bounds.width - 100, height: 40)
+            topScorerCell.nameLabel.text = self.topScorersData[row - 1]["Name"]
+            topScorerCell.contentView.addSubview(topScorerCell.nameLabel)
             
-            // Name label.
-            rankingCell.nameLabel.frame = CGRect(x: 95, y: 0, width: UIScreen.main.bounds.width - 115, height: 40)
-            rankingCell.contentView.addSubview(rankingCell.nameLabel)
-            
-            // Stat value label.
-            rankingCell.valueLabel.frame = CGRect(x: UIScreen.main.bounds.width - 70, y: 0, width: 50, height: 40)
-            rankingCell.addSubview(rankingCell.valueLabel)
-            
-            // Move the everything slightly to the left, as the ranking numbers will only
-            // Be between 1 and 5, so space for only one digit is needed and not 3 which
-            // Is the default.
-            rankingCell.positionLabel.frame = CGRect(x: 20, y: 0, width: 10, height: 40)
-            rankingCell.flagImage.frame = CGRect(x: 40, y: 11.5, width: 23, height: 17)
-            rankingCell.nameLabel.frame = CGRect(x: 75, y: 0, width: UIScreen.main.bounds.width - 95, height: 40)
-            
-            // Assign the correct values to the tableView cell.
-            rankingCell.positionLabel.text = String(indexPath.row)
-            rankingCell.nameLabel.text = self.topScorersData[(indexPath as NSIndexPath).row - 1]["Name"]
-            rankingCell.valueLabel.text = self.topScorersData[(indexPath as NSIndexPath).row - 1]["Goals"]
-            rankingCell.flagImage.image = UIImage(named: String((self.topScorersData[(indexPath as NSIndexPath).row - 1]["RegionCode"]?.uppercased())! + "")!)!
+            // Stat the value label.
+            topScorerCell.valueLabel.frame = CGRect(x: UIScreen.main.bounds.width - 70, y: 0, width: 50, height: 40)
+            topScorerCell.valueLabel.text = self.topScorersData[row - 1]["Goals"]
+            topScorerCell.addSubview(topScorerCell.valueLabel)
             
             // Set the cell.
-            cell = rankingCell
+            cell = topScorerCell
         }
         
         // Most Assists title cell.
-        else if (indexPath as NSIndexPath).row == 7 {
-            // Create a cell from the playerDividerCell class.
+        else if row == 7 {
+            
+            // Create a cell from the titleCell class.
             let title: titleCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(titleCell.self), for: indexPath) as! titleCell
-                
+            
+            // Set the title
             title.titleLabel.text = "Most Assists"
                 
             // Set the main cell to the new one.
@@ -127,86 +118,96 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         }
             
         // Most Assist cells.
-        else if (indexPath as NSIndexPath).row > 7 && (indexPath as NSIndexPath).row < 11 {
-            // Create a cell from the playerRatingCell class.
-            let ratingCell: playerCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerCell.self), for: indexPath) as! playerCell
+        else if row > 7 && row < 11 {
+            
+            // Create a cell from the playerCell class.
+            let mostAssistsCell: playerCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(playerCell.self), for: indexPath) as! playerCell
             
             // Set selection style.
-            ratingCell.selectionStyle = .gray
+            mostAssistsCell.selectionStyle = .gray
             
-            // Stat name label.
-            ratingCell.nameLabel.frame = CGRect(x: 20, y: 0, width: ((UIScreen.main.bounds.width / 3) * 2), height: 35)
-            ratingCell.contentView.addSubview(ratingCell.nameLabel)
+            // Set the name label.
+            mostAssistsCell.nameLabel.frame = CGRect(x: 20, y: 0, width: ((UIScreen.main.bounds.width / 3) * 2), height: 35)
+            mostAssistsCell.nameLabel.text = self.topAssistsData[row - 8]["Name"]
+            mostAssistsCell.contentView.addSubview(mostAssistsCell.nameLabel)
             
-            // Stat value label.
-            ratingCell.valueLabel.frame = CGRect(x: ((UIScreen.main.bounds.width / 3) * 2), y: 0, width: (UIScreen.main.bounds.width / 3) - 20, height: 35)
-            ratingCell.contentView.addSubview(ratingCell.valueLabel)
+            // Set the value label.
+            mostAssistsCell.valueLabel.frame = CGRect(x: ((UIScreen.main.bounds.width / 3) * 2), y: 0, width: (UIScreen.main.bounds.width / 3) - 20, height: 35)
+            mostAssistsCell.valueLabel.text = self.topAssistsData[row - 8]["Assists"]
+            mostAssistsCell.contentView.addSubview(mostAssistsCell.valueLabel)
             
-            // Add rating bar.
-            ratingCell.contentView.addSubview(ratingCell.ratingBar)
-                
-            // Set the values of the rating name and its value.
-            ratingCell.nameLabel.text = self.topAssistsData[(indexPath as NSIndexPath).row - 8]["Name"]
-            ratingCell.valueLabel.text = self.topAssistsData[(indexPath as NSIndexPath).row - 8]["Assists"]
-                
+            // Set the rating bar.
+            mostAssistsCell.ratingBar.frame = CGRect(x: 20, y: 40, width: 0, height: 10)
+            mostAssistsCell.contentView.addSubview(mostAssistsCell.ratingBar)
+            
             // Get the rating value as a float.
-            let ratingValue: Float = Float(self.topAssistsData[(indexPath as NSIndexPath).row - 8]["Assists"]!)! / Float(self.topAssistsData[0]["Assists"]!)! * 100.0
+            let ratingValue = Float(self.topAssistsData[row - 8]["Assists"]!)! / Float(self.topAssistsData[0]["Assists"]!)! * 100.0
+            
             // Get the bar width depending on the value and the screen width.
+            // The larger the value, the longer the bar.
             let barWidth: Int = Int(Float(ratingValue * Float(self.view.frame.width - 40)) / 100.0)
-            // Create the bar as a UIView and set its colour depending on the strength of the rating.
-            ratingCell.ratingBar.frame = CGRect(x: 20, y: 40, width: 0, height: 10)
-            ratingCell.ratingBar.backgroundColor = getRatingColour(value: Int(ratingValue))
-                
+            
+            // Set the bar's colour depending on the strength of the rating.
+            mostAssistsCell.ratingBar.backgroundColor = getRatingColour(value: Int(ratingValue))
+            
             // Animate the rating bar so that it slides in.
             UIView.animate(withDuration: 1.0, animations: {
-                ratingCell.ratingBar.frame = CGRect(x: 20, y: 40, width: barWidth, height: 10)
+                mostAssistsCell.ratingBar.frame = CGRect(x: 20, y: 40, width: barWidth, height: 10)
             })
-                
+            
             // Set the main cell to the new one.
-            cell = ratingCell
+            cell = mostAssistsCell
         }
         
         // Divider cell.
         else if (indexPath as NSIndexPath).row == 11 {
-            // Create a cell from the playerDividerCell class.
+            
+            // Create a cell from the dividerCell class.
             let divider: dividerCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(dividerCell.self), for: indexPath) as! dividerCell
             
+            // Set custom divider position.
             divider.divider.frame = CGRect(x: 20.0, y: 32.5, width: UIScreen.main.bounds.width - 40, height: 0.5)
             
             // Set the main cell to the new one.
             cell = divider
         }
         
-        // In Form Players title cell.
+        // Best Defender title cell.
         else if (indexPath as NSIndexPath).row == 12 {
-            // Create a cell from the playerDividerCell class.
+            
+            // Create a cell from the titleCell class.
             let title: titleCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(titleCell.self), for: indexPath) as! titleCell
             
+            // Set the title
             title.titleLabel.text = "Best Defender"
             
             // Set the main cell to the new one.
             cell = title
         }
         
+        // Best Defender cell.
         else if (indexPath as NSIndexPath).row == 13 {
+            
             // Create cell.
-            let rankingCell: imageRankingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(imageRankingCell.self), for: indexPath) as! imageRankingCell
+            let topDefenderCell: imageRankingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(imageRankingCell.self), for: indexPath) as! imageRankingCell
             
-            rankingCell.nameLabel.text = self.topDefenderData[0]["Name"]
-            rankingCell.teamLabel.text = self.topDefenderData[0]["Team"]
+            // Set the values of the player's name, team, flag image and image.
+            topDefenderCell.nameLabel.text = self.topDefenderData[0]["Name"]
+            topDefenderCell.teamLabel.text = self.topDefenderData[0]["Team"]
+            topDefenderCell.flagImage.image = UIImage(named: String((self.topDefenderData[0]["RegionCode"]?.uppercased())! + ""))
+            topDefenderCell.playerImage.image = self.topDefenderImage
             
-            let image = UIImage(named: String((self.topDefenderData[0]["RegionCode"]?.uppercased())! + ""))
-            
-            rankingCell.flagImage.image = image
-            rankingCell.playerImage.image = self.topDefenderImage
-            
-            cell = rankingCell
+            // Set the main cell to the new one.
+            cell = topDefenderCell
         }
-            
+         
+        // In Form Players title cell.
         else if (indexPath as NSIndexPath).row == 15 {
-            // Create a cell from the playerDividerCell class.
+            
+            // Create a cell from the titleCell class.
             let title: titleCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(titleCell.self), for: indexPath) as! titleCell
             
+            // Set the title.
             title.titleLabel.text = "In Form Players"
             
             // Set the main cell to the new one.
@@ -215,37 +216,46 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             
         // In Form player cells.
         else if (indexPath as NSIndexPath).row > 15 && (indexPath as NSIndexPath).row < 19 {
-            // Create the cell as a rankingTableCell.
+            
+            // Create the cell as a detailedRankingCell.
             let detailedCell: detailedRankingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(detailedRankingCell.self), for: indexPath) as! detailedRankingCell
             
             // Set the values for the ranking position, flag image, player name, statistic value, age and team.
-            detailedCell.positionLabel.text = String(indexPath.row - 15)
-            detailedCell.flagImage.image = UIImage(named: String((self.topPlayersData[(indexPath as NSIndexPath).row - 16]["RegionCode"]?.uppercased())! + ""))
-            detailedCell.nameLabel.text = self.topPlayersData[(indexPath as NSIndexPath).row - 16]["Name"]
-            detailedCell.ageLabel.text = self.topPlayersData[(indexPath as NSIndexPath).row - 16]["Age"]
-            detailedCell.teamLabel.text = self.topPlayersData[(indexPath as NSIndexPath).row - 16]["Team"]
+            detailedCell.positionLabel.text = String(row - 15)
+            detailedCell.flagImage.image = UIImage(named: String((self.topPlayersData[row - 16]["RegionCode"]?.uppercased())! + ""))
+            detailedCell.nameLabel.text = self.topPlayersData[row - 16]["Name"]
+            detailedCell.ageLabel.text = self.topPlayersData[row - 16]["Age"]
+            detailedCell.teamLabel.text = self.topPlayersData[row - 16]["Team"]
             
+            // Set the main cell to the new one.
             cell = detailedCell
         }
         
         // Otherwise any other cells should be divider cells.
         else {
-            // Create a cell from the playerDividerCell class.
+            
+            // Create a cell from the dividerCell class.
             let divider: dividerCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(dividerCell.self), for: indexPath) as! dividerCell
             
             // Set the main cell to the new one.
             cell = divider
         }
         
-        // Return the cell.
-        cell?.layer.anchorPointZ = CGFloat((indexPath as NSIndexPath).row)
+        // Set the cells anchor point to prevent it moving unexpectedly, and return it.
+        cell?.layer.anchorPointZ = CGFloat(row)
         return cell!
     }
     
     // Set the row height for the table view cells depending on which cell they are.
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        // Depending on which cell is being used vary the height.
+        // Depending on which cell is being used vary the height. The heights for the various cells are:
+        //  - Title - 40.0
+        //  - Top Scorers - 40.0
+        //  - Most Assists - 50.0
+        //  - Best Defender - 85.0
+        //  - In Form Players - 85.0
+        // In addition to the custom divider which is 45.0.
         switch (indexPath as NSIndexPath).row {
         case 6:
             return 20.0
@@ -276,18 +286,23 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         
         // Depending on which player was selected, open the correct player view.
         switch row {
+        // Top Scorers.
         case 1..<6:
             self.selectedPlayerData = self.topScorersData[(indexPath as NSIndexPath).row - 1]
             performSegue(withIdentifier: "homePlayerSegue", sender: self)
+        // Most Assists.
         case 8..<11:
             self.selectedPlayerData = self.topAssistsData[(indexPath as NSIndexPath).row - 8]
             performSegue(withIdentifier: "homePlayerSegue", sender: self)
+        // Best Defender.
         case 13:
             self.selectedPlayerData = self.topDefenderData[0]
             performSegue(withIdentifier: "homePlayerSegue", sender: self)
+        // In Form Players.
         case 16..<19:
             self.selectedPlayerData = self.topPlayersData[(indexPath as NSIndexPath).row - 16]
             performSegue(withIdentifier: "homePlayerSegue", sender: self)
+        // Any other cell, such as title cells or dividers should not do anything when selected.
         default: break
         }
         
@@ -295,17 +310,9 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
     
     // Called when a segue is about to be performed.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // If a player has been selected, send the correct PlayerId to the playerView.
-        if(segue.identifier == "homePlayerSegue") {
-            let playerClass = (segue.destination as! playerView)
-            playerClass.playerData = self.selectedPlayerData
-        }
-        // If a ranking has been selected, send the correct type of ranking to rankingsView.
-        else if (segue.identifier == "homeRankingSegue") {
-            //self.tabBarController?.selectedIndex = 1
-            let rankingClass = (segue.destination as! rankingsView)
-            rankingClass.rankingType = self.selectedRanking
-        }
+        // When a player has been selected, send the correct PlayerId to the playerView.
+        let playerClass = (segue.destination as! playerView)
+        playerClass.playerData = self.selectedPlayerData
     }
     
     /* Data Functions */
@@ -339,12 +346,12 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             else {
                 success = false }
             
-            // Reload the table view and show the correct views.
+            // Reload the table view and show the correct views using the parent function.
             super.getData(success: success)
             
         }
         
-        // Add the operation to the queue.
+        // Add the operation to the queue top run in the background.
         self.queue.addOperation(self.getDataOperation)
     }
     
@@ -364,11 +371,11 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         
         // Add table view cells.
+        self.tableView.register(titleCell.self, forCellReuseIdentifier: NSStringFromClass(titleCell.self))
+        self.tableView.register(dividerCell.self, forCellReuseIdentifier: NSStringFromClass(dividerCell.self))
         self.tableView.register(playerCell.self, forCellReuseIdentifier: NSStringFromClass(playerCell.self))
         self.tableView.register(imageRankingCell.self, forCellReuseIdentifier: NSStringFromClass(imageRankingCell.self))
         self.tableView.register(detailedRankingCell.self, forCellReuseIdentifier: NSStringFromClass(detailedRankingCell.self))
-        self.tableView.register(titleCell.self, forCellReuseIdentifier: NSStringFromClass(titleCell.self))
-        self.tableView.register(dividerCell.self, forCellReuseIdentifier: NSStringFromClass(dividerCell.self))
         
         // Add refresh control to table view.
         self.tableView.addSubview(self.refreshControl)

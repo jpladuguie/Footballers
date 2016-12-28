@@ -1,12 +1,6 @@
-//
-//  navigationBar.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 17/12/2016.
-//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
-//
-
 import UIKit
+
+/* Navigation Bar Class */
 
 class navigationBar: UIView, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     

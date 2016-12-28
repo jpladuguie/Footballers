@@ -1,11 +1,3 @@
-//
-//  templateViewController.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 18/12/2016.
-//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
-//
-
 import UIKit
 import NVActivityIndicatorView
 
@@ -266,8 +258,11 @@ class templateViewController: UIViewController {
         return image
     }
     
-    /* Function declarations.
-       Both are specific to the view so needed overriding in the individual classes. */
+    // Gets the data needed for the view.
+    // Only a declaration as it needs to be implemented in each of the child views.
+    func getData() {}
+    
+    /* Create Object Functions */
     
     // Called if the data is successfully obtained from the server.
     // Creates the table view and any other views which need initialising.
@@ -289,13 +284,6 @@ class templateViewController: UIViewController {
         // Fade table view in.
         self.transitionBetweenViews(firstView: self.activityIndicator, secondView: self.tableView, removeFirstView: true)
     }
-    
-    // Gets the data needed for the view.
-    func getData() {
-        
-    }
-    
-    /* Other Functions */
     
     // Creates the error button and adds it to view.
     func createErrorLabel() {
@@ -324,15 +312,17 @@ class templateViewController: UIViewController {
     
     // Create ActivityIndicator centred in the middle of the view and return it.
     func configureActivityIndicator(viewController: UIViewController) -> NVActivityIndicatorView {
+        // Define the size, position, type and colour of the activity indicator.
         let activityIndicator = NVActivityIndicatorView(frame: CGRect(x: (viewController.view.frame.size.width/2 - 25), y: (viewController.view.frame.size.height/2 - 25), width: 50, height: 50), type: NVActivityIndicatorType.ballClipRotate, color: UIColor.white)
+        
+        // Start animating it.
         activityIndicator.startAnimating()
         
+        // Return it.
         return activityIndicator
     }
     
-    func createNavBarButton() {
-        
-    }
+    /* Other Functions */
     
     // Reload data when the table view has been pulled down and released.
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -361,17 +351,19 @@ class templateViewController: UIViewController {
     
     // Return the colour red, yellow or green depending on a variable.
     func getRatingColour(value: Int) -> UIColor {
+        // When between 0 and 35 return red.
         if value < 35 {
             return red
         }
+        // When between 35 and 65 return yellow.
         else if value >= 35 && value <= 65 {
             return yellow
         }
+        // When between 65 and 100 return green.
         else {
             return green
         }
     }
-
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

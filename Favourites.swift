@@ -1,11 +1,3 @@
-//
-//  Favourites.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 30/10/2016.
-//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
-//
-
 import Foundation
 import CoreData
 

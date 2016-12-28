@@ -1,25 +1,17 @@
-//
-//  rankingsView.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 01/09/2016.
-//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
-//
-
 import UIKit
 
 class rankingsView: templateViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    // Declare a data variable to store all the players being shown in the table view.
+    var playerData = [[String: String]]()
     
     // currentStartPosition holds the value used in the next call to the API. As the table is scrolled through, it is increased,
     // As players further down in the rankings need to be fetched.
     var currentStartPosition: Int = 0
     
     // bottomReached becomes true once the last players have been called, i.e. the table view has been scrolled all the way
-    // To the bottom. This prevents excessive calls to the API.
+    // To the bottom. This prevents excessive calls to the API once there are no more players to load.
     var bottomReached = false
-    
-    // Player data array and table view.
-    var playerData = [[String: String]]()
     
     // Current menu open/last opened.
     var currentMenuType: menuType?
@@ -36,7 +28,7 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         // Call viewDidLoad() in parent view controller.
         super.viewDidLoad()
         
-        // Set the title.
+        // Set the title. Sorting by goals is the default value for Rankings view.
         self.title = "Goals"
         
         // Set the navigation bar button to the options button.
@@ -56,30 +48,37 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     // Set up the table view cells.
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        // Create the cell as a rankingTableCell.
+        // Get the row.
+        let row = (indexPath as NSIndexPath).row
+        
+        // Create the cell as a detailedRankingCell.
         let cell: detailedRankingCell = tableView.dequeueReusableCell( withIdentifier: NSStringFromClass(detailedRankingCell.self), for: indexPath) as! detailedRankingCell
         
         // Set the values for the ranking position, flag image, player name, statistic value, age and team.
-        cell.positionLabel.text = String(indexPath.row + 1)
-        cell.flagImage.image = UIImage(named: String((self.playerData[(indexPath as NSIndexPath).row]["RegionCode"]?.uppercased())! + ""))
-        cell.nameLabel.text = self.playerData[(indexPath as NSIndexPath).row]["Name"]
-        cell.valueLabel.text = self.playerData[(indexPath as NSIndexPath).row][rankingType]
-        cell.ageLabel.text = self.playerData[(indexPath as NSIndexPath).row]["Age"]
-        cell.teamLabel.text = self.playerData[(indexPath as NSIndexPath).row]["Team"]
-        
+        cell.positionLabel.text = String(row + 1)
+        cell.flagImage.image = UIImage(named: String((self.playerData[row]["RegionCode"]?.uppercased())! + ""))
+        cell.nameLabel.text = self.playerData[row]["Name"]
+        cell.valueLabel.text = self.playerData[row][rankingType]
+        cell.ageLabel.text = self.playerData[row]["Age"]
+        cell.teamLabel.text = self.playerData[row]["Team"]
         
         // Load more data as the table view is scrolled down.
         // If the current row is within 20 rows from the bottom, add more rows to the bottom.
-        if (indexPath.row == self.playerData.count - 20)
+        if (row == self.playerData.count - 20)
         {
             // Check whether the bottom has already been reached.
             // If it has, no more data needs to be called.
             if self.bottomReached == false {
+                
                 // Increment the currentStartPosition to get a new set of data.
                 self.currentStartPosition += 50
             
-                // Get the data in the background.
-                DispatchQueue.global(qos: .background).async {
+                // Define the operation.
+                self.getDataOperation = BlockOperation()
+                
+                // Run in the background to prevent the UI from freezing.
+                self.getDataOperation.addExecutionBlock {
+                    
                     // Fetch the data from the API.
                     let morePlayers = getPlayerRankings(SortValue: self.rankingType, StartPosition: self.currentStartPosition, EndPosition: self.currentStartPosition + 50)
                     
@@ -89,13 +88,20 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
                     }
                     
                     // This is called once the data has been fetched.
-                    DispatchQueue.main.async {
-                        // Append the new data to the old data.
-                        self.playerData += morePlayers
-                        // Reload the table view data.
-                        self.tableView.reloadData()
+                    // Before updating the view, make sure the operation hasn't been canceled.
+                    if !self.getDataOperation.isCancelled {
+                        // Execute on the main thread.
+                        OperationQueue.main.addOperation({
+                            // Append the new data to the old data.
+                            self.playerData += morePlayers
+                            // Reload the table view data.
+                            self.tableView.reloadData()
+                        })
                     }
                 }
+                
+                // Add the operation to the queue to be run in the background.
+                self.queue.addOperation(self.getDataOperation)
             }
         }
         
@@ -103,14 +109,15 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
         return cell
     }
     
-    // Set the row height for the table view.
+    // Set the row height for the table view. This is simply the height of the detailedRankingCell.
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 85.0
     }
     
     // This is called when a row in the table view is selected, i.e. a player has been clicked on.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Highlight the row.
+        
+        // Deselect the row.
         self.tableView.deselectRow(at: indexPath, animated: true)
         
         // Get the data of the selected player, and save it in the variable selectedPlayerData.
@@ -122,12 +129,11 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     
     // Adds the correct information during the segue to playerView.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if(segue.identifier == "rankingsPlayerSegue") {
-            // Create a new playerView class.
-            let playerClass = (segue.destination as! playerView)
-            // Add the selectedPlayerData to the new class so it initialises with the selected player.
-            playerClass.playerData = self.selectedPlayerData
-        }
+        // Create a new playerView class.
+        let playerClass = (segue.destination as! playerView)
+        // Add the selectedPlayerData to the new class so it initialises with the selected player.
+        playerClass.playerData = self.selectedPlayerData
+        
     }
     
     /* Data Functions */
@@ -161,7 +167,7 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
             
         }
         
-        // Add the operation to the queue.
+        // Add the operation to the queue to run in the background.
         self.queue.addOperation(self.getDataOperation)
     }
     
@@ -181,8 +187,7 @@ class rankingsView: templateViewController, UITableViewDelegate, UITableViewData
     
     /* createSubViews() */
     
-    // Create all the subviews and add them to the main view.
-    // Includes the main table view, as well as the column titles.
+    // Create the table view and add it to the main view.
     override func createTableView() {
         
         // Create the table view.

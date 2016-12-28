@@ -1,27 +1,23 @@
-//
-//  titleCell.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 26/11/2016.
-//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
-//
-
 import UIKit
 
 class titleCell: UITableViewCell {
     
-    // Position in the table.
+    // Define the title label so that its text may be set.
     var titleLabel: UILabel!
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        // Set up the cell.
+        
+        // Initiate cell.
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        // Set the background colour to clear.
         backgroundColor = UIColor.clear
+        
+        // Prevent the cell from being selected.
         selectionStyle = .none
         
-        // Position label.
-        self.titleLabel = UILabel()
-        self.titleLabel.frame = CGRect(x: 20, y: 0, width: self.frame.width - 40, height: 40)
+        // Create the position label.
+        self.titleLabel = UILabel(frame: CGRect(x: 15, y: 0, width: self.frame.width - 30, height: 40))
         self.titleLabel.textAlignment = .left
         self.titleLabel.font = UIFont.boldSystemFont(ofSize: 22.0)
         self.titleLabel.textColor = UIColor.white

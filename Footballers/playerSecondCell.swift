@@ -1,11 +1,3 @@
-//
-//  playerSecondCell.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 07/09/2016.
-//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
-//
-
 import UIKit
 
 class playerSecondCell: UITableViewCell {

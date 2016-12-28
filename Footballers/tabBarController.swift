@@ -1,11 +1,3 @@
-//
-//  tabBarController.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 25/11/2016.
-//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
-//
-
 import UIKit
 import SlidingTabBar
 

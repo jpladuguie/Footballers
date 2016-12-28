@@ -1,13 +1,3 @@
-//
-//  Data.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 18/08/2016.
-//  Copyright © 2016 Jean-Pierre Laduguie. All rights reserved.
-//
-
-// Everything to do with managing data. Functions are:
-
 import Foundation
 import SwiftyJSON
 

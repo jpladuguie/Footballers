@@ -1,11 +1,3 @@
-//
-//  detailedRankingCell.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 20/12/2016.
-//  Copyright © 2016 jp. All rights reserved.
-//
-
 import UIKit
 
 class detailedRankingCell: playerCell {
@@ -15,9 +7,6 @@ class detailedRankingCell: playerCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .gray
-        
-        
-        
         
         // Position label.
         self.positionLabel.frame = CGRect(x: 10, y: 5, width: 30, height: 40)

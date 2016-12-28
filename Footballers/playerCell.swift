@@ -1,11 +1,3 @@
-//
-//  playerCell.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 22/12/2016.
-//  Copyright © 2016 jp. All rights reserved.
-//
-
 import UIKit
 
 class playerCell: UITableViewCell {
@@ -48,13 +40,13 @@ class playerCell: UITableViewCell {
         self.layoutMargins = UIEdgeInsets.zero
         
         // Create name label.
-        self.nameLabel = createLabel(frame: CGRect(x: 20, y: 0, width: ((UIScreen.main.bounds.width / 3) * 2), height: 40), textAlignment: .left, fontSize: 16.0, fontWeight: UIFontWeightLight)
+        self.nameLabel = createLabel(frame: CGRect(x: 15, y: 0, width: ((UIScreen.main.bounds.width / 3) * 2), height: 40), textAlignment: .left, fontSize: 16.0, fontWeight: UIFontWeightLight)
         
         // Create value label.
-        self.valueLabel = createLabel(frame: CGRect(x: ((UIScreen.main.bounds.width / 3) * 2), y: 0, width: (UIScreen.main.bounds.width / 3) - 20, height: 40), textAlignment: .right, fontSize: 16.0, fontWeight: UIFontWeightBold)
+        self.valueLabel = createLabel(frame: CGRect(x: ((UIScreen.main.bounds.width / 3) * 2), y: 0, width: (UIScreen.main.bounds.width / 3) - 15, height: 40), textAlignment: .right, fontSize: 16.0, fontWeight: UIFontWeightBold)
         
         // Create position label.
-        self.positionLabel = createLabel(frame: CGRect(x: 20, y: 0, width: 30, height: 40), textAlignment: .right, fontSize: 16.0, fontWeight: UIFontWeightMedium)
+        self.positionLabel = createLabel(frame: CGRect(x: 15, y: 0, width: 30, height: 40), textAlignment: .right, fontSize: 16.0, fontWeight: UIFontWeightMedium)
         
         // Create team label.
         self.teamLabel = createLabel(frame: CGRect(x: 185, y: 40, width: 200, height: 30), textAlignment: .left, fontSize: 15.0, fontWeight: UIFontWeightLight)
@@ -69,7 +61,7 @@ class playerCell: UITableViewCell {
         self.playerImage = UIImageView(frame: CGRect(x: 20, y: 4.5, width: 48.75, height: 67.5))
         
         // Create rating bar.
-        self.ratingBar = UIView(frame: CGRect(x: 20, y: 40, width: 0, height: 10))
+        self.ratingBar = UIView(frame: CGRect(x: 15, y: 40, width: 0, height: 10))
         self.ratingBar.layer.cornerRadius = 5.0
         
     }

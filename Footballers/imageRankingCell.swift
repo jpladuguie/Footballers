@@ -1,11 +1,3 @@
-//
-//  imageRankingCell.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 20/12/2016.
-//  Copyright © 2016 jp. All rights reserved.
-//
-
 import UIKit
 
 class imageRankingCell: playerCell {

@@ -1,15 +1,7 @@
-//
-//  PlayerFavouritesData+CoreDataClass.swift
-//  Footballers
-//
-//  Created by Jean-Pierre Laduguie on 21/10/2016.
-//  Copyright © 2016 jp. All rights reserved.
-//
-
 import Foundation
 import CoreData
 
-
+// Declare the managed object class to hold the player favourites data.
 public class PlayerFavouritesData: NSManagedObject {
 
 }

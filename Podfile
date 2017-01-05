@@ -1,18 +1,14 @@
 # Uncomment this line to define a global platform for your project
 # platform :ios, ’10.0’
 
-target 'Footballers' do
+target ‘TopScorer’ do
   # Comment this line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
 
   # Pods for Footballers
-  pod 'Alamofire', '~> 4.0'
-  pod 'SwiftyJSON', git: 'https://github.com/BaiduHiDeviOS/SwiftyJSON.git', branch: 'swift3'
-  pod 'Kanna', git: 'https://github.com/tid-kijyun/Kanna.git', branch: 'swift3.0'
-  pod 'SideMenu'
   pod 'NVActivityIndicatorView'
-  pod 'Charts', :git => 'https://github.com/danielgindi/Charts.git', :branch => 'master'
   pod ‘SlidingTabBar’
+  pod 'SwiftyJSON', git: 'https://github.com/BaiduHiDeviOS/SwiftyJSON.git', branch: 'swift3'
 
 end
 

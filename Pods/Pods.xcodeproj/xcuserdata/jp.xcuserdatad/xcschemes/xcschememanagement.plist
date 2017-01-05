@@ -4,45 +4,33 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Alamofire.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Charts.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Kanna.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>NVActivityIndicatorView.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>1</integer>
 		</dict>
-		<key>Pods-Footballers.xcscheme</key>
+		<key>Pods-TopScorer.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-		</dict>
-		<key>SideMenu.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
+			<key>orderHint</key>
+			<integer>2</integer>
 		</dict>
 		<key>SlidingTabBar.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>3</integer>
 		</dict>
 		<key>SwiftyJSON.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>4</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -52,37 +40,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>22AF109B26DCD44F54783389C8AA91E0</key>
+		<key>4B4D3BEFE03B4BC3F7C05F480001A7D8</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
+		<key>DF64798D141CDF0D1F7BF8D3A4C07853</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7FFA718D2A8C1AB2DA19733271FF64B7</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>909ED2F977F88D9F0901710ADCA5B6EB</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>B6312CAD7E18804AD5E11308495CFD52</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>BAD568EA1A2889FAE8EFBE4EDC0695B8</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>D8BC36C7496A0465188711428893D819</key>
+		<key>F5D39E68D04BAE440D236215D37F8896</key>
 		<dict>
 			<key>primary</key>
 			<true/>

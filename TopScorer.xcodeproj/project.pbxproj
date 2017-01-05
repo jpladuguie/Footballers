@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2ED7D601B4BFB9F4677F1386 /* Pods_Footballers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ADF919B346CB0628D173243 /* Pods_Footballers.framework */; };
 		3F154F891D8ABA3100EF70E2 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F154F881D8ABA3100EF70E2 /* CoreData.framework */; };
+		CEA84892D8B3C577B4CD6C8B /* Pods_TopScorer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF64C4142B9CAA8D33379D76 /* Pods_TopScorer.framework */; };
 		E81059D01D80B19800EE205E /* playerSecondCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81059CF1D80B19800EE205E /* playerSecondCell.swift */; };
 		E8168BFC1E05894500F5BEAA /* navigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8168BFB1E05894500F5BEAA /* navigationBar.swift */; };
 		E821258E1D78B99E0024D016 /* playerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82125891D78B99E0024D016 /* playerView.swift */; };
@@ -47,10 +47,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0CC4B561EFD02C2903C61E16 /* Pods-TopScorer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopScorer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TopScorer/Pods-TopScorer.debug.xcconfig"; sourceTree = "<group>"; };
 		2ADF919B346CB0628D173243 /* Pods_Footballers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Footballers.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F154F881D8ABA3100EF70E2 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		44D20C8AB5A64F8CED142D4B /* Pods-Footballers.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Footballers.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Footballers/Pods-Footballers.debug.xcconfig"; sourceTree = "<group>"; };
 		459A20C510435B97C61922BD /* Pods-Footballers.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Footballers.release.xcconfig"; path = "Pods/Target Support Files/Pods-Footballers/Pods-Footballers.release.xcconfig"; sourceTree = "<group>"; };
+		B09BB04DE7D64EEE40F46944 /* Pods-TopScorer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TopScorer.release.xcconfig"; path = "Pods/Target Support Files/Pods-TopScorer/Pods-TopScorer.release.xcconfig"; sourceTree = "<group>"; };
+		CF64C4142B9CAA8D33379D76 /* Pods_TopScorer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TopScorer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E81059CF1D80B19800EE205E /* playerSecondCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerSecondCell.swift; sourceTree = "<group>"; };
 		E8168BFB1E05894500F5BEAA /* navigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = navigationBar.swift; sourceTree = "<group>"; };
 		E82125891D78B99E0024D016 /* playerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerView.swift; sourceTree = "<group>"; };
@@ -96,7 +99,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F154F891D8ABA3100EF70E2 /* CoreData.framework in Frameworks */,
-				2ED7D601B4BFB9F4677F1386 /* Pods_Footballers.framework in Frameworks */,
+				CEA84892D8B3C577B4CD6C8B /* Pods_TopScorer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,6 +111,8 @@
 			children = (
 				44D20C8AB5A64F8CED142D4B /* Pods-Footballers.debug.xcconfig */,
 				459A20C510435B97C61922BD /* Pods-Footballers.release.xcconfig */,
+				0CC4B561EFD02C2903C61E16 /* Pods-TopScorer.debug.xcconfig */,
+				B09BB04DE7D64EEE40F46944 /* Pods-TopScorer.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -178,6 +183,7 @@
 			children = (
 				3F154F881D8ABA3100EF70E2 /* CoreData.framework */,
 				2ADF919B346CB0628D173243 /* Pods_Footballers.framework */,
+				CF64C4142B9CAA8D33379D76 /* Pods_TopScorer.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -217,7 +223,7 @@
 				TargetAttributes = {
 					E87F5AEC1D78B82500C10A38 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = R7KQE45QY7;
+						DevelopmentTeam = JDJW93Z5F4;
 						LastSwiftMigration = 0800;
 					};
 				};
@@ -276,7 +282,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Footballers/Pods-Footballers-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TopScorer/Pods-TopScorer-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7F62361D4FB73823EBB8F559 /* [CP] Check Pods Manifest.lock */ = {
@@ -306,7 +312,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Footballers/Pods-Footballers-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TopScorer/Pods-TopScorer-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -453,16 +459,17 @@
 		};
 		E87F5B001D78B82500C10A38 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 44D20C8AB5A64F8CED142D4B /* Pods-Footballers.debug.xcconfig */;
+			baseConfigurationReference = 0CC4B561EFD02C2903C61E16 /* Pods-TopScorer.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = JDJW93Z5F4;
 				INFOPLIST_FILE = Footballers/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jp.Footballers;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topscorer.uk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_VERSION = 3.0;
@@ -471,16 +478,17 @@
 		};
 		E87F5B011D78B82500C10A38 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 459A20C510435B97C61922BD /* Pods-Footballers.release.xcconfig */;
+			baseConfigurationReference = B09BB04DE7D64EEE40F46944 /* Pods-TopScorer.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = JDJW93Z5F4;
 				INFOPLIST_FILE = Footballers/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jp.Footballers;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topscorer.uk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_VERSION = 3.0;

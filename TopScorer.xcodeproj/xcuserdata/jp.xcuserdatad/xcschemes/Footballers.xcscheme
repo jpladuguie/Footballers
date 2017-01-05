@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E87F5AEC1D78B82500C10A38"
-               BuildableName = "Footballers.app"
-               BlueprintName = "Footballers"
-               ReferencedContainer = "container:Footballers.xcodeproj">
+               BuildableName = "TopScorer.app"
+               BlueprintName = "TopScorer"
+               ReferencedContainer = "container:TopScorer.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E87F5AEC1D78B82500C10A38"
-            BuildableName = "Footballers.app"
-            BlueprintName = "Footballers"
-            ReferencedContainer = "container:Footballers.xcodeproj">
+            BuildableName = "TopScorer.app"
+            BlueprintName = "TopScorer"
+            ReferencedContainer = "container:TopScorer.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -56,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E87F5AEC1D78B82500C10A38"
-            BuildableName = "Footballers.app"
-            BlueprintName = "Footballers"
-            ReferencedContainer = "container:Footballers.xcodeproj">
+            BuildableName = "TopScorer.app"
+            BlueprintName = "TopScorer"
+            ReferencedContainer = "container:TopScorer.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
@@ -82,9 +82,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E87F5AEC1D78B82500C10A38"
-            BuildableName = "Footballers.app"
-            BlueprintName = "Footballers"
-            ReferencedContainer = "container:Footballers.xcodeproj">
+            BuildableName = "TopScorer.app"
+            BlueprintName = "TopScorer"
+            ReferencedContainer = "container:TopScorer.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

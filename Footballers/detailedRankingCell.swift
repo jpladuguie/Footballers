@@ -9,7 +9,7 @@ class detailedRankingCell: playerCell {
         selectionStyle = .gray
         
         // Position label.
-        self.positionLabel.frame = CGRect(x: 10, y: 5, width: 30, height: 40)
+        self.positionLabel.frame = CGRect(x: 5, y: 5, width: 35, height: 40)
         self.contentView.addSubview(self.positionLabel)
         
         // Flag image.

@@ -45,7 +45,6 @@ class templateViewController: UIViewController {
     var queue: OperationQueue!
     var getDataOperation: BlockOperation!
     
-    
     /* viewDidLoad() */
     
     // Called when the view loads.

@@ -137,7 +137,6 @@ class homeView: templateViewController, UITableViewDelegate, UITableViewDataSour
             mostAssistsCell.contentView.addSubview(mostAssistsCell.valueLabel)
             
             // Set the rating bar.
-            mostAssistsCell.ratingBar.frame = CGRect(x: 20, y: 40, width: 0, height: 10)
             mostAssistsCell.contentView.addSubview(mostAssistsCell.ratingBar)
             
             // Get the rating value as a float.

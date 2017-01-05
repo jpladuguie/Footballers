@@ -70,7 +70,7 @@
 		E86644D61DE9D7CC00AA86BA /* titleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = titleCell.swift; sourceTree = "<group>"; };
 		E86EFBEA1E0C4FDC0083B8A7 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Global.swift; path = Footballers/Global.swift; sourceTree = "<group>"; };
 		E876E9F31E06E0380030661B /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
-		E87F5AED1D78B82500C10A38 /* Footballers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Footballers.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E87F5AED1D78B82500C10A38 /* TopScorer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TopScorer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E87F5AF01D78B82500C10A38 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E87F5AF51D78B82500C10A38 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E87F5AF71D78B82500C10A38 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -129,7 +129,7 @@
 		E87F5AEE1D78B82500C10A38 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E87F5AED1D78B82500C10A38 /* Footballers.app */,
+				E87F5AED1D78B82500C10A38 /* TopScorer.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -185,9 +185,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E87F5AEC1D78B82500C10A38 /* Footballers */ = {
+		E87F5AEC1D78B82500C10A38 /* TopScorer */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E87F5AFF1D78B82500C10A38 /* Build configuration list for PBXNativeTarget "Footballers" */;
+			buildConfigurationList = E87F5AFF1D78B82500C10A38 /* Build configuration list for PBXNativeTarget "TopScorer" */;
 			buildPhases = (
 				7F62361D4FB73823EBB8F559 /* [CP] Check Pods Manifest.lock */,
 				E87F5AE91D78B82500C10A38 /* Sources */,
@@ -200,9 +200,9 @@
 			);
 			dependencies = (
 			);
-			name = Footballers;
+			name = TopScorer;
 			productName = Footballers;
-			productReference = E87F5AED1D78B82500C10A38 /* Footballers.app */;
+			productReference = E87F5AED1D78B82500C10A38 /* TopScorer.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -222,7 +222,7 @@
 					};
 				};
 			};
-			buildConfigurationList = E87F5AE81D78B82500C10A38 /* Build configuration list for PBXProject "Footballers" */;
+			buildConfigurationList = E87F5AE81D78B82500C10A38 /* Build configuration list for PBXProject "TopScorer" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -235,7 +235,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E87F5AEC1D78B82500C10A38 /* Footballers */,
+				E87F5AEC1D78B82500C10A38 /* TopScorer */,
 			);
 		};
 /* End PBXProject section */
@@ -490,7 +490,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E87F5AE81D78B82500C10A38 /* Build configuration list for PBXProject "Footballers" */ = {
+		E87F5AE81D78B82500C10A38 /* Build configuration list for PBXProject "TopScorer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E87F5AFD1D78B82500C10A38 /* Debug */,
@@ -499,7 +499,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E87F5AFF1D78B82500C10A38 /* Build configuration list for PBXNativeTarget "Footballers" */ = {
+		E87F5AFF1D78B82500C10A38 /* Build configuration list for PBXNativeTarget "TopScorer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E87F5B001D78B82500C10A38 /* Debug */,
